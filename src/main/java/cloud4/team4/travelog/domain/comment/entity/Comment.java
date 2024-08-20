@@ -20,11 +20,11 @@ public class Comment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private ExMember member;    // 예시 멤버 엔티티 사용
+    private ExMember member;    // 예시 멤버 엔티티 사용 -> 변경 필수!
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
-    private ExPost post;        // 예시 게시글 엔티티 사용
+    private ExPost post;        // 예시 게시글 엔티티 사용 -> 변경 필수!
 
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
     private List<CommentPhotos> commentPhotos = new ArrayList<>();
@@ -34,11 +34,13 @@ public class Comment {
     private LocalDateTime created_at;
     private LocalDateTime edited_at;
 
+    // 예시 멤버 엔티티 사용 -> 변경 필수!
     public void setMember(ExMember member) {
         this.member = member;
         member.getCommentList().add(this);
     }
 
+    // 예시 게시글 엔티티 사용 -> 변경 필수!
     public void setPost(ExPost post) {
         this.post = post;
         post.getCommentList().add(this);
