@@ -18,5 +18,6 @@ public interface CommentMapper {
         return member != null ? member.getId() : null;
     }
 
+    @Mapping(target = "member", ignore = true) // member 필드 매핑 제외
     Comment toEntity(CommentRequestDto commentRequestDto);
 }
