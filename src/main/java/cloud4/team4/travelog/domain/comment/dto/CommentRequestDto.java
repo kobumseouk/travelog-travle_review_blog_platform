@@ -9,9 +9,8 @@ public class CommentRequestDto {
 
     private String content;
 
-//    private Member member;
-//    private
+    private String memberId;
 
     private LocalDateTime created_at;
-    private LocalDateTime edited_at;
+
 }
