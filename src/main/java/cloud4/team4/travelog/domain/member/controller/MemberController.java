@@ -1,0 +1,27 @@
+package cloud4.team4.travelog.domain.member.controller;
+
+import cloud4.team4.travelog.domain.member.dto.MemberDto;
+import cloud4.team4.travelog.domain.member.service.MemberService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.swing.*;
+
+@RestController
+@RequestMapping("/api")
+@RequiredArgsConstructor
+public class MemberController {
+    private final MemberService memberService;
+
+    @PostMapping("/sign-up")
+    public ResponseEntity<String> createMember(@RequestBody MemberDto memberDto){
+        memberService.createMember(memberDto);
+        return ResponseEntity.ok("회원가입 성공");
+    }
+
+
+}
