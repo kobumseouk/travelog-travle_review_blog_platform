@@ -8,9 +8,8 @@ public class MemberMapper {
         MemberDto memberDto = new MemberDto();
 
         memberDto.setId(memberEntity.getId());
-        memberDto.setName(memberDto.getName());
-        memberDto.setPassword(memberDto.getPassword());
-        memberDto.setPhoneNumber(memberDto.getPhoneNumber());
+        memberDto.setName(memberEntity.getName());
+        memberDto.setPhoneNumber(memberEntity.getPhoneNumber());
         return memberDto;
 
     }
