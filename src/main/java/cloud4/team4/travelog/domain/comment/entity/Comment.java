@@ -25,7 +25,7 @@ public class Comment {
     // comment와 member 는 다대일 관계
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private MemberEntity member;    // 엔티티 이름 확인
+    private MemberEntity member;
 
     // comment와 post는 다대일 관계
     @ManyToOne(fetch = FetchType.LAZY)

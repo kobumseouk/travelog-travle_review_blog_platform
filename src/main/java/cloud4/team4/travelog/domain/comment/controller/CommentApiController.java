@@ -51,7 +51,10 @@ public class CommentApiController {
 
 
         // member, post 설정 위해 단건 조회함
-        MemberEntity member = memberService.findMemberById(commentRequestDto.getMemberId());        // 아직 불완전함 -> 메서드 다시 확인! (멤버만)
+        MemberDto memberDto = memberService.findMember(commentRequestDto.getMemberId());
+
+        // dto 변환 과정 추가해야 함 (MemberDto -> Member)
+
         Post post = postService.getPostById(postId);
 
         // 저장
