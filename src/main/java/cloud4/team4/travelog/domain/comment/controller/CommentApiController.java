@@ -46,7 +46,7 @@ public class CommentApiController {
 
     // CREATE
     @PostMapping("/{postId}")
-    public ResponseEntity addComment(@PathVariable("postId") Long postId,
+    public ResponseEntity<Void> addComment(@PathVariable("postId") Long postId,
                                               @RequestBody CommentRequestDto commentRequestDto) {
         // 아직 member와 post를 설정하지 않음
         Comment createdComment = CommentMapper.INSTANCE.toEntity(commentRequestDto);
@@ -73,5 +73,12 @@ public class CommentApiController {
         CommentResponseDto commentResponseDto = CommentMapper.INSTANCE.toResponseDto(updatedComment);
 
         return ResponseEntity.ok(commentResponseDto);
+    }
+
+    // DELETE
+    @DeleteMapping("/delete/{commentId}")
+    public ResponseEntity<Void> deleteComment(@PathVariable("commentId") Long commentId) {
+        commentService.deleteComment(commentId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
