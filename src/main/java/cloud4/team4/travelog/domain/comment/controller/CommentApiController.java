@@ -5,11 +5,9 @@ import cloud4.team4.travelog.domain.comment.dto.CommentRequestDto;
 import cloud4.team4.travelog.domain.comment.dto.CommentResponseDto;
 import cloud4.team4.travelog.domain.comment.dto.CommentUpdateDto;
 import cloud4.team4.travelog.domain.comment.entity.Comment;
-import cloud4.team4.travelog.domain.comment.entity.ExMember;
-import cloud4.team4.travelog.domain.comment.entity.ExPost;
 import cloud4.team4.travelog.domain.comment.service.CommentService;
-import cloud4.team4.travelog.domain.comment.service.ExMemberService;
-import cloud4.team4.travelog.domain.comment.service.ExPostService;
+import cloud4.team4.travelog.domain.post.service.PostService;
+import cloud4.team4.travelog.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,9 +22,9 @@ public class CommentApiController {
 
     private final CommentService commentService;
 
-    // 예시 서비스 의존관계 주입 -> 변경 필요
-    private final ExPostService exPostService;
-    private final ExMemberService exMemberService;
+    // 서비스 의존관계 주입 다시 확인!
+    private final PostService postService;
+    private final MemberService memberService;
 
     // READ
     @GetMapping("/{postId}")
@@ -51,10 +49,10 @@ public class CommentApiController {
         // 아직 member와 post를 설정하지 않음
         Comment createdComment = CommentMapper.INSTANCE.toEntity(commentRequestDto);
 
-        // 예시 서비스 사용 -> 변경 필수!
+
         // member, post 설정 위해 단건 조회함
-        ExMember member = exMemberService.findMemberById(commentRequestDto.getMemberId());
-        ExPost post = exPostService.findPostById(postId);
+        MemberEntity member = memberService.findMemberById(commentRequestDto.getMemberId());        // 아직 불완전함 -> 메서드 다시 확인! (멤버만)
+        Post post = postService.getPostById(postId);
 
         // 저장
         commentService.saveComment(member, post, createdComment);

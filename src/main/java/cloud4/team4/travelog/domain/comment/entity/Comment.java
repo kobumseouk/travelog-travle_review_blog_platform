@@ -1,6 +1,8 @@
 package cloud4.team4.travelog.domain.comment.entity;
 
 import jakarta.persistence.*;
+import cloud4.team4.travelog.domain.member.entity.MemberEntity;
+import cloud4.team4.travelog.domain.post.entity.Post;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,13 +22,15 @@ public class Comment {
     @Column(name = "comment_id")
     private Long id;
 
+    // comment와 member 는 다대일 관계
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private ExMember member;    // 예시 멤버 엔티티 사용 -> 변경 필수!
+    private MemberEntity member;    // 엔티티 이름 확인
 
+    // comment와 post는 다대일 관계
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
-    private ExPost post;        // 예시 게시글 엔티티 사용 -> 변경 필수!
+    private Post post;
 
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
     private List<CommentPhotos> commentPhotos = new ArrayList<>();
@@ -36,16 +40,15 @@ public class Comment {
     private LocalDateTime created_at;
     private LocalDateTime edited_at;
 
-    // 예시 멤버 엔티티 사용 -> 변경 필수!
-    public void setMember(ExMember member) {
+    public void setMember(MemberEntity member) {
         this.member = member;
+        // ArrayList 이름 확인 필수
         member.getCommentList().add(this);
     }
 
-    // 예시 게시글 엔티티 사용 -> 변경 필수!
-    public void setPost(ExPost post) {
+    public void setPost(Post post) {
         this.post = post;
-        post.getCommentList().add(this);
+        post.getComments().add(this);
     }
 
     public Comment(String content, LocalDateTime created_at) {
