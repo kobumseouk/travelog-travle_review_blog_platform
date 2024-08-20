@@ -1,9 +1,11 @@
 package cloud4.team4.travelog.domain.comment.service;
 
 import cloud4.team4.travelog.domain.comment.entity.Comment;
+import cloud4.team4.travelog.domain.comment.entity.ExMember;
 import cloud4.team4.travelog.domain.comment.entity.ExPost;
 import cloud4.team4.travelog.domain.comment.repository.CommentRepository;
 import cloud4.team4.travelog.domain.comment.repository.ExPostRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -30,4 +32,18 @@ public class CommentService {
 
         return commentRepository.findCommentsByPost(post);
     }
+
+    /**
+     * CREATE
+     * save: comment 객체 엔티티화
+     */
+    @Transactional
+    // 파라미터 통일 필요, 예시 엔티티 사용 -> 변경 필수!
+    public void saveComment(ExMember member, ExPost post, Comment comment) {
+        comment.setMember(member);
+        comment.setPost(post);
+
+        commentRepository.save(comment);
+    }
+
 }
