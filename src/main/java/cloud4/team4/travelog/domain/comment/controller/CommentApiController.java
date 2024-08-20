@@ -23,9 +23,13 @@ public class CommentApiController {
     @GetMapping("/{postId}")
     public ResponseEntity<List<CommentResponseDto>> findAllComments(@PathVariable("postId") Long postId) {
 
-        List<CommentResponseDto> result = commentService.findAll(postId)
+        List<CommentResponseDto> result = commentService.findAllByPostId(postId)
                 .stream()
-                .map(CommentMapper.INSTANCE::toResponseDto)
+                .map(comment -> {
+                    CommentResponseDto dto = CommentMapper.INSTANCE.toResponseDto(comment);
+                    dto.setPostId(postId);
+                    return dto;
+                })
                 .toList();
 
         return ResponseEntity.ok(result);

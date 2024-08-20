@@ -14,7 +14,7 @@ import java.util.List;
 public class CommentService {
 
     private final CommentRepository commentRepository;
-//    private final ExPostRepository exPostRepository;
+    private final ExPostRepository exPostRepository;
 
     // 체크해야 함!
 //    private final PostService postService;
@@ -23,16 +23,11 @@ public class CommentService {
      * READ
      * findAll: 해당 게시글의 모든 댓글 반환
      */
-    public List<Comment> findAll(Long postId) {
+    public List<Comment> findAllByPostId(Long postId) {
 
         // 메서드 시그니처 체크해야 함!
-//        ExPost post = exPostRepository.findExPostById(postId);
+        ExPost post = exPostRepository.findExPostById(postId);
 
         return commentRepository.findCommentsByPost(post);
     }
-
-//    @Transactional
-//    public void saveComment(Comment comment) {
-//        commentRepository.save(comment);
-//    }
 }
