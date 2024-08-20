@@ -52,4 +52,10 @@ public class Comment {
         this.content = content;
         this.created_at = created_at;
     }
+
+    // comment update 메서드
+    public void update(String content, LocalDateTime edited_at) {
+        this.content = content;
+        this.edited_at = edited_at;
+    }
 }

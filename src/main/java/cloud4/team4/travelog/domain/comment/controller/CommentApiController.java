@@ -3,6 +3,7 @@ package cloud4.team4.travelog.domain.comment.controller;
 import cloud4.team4.travelog.domain.comment.dto.CommentMapper;
 import cloud4.team4.travelog.domain.comment.dto.CommentRequestDto;
 import cloud4.team4.travelog.domain.comment.dto.CommentResponseDto;
+import cloud4.team4.travelog.domain.comment.dto.CommentUpdateDto;
 import cloud4.team4.travelog.domain.comment.entity.Comment;
 import cloud4.team4.travelog.domain.comment.entity.ExMember;
 import cloud4.team4.travelog.domain.comment.entity.ExPost;
@@ -61,4 +62,16 @@ public class CommentApiController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    // UPDATE
+    @PutMapping("/update/{commentId}")
+    public ResponseEntity<CommentResponseDto> updateComment(@PathVariable("commentId") Long commentId,
+                                                            @RequestBody CommentUpdateDto commentUpdateDto) {
+
+
+        Comment updatedComment = commentService.updateComment(commentId, commentUpdateDto);
+
+        CommentResponseDto commentResponseDto = CommentMapper.INSTANCE.toResponseDto(updatedComment);
+
+        return ResponseEntity.ok(commentResponseDto);
+    }
 }

@@ -1,5 +1,6 @@
 package cloud4.team4.travelog.domain.comment.service;
 
+import cloud4.team4.travelog.domain.comment.dto.CommentUpdateDto;
 import cloud4.team4.travelog.domain.comment.entity.Comment;
 import cloud4.team4.travelog.domain.comment.entity.ExMember;
 import cloud4.team4.travelog.domain.comment.entity.ExPost;
@@ -9,6 +10,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -46,4 +48,17 @@ public class CommentService {
         commentRepository.save(comment);
     }
 
+
+    /**
+     * UPDATE
+     * updateComment: comment 찾고 내부 메서드 update 호출
+     */
+    @Transactional
+    public Comment updateComment(Long commentId, CommentUpdateDto commentUpdateDto) {
+        Comment findComment = commentRepository.findCommentById(commentId);
+
+        findComment.update(commentUpdateDto.getContent(), LocalDateTime.now());
+
+        return findComment;
+    }
 }
