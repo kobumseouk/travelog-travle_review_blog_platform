@@ -19,11 +19,14 @@ public class MemberController {
         memberService.createMember(memberDto);
         return ResponseEntity.ok("회원가입 성공");
     }
+    // 단건조회
     @GetMapping("/member/{memberId}")
     public ResponseEntity<MemberDto> findUser(@PathVariable Long memberId){
         return ResponseEntity.ok(memberService.findMember(memberId));
 
     }
+
+
 
 
 }

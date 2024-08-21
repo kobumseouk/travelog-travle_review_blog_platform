@@ -14,4 +14,9 @@ public class MemberDto {
 
     private String phoneNumber;
 
+    private String loginId;
+
+    private String password;
+
+
 }

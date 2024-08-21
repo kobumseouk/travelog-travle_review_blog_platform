@@ -4,6 +4,10 @@ package cloud4.team4.travelog.domain.member.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Comments;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "member")
@@ -15,6 +19,9 @@ public class MemberEntity {
     @Column(name = "member_id")
     private Long id;
 
+    @Column(name = "login_id")
+    private String loginId;
+
     @Column( name = "name")
     private String name;
 
@@ -23,5 +30,6 @@ public class MemberEntity {
 
     @Column(name = "phone_number")
     private String phoneNumber;
+
 
 }
