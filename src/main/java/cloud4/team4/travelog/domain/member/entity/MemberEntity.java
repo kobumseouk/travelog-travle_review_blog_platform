@@ -1,6 +1,7 @@
 package cloud4.team4.travelog.domain.member.entity;
 
 
+import cloud4.team4.travelog.domain.comment.entity.Comment;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,6 +31,9 @@ public class MemberEntity {
 
     @Column(name = "phone_number")
     private String phoneNumber;
+
+    @OneToMany(mappedBy = "member")
+    private List<Comment> comments = new ArrayList<>();
 
 
 }
