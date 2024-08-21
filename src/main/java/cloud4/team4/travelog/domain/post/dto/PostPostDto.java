@@ -1,4 +1,4 @@
-package cloud4.team4.Travelog.Post.Dto;
+package cloud4.team4.travelog.domain.post.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

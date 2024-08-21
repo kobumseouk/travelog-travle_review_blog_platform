@@ -1,4 +1,4 @@
-package cloud4.team4.Travelog.Post.Entity;
+package cloud4.team4.travelog.domain.post.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import jakarta.persistence.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Post_Photo {
+public class PostPhoto {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,5 +26,15 @@ public class Post_Photo {
 
   @Column(name = "image_path")
   private String imagePath;
+
+  @Column(name = "position")   // 위치 정보 추가
+  private String position;
+
+
+  public PostPhoto(Post post, String imagePath, String position){
+    this.post = post;
+    this.imagePath = imagePath;
+    this.position = position;
+  }
 
 }

@@ -1,11 +1,13 @@
-package cloud4.team4.Travelog.Post.Dto;
+package cloud4.team4.travelog.domain.post.dto;
 
+import cloud4.team4.travelog.domain.comment.dto.CommentDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -24,5 +26,9 @@ public class PostResponseDto {
   private LocalDateTime editedAt;
   private Integer views;
   private Integer recommends;
+
+  private List<String> photos;    // 게시글에 첨부된 이미지 경로
+
+  // private List<CommentDto> comments;
 }
 

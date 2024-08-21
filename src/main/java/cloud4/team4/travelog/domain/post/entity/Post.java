@@ -1,4 +1,4 @@
-package cloud4.team4.Travelog.Post.Entity;
+package cloud4.team4.travelog.domain.post.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -58,12 +58,11 @@ public class Post {
 
 
   @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  private List<Post_Photo> postPhoto = new ArrayList<>();
+  private List<PostPhoto> postPhoto = new ArrayList<>();
 
-
-    // 댓글 추가
-//  @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-//  private List<Comment> comments = new ArrayList<>();
+  // 댓글 추가
+  @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Comment> comments = new ArrayList<>();
 
 
 }
