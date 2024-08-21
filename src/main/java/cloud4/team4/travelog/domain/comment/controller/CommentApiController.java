@@ -7,7 +7,6 @@ import cloud4.team4.travelog.domain.comment.dto.CommentUpdateDto;
 import cloud4.team4.travelog.domain.comment.entity.Comment;
 import cloud4.team4.travelog.domain.comment.service.CommentService;
 import cloud4.team4.travelog.domain.post.service.PostService;
-import cloud4.team4.travelog.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,9 +21,7 @@ public class CommentApiController {
 
     private final CommentService commentService;
 
-    // 서비스 의존관계 주입 다시 확인!
     private final PostService postService;
-    private final MemberService memberService;
 
     // READ
     @GetMapping("/{postId}")
@@ -46,19 +43,9 @@ public class CommentApiController {
     @PostMapping("/{postId}")
     public ResponseEntity<Void> addComment(@PathVariable("postId") Long postId,
                                               @RequestBody CommentRequestDto commentRequestDto) {
-        // 아직 member와 post를 설정하지 않음
-        Comment createdComment = CommentMapper.INSTANCE.toEntity(commentRequestDto);
-
-
-        // member, post 설정 위해 단건 조회함
-        MemberDto memberDto = memberService.findMember(commentRequestDto.getMemberId());
-
-        // dto 변환 과정 추가해야 함 (MemberDto -> Member)
-
-        Post post = postService.getPostById(postId);
 
         // 저장
-        commentService.saveComment(member, post, createdComment);
+        commentService.saveComment(postId, commentRequestDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -68,18 +55,17 @@ public class CommentApiController {
     public ResponseEntity<CommentResponseDto> updateComment(@PathVariable("commentId") Long commentId,
                                                             @RequestBody CommentUpdateDto commentUpdateDto) {
 
-
         Comment updatedComment = commentService.updateComment(commentId, commentUpdateDto);
 
-        CommentResponseDto commentResponseDto = CommentMapper.INSTANCE.toResponseDto(updatedComment);
-
-        return ResponseEntity.ok(commentResponseDto);
+        return ResponseEntity.ok(CommentMapper.INSTANCE.toResponseDto(updatedComment));
     }
 
     // DELETE
     @DeleteMapping("/delete/{commentId}")
     public ResponseEntity<Void> deleteComment(@PathVariable("commentId") Long commentId) {
+
         commentService.deleteComment(commentId);
+
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
