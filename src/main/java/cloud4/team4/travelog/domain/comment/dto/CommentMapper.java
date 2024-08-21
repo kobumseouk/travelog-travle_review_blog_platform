@@ -19,5 +19,6 @@ public interface CommentMapper {
     }
 
     @Mapping(target = "member", ignore = true) // member 필드 매핑 제외
+    @Mapping(target = "created_at", expression = "java(java.time.LocalDateTime.now())") // 현재 시각으로 createdAt 매핑
     Comment toEntity(CommentRequestDto commentRequestDto);
 }

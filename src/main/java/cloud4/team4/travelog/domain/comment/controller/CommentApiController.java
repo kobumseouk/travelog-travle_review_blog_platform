@@ -5,11 +5,13 @@ import cloud4.team4.travelog.domain.comment.dto.CommentRequestDto;
 import cloud4.team4.travelog.domain.comment.dto.CommentResponseDto;
 import cloud4.team4.travelog.domain.comment.dto.CommentUpdateDto;
 import cloud4.team4.travelog.domain.comment.entity.Comment;
+import cloud4.team4.travelog.domain.comment.service.CommentPhotosService;
 import cloud4.team4.travelog.domain.comment.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -19,6 +21,7 @@ import java.util.List;
 public class CommentApiController {
 
     private final CommentService commentService;
+    private final CommentPhotosService commentPhotosService;
 
     // READ
     @GetMapping("/{postId}")
@@ -29,6 +32,7 @@ public class CommentApiController {
                 .map(comment -> {
                     CommentResponseDto dto = CommentMapper.INSTANCE.toResponseDto(comment);
                     dto.setPostId(postId);
+                    dto.setPhotos(commentPhotosService.findPhotosPathByCommentId(comment.getId()));
                     return dto;
                 })
                 .toList();
@@ -37,12 +41,13 @@ public class CommentApiController {
     }
 
     // CREATE
-    @PostMapping("/{postId}")
+    @PostMapping(value = "/{postId}", consumes = "multipart/form-data")
     public ResponseEntity<Void> addComment(@PathVariable("postId") Long postId,
-                                              @RequestBody CommentRequestDto commentRequestDto) {
+                                           @ModelAttribute CommentRequestDto commentRequestDto,
+                                           @RequestParam(value = "photos", required = false) List<MultipartFile> photos) {
 
         // 저장
-        commentService.saveComment(postId, commentRequestDto);
+        commentService.saveComment(postId, commentRequestDto, photos);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -50,9 +55,10 @@ public class CommentApiController {
     // UPDATE
     @PutMapping("/update/{commentId}")
     public ResponseEntity<CommentResponseDto> updateComment(@PathVariable("commentId") Long commentId,
-                                                            @RequestBody CommentUpdateDto commentUpdateDto) {
+                                                            @ModelAttribute CommentUpdateDto commentUpdateDto,
+                                                            @RequestParam(value = "photos", required = false) List<MultipartFile> photos) {
 
-        Comment updatedComment = commentService.updateComment(commentId, commentUpdateDto);
+        Comment updatedComment = commentService.updateComment(commentId, commentUpdateDto, photos);
 
         return ResponseEntity.ok(CommentMapper.INSTANCE.toResponseDto(updatedComment));
     }

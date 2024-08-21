@@ -6,12 +6,12 @@ import cloud4.team4.travelog.domain.comment.dto.CommentUpdateDto;
 import cloud4.team4.travelog.domain.comment.entity.Comment;
 import cloud4.team4.travelog.domain.comment.repository.CommentRepository;
 import cloud4.team4.travelog.domain.member.entity.MemberEntity;
-import cloud4.team4.travelog.domain.member.repository.MemberRepository;
 import cloud4.team4.travelog.domain.post.entity.Post;
 import cloud4.team4.travelog.domain.post.service.PostService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,9 +21,15 @@ import java.util.List;
 public class CommentService {
 
     private final CommentRepository commentRepository;
-    private final MemberRepository memberRepository;
 
+    private final MemberRepository memberRepository;
     private final PostService postService;
+
+    // 테스트 용 코드
+//    private final ExMemberRepository exMemberRepository;
+//    private final ExPostService exPostService;
+
+    private final CommentPhotosService commentPhotosService;
 
     /**
      * READ
@@ -31,10 +37,13 @@ public class CommentService {
      */
     public List<Comment> findAllByPostId(Long postId) {
 
-        // 메서드 시그니처 체크해야 함!
         Post post = postService.getPostById(postId);
-
         return commentRepository.findCommentsByPost(post);
+
+        // 테스트 용 코드
+//        ExPost post = exPostService.getPostById(postId);
+//        return commentRepository.findCommentsByPost(post);
+
     }
 
     /**
@@ -43,7 +52,7 @@ public class CommentService {
      */
     @Transactional
     // 파라미터 통일 필요, 예시 엔티티 사용 -> 변경 필수!
-    public void saveComment(Long postId, CommentRequestDto commentRequestDto) {
+    public void saveComment(Long postId, CommentRequestDto commentRequestDto, List<MultipartFile> photos) {
 
         // 아직 member와 post를 설정하지 않음
         Comment comment = CommentMapper.INSTANCE.toEntity(commentRequestDto);
@@ -58,7 +67,17 @@ public class CommentService {
         comment.setMember(member);
         comment.setPost(post);
 
-        commentRepository.save(comment);
+        // 테스트 용 코드
+//        ExMember member = exMemberRepository.findById(commentRequestDto.getMemberId())
+//                    .orElseThrow(() -> new IllegalArgumentException("member not found"));
+//        ExPost post = exPostService.getPostById(postId);
+//
+//        comment.setMember(member);
+//        comment.setPost(post);
+
+        Comment savedComment = commentRepository.save(comment);
+
+        commentPhotosService.savePhotos(photos, savedComment);
     }
 
 
@@ -67,10 +86,11 @@ public class CommentService {
      * updateComment: comment 찾고 내부 메서드 update 호출
      */
     @Transactional
-    public Comment updateComment(Long commentId, CommentUpdateDto commentUpdateDto) {
+    public Comment updateComment(Long commentId, CommentUpdateDto commentUpdateDto, List<MultipartFile> photos) {
         Comment findComment = commentRepository.findCommentById(commentId);
 
         findComment.update(commentUpdateDto.getContent(), LocalDateTime.now());
+        commentPhotosService.updatePhotos(commentId, photos);
 
         return findComment;
     }
