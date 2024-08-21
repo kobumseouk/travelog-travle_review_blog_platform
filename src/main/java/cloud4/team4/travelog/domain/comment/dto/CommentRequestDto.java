@@ -11,6 +11,4 @@ public class CommentRequestDto {
 
     private String memberId;
 
-    private LocalDateTime created_at;
-
 }
