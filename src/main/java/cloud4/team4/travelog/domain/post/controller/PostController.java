@@ -1,11 +1,11 @@
-package cloud4.team4.Travelog.Post.Controller;
+package cloud4.team4.travelog.domain.post.controller;
 
 
-import cloud4.team4.Travelog.Post.Dto.PostPostDto;
-import cloud4.team4.Travelog.Post.Dto.PostResponseDto;
-import cloud4.team4.Travelog.Post.Entity.Post;
-import cloud4.team4.Travelog.Post.Mapper.PostMapper;
-import cloud4.team4.Travelog.Post.Service.PostService;
+import cloud4.team4.travelog.domain.post.dto.PostPostDto;
+import cloud4.team4.travelog.domain.post.dto.PostResponseDto;
+import cloud4.team4.travelog.domain.post.entity.Post;
+import cloud4.team4.travelog.domain.post.Mapper.PostMapper;
+import cloud4.team4.travelog.domain.post.service.PostService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +15,7 @@ import java.util.stream.*;
 import java.lang.Void;
 
 @RestController
-@RequestMapping("/posts")
+@RequestMapping("/api/posts")
 public class PostController {
   private final PostService postService;
   private final PostMapper postMapper;
@@ -74,12 +74,9 @@ public class PostController {
   // 게시글 삭제
   @DeleteMapping("/{postId}")
   public ResponseEntity<Void> deletePost(@PathVariable("postId") Long postId) {
-    boolean deleted = postService.deletePost(postId);
-    if (deleted) {
-      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    } else {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
+    postService.deletePost(postId);
+
+    return ResponseEntity.ok().build();
   }
 
 }

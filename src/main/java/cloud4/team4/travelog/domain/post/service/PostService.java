@@ -1,7 +1,7 @@
-package cloud4.team4.Travelog.Post.Service;
+package cloud4.team4.travelog.domain.post.service;
 
-import cloud4.team4.Travelog.Post.Entity.Post;
-import cloud4.team4.Travelog.Post.Repository.PostRepository;
+import cloud4.team4.travelog.domain.post.entity.Post;
+import cloud4.team4.travelog.domain.post.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,18 +48,13 @@ public class PostService {
           post.setEditedAt(LocalDateTime.now());   // -> 수정 시마다 업데이트
           return postRepository.save(post);
         })
-        .orElse(null);
+        .orElseThrow(() -> new IllegalArgumentException("not found : " + postId));
   }
 
   // 게시글 삭제
   @Transactional
-  public boolean deletePost(Long postId) {
-    return postRepository.findById(postId)
-        .map(post -> {
-          postRepository.delete(post);
-          return true;
-        })
-        .orElse(false);
+  public void deletePost(Long postId) {
+    postRepository.deleteById(postId);
   }
 
   // 조회수 증가
@@ -72,7 +67,7 @@ public class PostService {
         });
   }
 
-  // 추천수 증가 -> TODO
+  // 추천수 증가
   @Transactional
   public void incrementRecommends(Long postId) {
     postRepository.findById(postId)
@@ -86,4 +81,5 @@ public class PostService {
   public List<Post> searchPostsByTitle(String keyword) {
     return postRepository.findByTitleContaining(keyword);
   }
+
 }
