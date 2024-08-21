@@ -43,7 +43,7 @@ public class Comment {
     public void setMember(MemberEntity member) {
         this.member = member;
         // ArrayList 이름 확인 필수
-        member.getCommentList().add(this);
+        member.getComments().add(this);
     }
 
     public void setPost(Post post) {
