@@ -4,11 +4,11 @@ import cloud4.team4.travelog.domain.comment.dto.CommentMapper;
 import cloud4.team4.travelog.domain.comment.dto.CommentRequestDto;
 import cloud4.team4.travelog.domain.comment.dto.CommentUpdateDto;
 import cloud4.team4.travelog.domain.comment.entity.Comment;
-import cloud4.team4.travelog.domain.post.entity.Post;
-import cloud4.team4.travelog.domain.member.entity.MemberEntity;
-import cloud4.team4.travelog.domain.post.repository.PostRepository;
 import cloud4.team4.travelog.domain.comment.repository.CommentRepository;
+import cloud4.team4.travelog.domain.member.entity.MemberEntity;
 import cloud4.team4.travelog.domain.member.repository.MemberRepository;
+import cloud4.team4.travelog.domain.post.entity.Post;
+import cloud4.team4.travelog.domain.post.service.PostService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,11 +21,9 @@ import java.util.List;
 public class CommentService {
 
     private final CommentRepository commentRepository;
-    private final PostRepository postRepository;
     private final MemberRepository memberRepository;
 
-    // 체크해야 함!
-//    private final PostService postService;
+    private final PostService postService;
 
     /**
      * READ
@@ -34,7 +32,7 @@ public class CommentService {
     public List<Comment> findAllByPostId(Long postId) {
 
         // 메서드 시그니처 체크해야 함!
-        Post post = postRepository.findPostByPostId(postId);
+        Post post = postService.getPostById(postId);
 
         return commentRepository.findCommentsByPost(post);
     }
@@ -51,11 +49,11 @@ public class CommentService {
         Comment comment = CommentMapper.INSTANCE.toEntity(commentRequestDto);
 
         // member 설정 위해 단건 조회함
-        Optional<MemberEntity> member = memberRepository.findById(commentRequestDto.getMemberId());
+        MemberEntity member = memberRepository.findById(commentRequestDto.getMemberId())
+                .orElseThrow(() -> new IllegalArgumentException("member not found"));
 
         // post 설정 위해 단건 조회함
         Post post = postService.getPostById(postId);
-
 
         comment.setMember(member);
         comment.setPost(post);

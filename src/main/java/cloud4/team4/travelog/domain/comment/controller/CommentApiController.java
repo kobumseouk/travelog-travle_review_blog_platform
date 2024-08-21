@@ -6,7 +6,6 @@ import cloud4.team4.travelog.domain.comment.dto.CommentResponseDto;
 import cloud4.team4.travelog.domain.comment.dto.CommentUpdateDto;
 import cloud4.team4.travelog.domain.comment.entity.Comment;
 import cloud4.team4.travelog.domain.comment.service.CommentService;
-import cloud4.team4.travelog.domain.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +19,6 @@ import java.util.List;
 public class CommentApiController {
 
     private final CommentService commentService;
-
-    private final PostService postService;
 
     // READ
     @GetMapping("/{postId}")
