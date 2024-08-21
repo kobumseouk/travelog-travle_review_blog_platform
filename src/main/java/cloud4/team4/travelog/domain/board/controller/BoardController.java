@@ -1,6 +1,8 @@
 package cloud4.team4.travelog.domain.board.controller;
 
 import cloud4.team4.travelog.domain.board.dto.BoardCreateRequestDto;
+import cloud4.team4.travelog.domain.board.dto.BoardUpdateRequestDto;
+import cloud4.team4.travelog.domain.board.dto.BoardUpdateResponseDto;
 import cloud4.team4.travelog.domain.board.dto.BoardViewResponse;
 import cloud4.team4.travelog.domain.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
@@ -27,9 +29,10 @@ public class BoardController {
     }
 
     // Update: 게시판 수정
-
-
-
+    @PutMapping("/board-update/{id}")
+    public BoardUpdateResponseDto update(@PathVariable("id") Long id, @RequestBody BoardUpdateRequestDto requestDto) {
+        return boardService.update(id, requestDto);
+    }
 
     // Delete: 게시판 삭제
     @DeleteMapping("/board-delete/{id}")

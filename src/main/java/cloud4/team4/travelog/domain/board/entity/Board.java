@@ -33,4 +33,9 @@ public class Board {
         this.region = region;
     }
 
+    public void update(String title, String region) {
+        this.title = title;
+        this.region = region;
+    }
+
 }

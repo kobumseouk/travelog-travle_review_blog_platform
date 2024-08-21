@@ -1,9 +1,12 @@
 package cloud4.team4.travelog.domain.board.service;
 
 import cloud4.team4.travelog.domain.board.dto.BoardCreateRequestDto;
+import cloud4.team4.travelog.domain.board.dto.BoardUpdateRequestDto;
+import cloud4.team4.travelog.domain.board.dto.BoardUpdateResponseDto;
 import cloud4.team4.travelog.domain.board.dto.BoardViewResponse;
 import cloud4.team4.travelog.domain.board.entity.Board;
 import cloud4.team4.travelog.domain.board.repository.BoardRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +37,14 @@ public class BoardService {
     }
 
     /*----------Update----------*/
+    @Transactional
+    public BoardUpdateResponseDto update(Long id, BoardUpdateRequestDto requestDto) {
+        Board board = boardRepository.findById(id)
+                .orElseThrow(RuntimeException::new);
 
+        board.update(requestDto.getTitle(), requestDto.getRegion());
+        return new BoardUpdateResponseDto(board);
+    }
 
 
 
