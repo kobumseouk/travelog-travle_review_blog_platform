@@ -19,7 +19,7 @@ public class PostService {
   @Transactional
   public Post createPost(Post post) {
     post.setCreatedAt(LocalDateTime.now());
-    post.setEditedAt(LocalDateTime.now());  // -> 수정 시마다 업데이트
+    post.setEditedAt(LocalDateTime.now());
     post.setViews(0);
     post.setRecommends(0);
     return postRepository.save(post);
@@ -45,7 +45,7 @@ public class PostService {
           post.setRegion(postDetails.getRegion());
           post.setPeriodStart(postDetails.getPeriodStart());
           post.setPeriodEnd(postDetails.getPeriodEnd());
-          post.setEditedAt(LocalDateTime.now());
+          post.setEditedAt(LocalDateTime.now());   // -> 수정 시마다 업데이트
           return postRepository.save(post);
         })
         .orElse(null);
@@ -62,6 +62,25 @@ public class PostService {
         .orElse(false);
   }
 
+  // 조회수 증가
+  @Transactional
+  public void incrementViews(Long postId) {
+    postRepository.findById(postId)
+        .ifPresent(post -> {
+          post.setViews(post.getViews() + 1);
+          postRepository.save(post);
+        });
+  }
+
+  // 추천수 증가 -> TODO
+  @Transactional
+  public void incrementRecommends(Long postId) {
+    postRepository.findById(postId)
+        .ifPresent(post -> {
+          post.setRecommends(post.getRecommends() + 1);
+          postRepository.save(post);
+        });
+  }
 
   // 제목으로 게시글 검색
   public List<Post> searchPostsByTitle(String keyword) {
