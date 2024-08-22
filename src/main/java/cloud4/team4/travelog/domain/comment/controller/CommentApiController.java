@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -43,13 +44,13 @@ public class CommentApiController {
     // CREATE
     @PostMapping(value = "/{postId}", consumes = "multipart/form-data")
     public ResponseEntity<Void> addComment(@PathVariable("postId") Long postId,
-                                           @ModelAttribute CommentRequestDto commentRequestDto,
-                                           @RequestParam(value = "photos", required = false) List<MultipartFile> photos) {
-
+                                           @ModelAttribute CommentRequestDto commentRequestDto) {
         // 저장
-        commentService.saveComment(postId, commentRequestDto, photos);
+        commentService.saveComment(postId, commentRequestDto);
 
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.FOUND)
+                .location(URI.create("/")) // 리다이렉트할 URL 수정 필요
+                .build();
     }
 
     // UPDATE
