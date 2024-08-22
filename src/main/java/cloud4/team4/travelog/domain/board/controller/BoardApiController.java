@@ -13,22 +13,34 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/main")
-public class BoardController {
+public class BoardApiController {
     private final BoardService boardService;
 
-    // Create: 게시판 생성
+    /*----------Create----------*/
+
+    // 게시판 생성
     @PostMapping("/board-create")
     public void createBoard(@RequestBody BoardCreateRequestDto boardCreateRequestDto) {
         boardService.save(boardCreateRequestDto);
     }
 
-    // Read: 모든 게시판 조회
+    /*----------Read----------*/
+
+    // 모든 대분류(regionMajor) 게시판 조회
     @GetMapping
     public List<BoardViewResponse> getAllBoards() {
         return boardService.getAllBoards();
     }
 
-    // Update: 게시판 수정
+    // 모든 소분류(regionMiddle) 게시판 조회
+    @GetMapping("/boardlist-{regionMajor}")
+    public List<BoardViewResponse> getMiddleBoards(@PathVariable("regionMajor") String regionMajor) {
+        return boardService.getMiddleBoards(regionMajor);
+    }
+
+    /*----------Update----------*/
+
+    // 게시판 수정
     @PutMapping("/board-update/{id}")
     public BoardUpdateResponseDto update(@PathVariable("id") Long id, @RequestBody BoardUpdateRequestDto requestDto) {
         return boardService.update(id, requestDto);

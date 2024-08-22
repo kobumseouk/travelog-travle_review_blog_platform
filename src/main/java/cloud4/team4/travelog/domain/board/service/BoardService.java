@@ -28,9 +28,16 @@ public class BoardService {
     }
 
     /*----------Read----------*/
-    // 전체 조회
+    // 모든 대분류(regionMajor) 게시판 조회
     public List<BoardViewResponse> getAllBoards() {
         return boardRepository.findAll().stream()
+                .map(BoardViewResponse::new)
+                .collect(Collectors.toList());
+    }
+
+    // 모든 소분류(regionMiddle) 게시판 조회
+    public List<BoardViewResponse> getMiddleBoards(String regionMajor) {
+        return boardRepository.findByRegionMajor(regionMajor).stream()
                 .map(BoardViewResponse::new)
                 .collect(Collectors.toList());
     }
