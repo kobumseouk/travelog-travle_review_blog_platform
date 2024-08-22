@@ -23,7 +23,7 @@ public class MemberEntity {
     @Column(name = "login_id")
     private String loginId;
 
-    @Column( name = "name")
+    @Column( name = "nickname")
     private String name;
 
     @Column(name ="password")
@@ -31,6 +31,12 @@ public class MemberEntity {
 
     @Column(name = "phone_number")
     private String phoneNumber;
+
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "status")
+    private String status;
 
     @OneToMany(mappedBy = "member")
     private List<Comment> comments = new ArrayList<>();

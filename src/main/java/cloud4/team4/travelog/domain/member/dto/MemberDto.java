@@ -18,5 +18,7 @@ public class MemberDto {
 
     private String password;
 
+    private String email;
+
 
 }
