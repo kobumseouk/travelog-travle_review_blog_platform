@@ -52,7 +52,7 @@ public class CommentService {
      */
     @Transactional
     // 파라미터 통일 필요, 예시 엔티티 사용 -> 변경 필수!
-    public void saveComment(Long postId, CommentRequestDto commentRequestDto, List<MultipartFile> photos) {
+    public void saveComment(Long postId, CommentRequestDto commentRequestDto) {
 
         // 아직 member와 post를 설정하지 않음
         Comment comment = CommentMapper.INSTANCE.toEntity(commentRequestDto);
@@ -77,7 +77,7 @@ public class CommentService {
 
         Comment savedComment = commentRepository.save(comment);
 
-        commentPhotosService.savePhotos(photos, savedComment);
+        commentPhotosService.savePhotos(commentRequestDto.getPhotos(), savedComment);
     }
 
 
