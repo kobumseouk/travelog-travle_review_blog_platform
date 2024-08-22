@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -31,6 +32,9 @@ public class CommentPhotosService {
 
              // 각 사진에 대해 업로드와 db에 저장
              for (MultipartFile photo : photos) {
+
+                 // 파일이 비어있는 경우 패스
+                 if(Objects.requireNonNull(photo.getOriginalFilename()).isEmpty()) continue;
 
                  // db 저장 경로
                  String dbFilePath = saveImage(photo, saveDir);
