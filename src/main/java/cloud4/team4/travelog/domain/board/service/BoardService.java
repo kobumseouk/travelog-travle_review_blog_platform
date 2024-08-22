@@ -23,7 +23,7 @@ public class BoardService {
 
     /*----------Create----------*/
     public void save(BoardCreateRequestDto request) {
-        Board board = boardMapper.toEntity(request);
+        Board board = boardMapper.toCreateEntity(request);
         boardRepository.save(board);
     }
 
@@ -36,14 +36,25 @@ public class BoardService {
     }
 
     /*----------Update----------*/
+    // 업데이트
     @Transactional
     public BoardUpdateResponseDto update(Long id, BoardUpdateRequestDto requestDto) {
-        Board board = boardRepository.findById(id)
-                .orElseThrow(RuntimeException::new);
+        Board board = boardRepository.findById(id).orElseThrow(RuntimeException::new);
 
         board.update(requestDto.getDescription());
         return new BoardUpdateResponseDto(board);
     }
+
+    /*public BoardUpdateResponseDto update(Long id, BoardUpdateRequestDto requestDto) {
+        Board board = boardRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Board not found with id: " + id));
+
+        // DTO의 필드를 엔티티에 매핑하여 업데이트
+        boardMapper.updateBoardFromDto(requestDto, board);
+        boardRepository.save(board); // 엔티티 저장하여 변경 사항 반영
+
+        return new BoardUpdateResponseDto(board);
+    }*/
 
     /*----------Delete----------*/
     public void deleteBoard(Long id) {

@@ -6,12 +6,10 @@ import lombok.Getter;
 
 @Getter
 public class BoardUpdateResponseDto {
-    private final String title;
-    private final String region;
+    private final String description;
 
     @Builder
     public BoardUpdateResponseDto(Board board) {
-        this.title = board.getTitle();
-        this.region = board.getRegion();
+        this.description = board.getDescription();
     }
 }
