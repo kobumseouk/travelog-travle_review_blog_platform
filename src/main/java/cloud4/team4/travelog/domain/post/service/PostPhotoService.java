@@ -35,8 +35,7 @@ public class PostPhotoService {
         }
 
         String dbFilePath = savePhoto(photo, uploadsDir);
-        PostPhoto postPhoto = new PostPhoto(post, dbFilePath);
-        postPhoto.setPosition(position);
+        PostPhoto postPhoto = new PostPhoto(post, dbFilePath, position);
         postPhotoRepository.save(postPhoto);
       }
     } catch (IOException e) {
