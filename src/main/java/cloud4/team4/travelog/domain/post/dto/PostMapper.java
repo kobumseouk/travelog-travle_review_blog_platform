@@ -5,7 +5,7 @@ import cloud4.team4.travelog.domain.post.entity.PostPhoto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
-import cloud4.team4.travelog.domain.member.entity.MemberEntity;
+import cloud4.team4.travelog.domain.member.entity.Member;
 
 @Mapper(componentModel = "spring")
 public interface PostMapper {
@@ -18,7 +18,7 @@ public interface PostMapper {
   @Mapping(source = "postPhoto", target = "photos")
   PostResponseDto postToPostResponseDto(Post post);
 
-  default Long mapMemberToLong(MemberEntity member) {
+  default Long mapMemberToLong(Member member) {
     return member != null ? member.getId() : null;
   }
 

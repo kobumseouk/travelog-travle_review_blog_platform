@@ -2,7 +2,7 @@ package cloud4.team4.travelog.domain.member.service;
 
 import cloud4.team4.travelog.domain.member.dto.MemberDto;
 import cloud4.team4.travelog.domain.member.dto.MemberMapper0;
-import cloud4.team4.travelog.domain.member.entity.MemberEntity;
+import cloud4.team4.travelog.domain.member.entity.Member;
 import cloud4.team4.travelog.domain.member.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,10 +29,10 @@ public class MemberService {
     // 회원가입
     public void createMember(MemberDto memberDto){
         //Dto를 entity로 매핑한 것을 가져옴
-        MemberEntity memberEntity = MemberMapper0.toMemberEntity(memberDto);
+        Member memberEntity = MemberMapper0.toMemberEntity(memberDto);
 
         //중복처리
-        Optional<MemberEntity> member = memberRepository.findByLoginId(memberEntity.getLoginId());
+        Optional<Member> member = memberRepository.findByLoginId(memberEntity.getLoginId());
         if(member.isPresent()){
             throw new IllegalArgumentException("이미 있는 회원입니다.");
         }
@@ -45,25 +45,25 @@ public class MemberService {
 
     //단일처리
     public MemberDto findMember(Long memberId){
-        Optional<MemberEntity> memberEntity = memberRepository.findById(memberId);
+        Optional<Member> memberEntity = memberRepository.findById(memberId);
         MemberDto memberDto = MemberMapper0.toMemberDto(memberEntity.get());
         return memberDto;
     }
 
     //업데이트
     public void  updateMember(Long memberId, MemberDto memberDto) {
-        MemberEntity memberEntity = memberRepository.findById(memberId).get();
-        memberEntity.setName(memberDto.getName());
-        memberEntity.setEmail(memberDto.getEmail());
-        memberEntity.setPhoneNumber(memberDto.getPhoneNumber());
+        Member member = memberRepository.findById(memberId).get();
+        member.setName(memberDto.getName());
+        member.setEmail(memberDto.getEmail());
+        member.setPhoneNumber(memberDto.getPhoneNumber());
 
-        memberRepository.save(memberEntity);
+        memberRepository.save(member);
     }
 
     //회원삭제
     public void deleteMember(Long memberId){
-        MemberEntity memberEntity = memberRepository.findById(memberId).get();
-        memberRepository.delete(memberEntity);
+        Member member = memberRepository.findById(memberId).get();
+        memberRepository.delete(member);
 
     }
 
@@ -72,7 +72,7 @@ public class MemberService {
 
     //아이디찾기 (이름&이메일방식)
     public String findMemberIdByEmail(String name, String email){
-        Optional<MemberEntity> member = memberRepository.findByNameAndEmail(name, email);
+        Optional<Member> member = memberRepository.findByNameAndEmail(name, email);
         if(member.isPresent()) {
             return member.get().getLoginId();
         }
@@ -83,7 +83,7 @@ public class MemberService {
 
     //아이디찾기 (이름&전화번호 방식)
     public String findMemberIdByNum(String name, String phoneNumber){
-        Optional<MemberEntity> member = memberRepository.findByNameAndPhoneNumber(name, phoneNumber);
+        Optional<Member> member = memberRepository.findByNameAndPhoneNumber(name, phoneNumber);
         if(member.isPresent()) {
             return member.get().getLoginId();
         }

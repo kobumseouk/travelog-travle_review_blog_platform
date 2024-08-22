@@ -5,7 +5,7 @@ import cloud4.team4.travelog.domain.comment.dto.CommentRequestDto;
 import cloud4.team4.travelog.domain.comment.dto.CommentUpdateDto;
 import cloud4.team4.travelog.domain.comment.entity.Comment;
 import cloud4.team4.travelog.domain.comment.repository.CommentRepository;
-import cloud4.team4.travelog.domain.member.entity.MemberEntity;
+import cloud4.team4.travelog.domain.member.entity.Member;
 import cloud4.team4.travelog.domain.member.repository.MemberRepository;
 import cloud4.team4.travelog.domain.post.entity.Post;
 import cloud4.team4.travelog.domain.post.service.PostService;
@@ -60,7 +60,7 @@ public class CommentService {
         Comment comment = CommentMapper.INSTANCE.toEntity(commentRequestDto);
 
         // member 설정 위해 단건 조회함
-        MemberEntity member = memberRepository.findById(commentRequestDto.getMemberId())
+        Member member = memberRepository.findById(commentRequestDto.getMemberId())
                 .orElseThrow(() -> new IllegalArgumentException("member not found"));
 
         // post 설정 위해 단건 조회함

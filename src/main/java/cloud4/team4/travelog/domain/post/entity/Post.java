@@ -3,7 +3,7 @@ package cloud4.team4.travelog.domain.post.entity;
 import cloud4.team4.travelog.domain.board.entity.Board;
 import cloud4.team4.travelog.domain.comment.entity.Comment;
 import jakarta.persistence.Entity;
-import cloud4.team4.travelog.domain.member.entity.MemberEntity;
+import cloud4.team4.travelog.domain.member.entity.Member;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.OneToMany;
@@ -39,7 +39,7 @@ public class Post {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "member_id")
-  private MemberEntity member;
+  private Member member;
 
   @Column(name = "period_start")
   private String periodStart;

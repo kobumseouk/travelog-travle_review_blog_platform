@@ -1,7 +1,7 @@
 package cloud4.team4.travelog.domain.comment.dto;
 
 import cloud4.team4.travelog.domain.comment.entity.Comment;
-import cloud4.team4.travelog.domain.member.entity.MemberEntity;
+import cloud4.team4.travelog.domain.member.entity.Member;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -14,7 +14,7 @@ public interface CommentMapper {
     @Mapping(source = "member", target="memberId")
     CommentResponseDto toResponseDto(Comment comment);
 
-    default Long mapMemberToLong(MemberEntity member) {
+    default Long mapMemberToLong(Member member) {
         return member != null ? member.getId() : null;
     }
 

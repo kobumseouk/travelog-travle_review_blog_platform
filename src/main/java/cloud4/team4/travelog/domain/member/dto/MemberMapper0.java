@@ -1,34 +1,34 @@
 package cloud4.team4.travelog.domain.member.dto;
 
 
-import cloud4.team4.travelog.domain.member.entity.MemberEntity;
+import cloud4.team4.travelog.domain.member.entity.Member;
 
 // entity를 dto로 매핑
 public class MemberMapper0 {
-    public static MemberDto toMemberDto(MemberEntity memberEntity){
+    public static MemberDto toMemberDto(Member member){
         MemberDto memberDto = new MemberDto();
 
-        memberDto.setId(memberEntity.getId());
-        memberDto.setName(memberEntity.getName());
-        memberDto.setPhoneNumber(memberEntity.getPhoneNumber());
-        memberDto.setLoginId(memberEntity.getLoginId());
-        memberDto.setPassword(memberEntity.getPassword());
+        memberDto.setId(member.getId());
+        memberDto.setName(member.getName());
+        memberDto.setPhoneNumber(member.getPhoneNumber());
+        memberDto.setLoginId(member.getLoginId());
+        memberDto.setPassword(member.getPassword());
 
         return memberDto;
 
     }
 
     // dto를 entity로 매핑
-    public static MemberEntity toMemberEntity(MemberDto memberDto){
+    public static Member toMemberEntity(MemberDto memberDto){
 
-        MemberEntity memberEntity = new MemberEntity();
+        Member member = new Member();
 
-        memberEntity.setName(memberDto.getName());
-        memberEntity.setPhoneNumber(memberDto.getPhoneNumber());
-        memberEntity.setLoginId(memberDto.getLoginId());
-        memberEntity.setPassword(memberDto.getPassword());
+        member.setName(memberDto.getName());
+        member.setPhoneNumber(memberDto.getPhoneNumber());
+        member.setLoginId(memberDto.getLoginId());
+        member.setPassword(memberDto.getPassword());
 
-        return memberEntity;
+        return member;
     }
 
 }
