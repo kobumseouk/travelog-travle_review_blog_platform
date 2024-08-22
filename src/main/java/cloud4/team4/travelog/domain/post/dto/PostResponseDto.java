@@ -1,6 +1,5 @@
 package cloud4.team4.travelog.domain.post.dto;
 
-import cloud4.team4.travelog.domain.comment.dto.CommentDto;
 import cloud4.team4.travelog.domain.comment.entity.Comment;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
