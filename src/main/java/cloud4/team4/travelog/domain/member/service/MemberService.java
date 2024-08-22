@@ -5,7 +5,7 @@ import cloud4.team4.travelog.domain.member.dto.MemberMapper0;
 import cloud4.team4.travelog.domain.member.entity.MemberEntity;
 import cloud4.team4.travelog.domain.member.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
+//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -15,15 +15,16 @@ import java.util.Optional;
 public class MemberService {
     @Autowired
     private MemberRepository memberRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+
+//    @Autowired
+//    private PasswordEncoder passwordEncoder;
 
     // 패스워드 인코딩
     // 시큐리티 설정할때 BCryptPasswordEncoder 추가해야함
-    public String encodingPassword(String password){
-        String encodedPassword = passwordEncoder.encode(password);
-        return encodedPassword;
-    }
+//    public String encodingPassword(String password){
+//        String encodedPassword = passwordEncoder.encode(password);
+//        return encodedPassword;
+//    }
 
     // 회원가입
     public void createMember(MemberDto memberDto){
@@ -37,7 +38,7 @@ public class MemberService {
         }
 
         // 인코딩된 패스워드 저장 및 회원 저장( 해시저장 )
-        memberEntity.setPassword(encodingPassword(memberEntity.getPassword()));
+//        memberEntity.setPassword(encodingPassword(memberEntity.getPassword()));
         memberRepository.save(memberEntity);
 
     }
@@ -82,7 +83,7 @@ public class MemberService {
 
     //아이디찾기 (이름&전화번호 방식)
     public String findMemberIdByNum(String name, String phoneNumber){
-        Optional<MemberEntity> member = memberRepository.findByNameAndNum(name, phoneNumber);
+        Optional<MemberEntity> member = memberRepository.findByNameAndPhoneNumber(name, phoneNumber);
         if(member.isPresent()) {
             return member.get().getLoginId();
         }
@@ -90,12 +91,5 @@ public class MemberService {
             return ("존재하지 않는 아이디입니다..");
         }
     }
-
-
-
-
-
-
-
 
 }

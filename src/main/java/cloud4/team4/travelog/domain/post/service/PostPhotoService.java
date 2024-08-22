@@ -66,21 +66,21 @@ public class PostPhotoService {
         .orElseThrow(() -> new ResourceNotFoundException("Post not found with id: " + postId));
 
     // 기존 사진 삭제
-    postPhotoRepository.deleteAll(postPhotoRepository.findPostPhotoByPostId(postId));
+    postPhotoRepository.deleteAll(postPhotoRepository.findPostPhotoByPost_PostId(postId));
 
     // 새 사진 업로드
     uploadPhotos(post, photos, positions);
   }
 
   public List<String> findPhotosPathByPostId(Long postId) {
-    return postPhotoRepository.findPostPhotoByPostId(postId)
+    return postPhotoRepository.findPostPhotoByPost_PostId(postId)
         .stream()
         .map(PostPhoto::getImagePath)
         .toList();
   }
 
   public List<PostPhoto> findPhotosByPostId(Long postId) {
-    return postPhotoRepository.findPostPhotoByPostId(postId);
+    return postPhotoRepository.findPostPhotoByPost_PostId(postId);
   }
 
 

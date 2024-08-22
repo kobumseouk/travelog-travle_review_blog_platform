@@ -23,7 +23,7 @@ public class BoardService {
 
     /*----------Create----------*/
     public void save(BoardCreateRequestDto request) {
-        Board board = boardMapper.toCreateEntity(request);
+        Board board = boardMapper.toEntity(request);
         boardRepository.save(board);
     }
 
