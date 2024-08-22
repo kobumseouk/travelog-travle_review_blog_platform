@@ -18,8 +18,9 @@ public class PostUpdateDto {
   private String content;
   private String periodStart;
   private String periodEnd;
+  private List<MultipartFile> photos;
+  private List<String> photoPositions;
 
-  //private List<MultipartFile> photos;
   // private Long memberId;
   // private Long boardId;  // 게시판 변경
 }

@@ -3,12 +3,12 @@ package cloud4.team4.travelog.domain.post.service;
 import cloud4.team4.travelog.domain.post.dto.PostPostDto;
 import cloud4.team4.travelog.domain.post.dto.PostUpdateDto;
 import cloud4.team4.travelog.domain.post.entity.Post;
+import cloud4.team4.travelog.domain.post.exception.ResourceNotFoundException;
 import cloud4.team4.travelog.domain.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,16 +25,19 @@ public class PostService {
 
   // 게시글 생성
   @Transactional
-  public Post createPost(Long postId, PostPostDto postPostDto) {
-    Post post = getPostById(postId);
-
+  public Post createPost(PostPostDto postPostDto) {
+    Post post = new Post();
+    post.setTitle(postPostDto.getTitle());
+    post.setContent(postPostDto.getContent());
+    post.setPeriodStart(postPostDto.getPeriodStart());
+    post.setPeriodEnd(postPostDto.getPeriodEnd());
     post.setCreatedAt(LocalDateTime.now());
     post.setEditedAt(LocalDateTime.now());
     post.setViews(0);
     post.setRecommends(0);
 
     Post createdPost = postRepository.save(post);
-    postPhotoService.uploadPhotos(createdPost, postPostDto.getPhotos());
+    postPhotoService.uploadPhotos(createdPost, postPostDto.getPhotos(), postPostDto.getPhotoPositions());
     return createdPost;
   }
 
@@ -45,30 +48,32 @@ public class PostService {
 
   // 특정 게시글 조회
   public Post getPostById(Long postId) {
-    return postRepository.findById(postId).orElse(null);
+    return postRepository.findById(postId)
+        .orElseThrow(() -> new ResourceNotFoundException("Post not found with id: " + postId));
   }
 
   // 게시글 수정
   @Transactional
-  public Post updatePost(Long postId, PostUpdateDto postDetails, List<MultipartFile> photos) {
-    postPhotoService.updatePhotos(postId, photos);
+  public Post updatePost(Long postId, PostUpdateDto postDetails) {
+    Post post = postRepository.findById(postId)
+        .orElseThrow(() -> new ResourceNotFoundException("Post not found with id: " + postId));
 
-    return postRepository.findById(postId)
-        .map(post -> {
-          post.setTitle(postDetails.getTitle());
-          post.setContent(postDetails.getContent());
-          post.setPeriodStart(postDetails.getPeriodStart());
-          post.setPeriodEnd(postDetails.getPeriodEnd());
-          post.setEditedAt(LocalDateTime.now());   // -> 수정 시마다 업데이트
-          return postRepository.save(post);
-        })
-        .orElseThrow(() -> new IllegalArgumentException("not found : " + postId));
+    post.setTitle(postDetails.getTitle());
+    post.setContent(postDetails.getContent());
+    post.setPeriodStart(postDetails.getPeriodStart());
+    post.setPeriodEnd(postDetails.getPeriodEnd());
+    post.setEditedAt(LocalDateTime.now());
+
+    postPhotoService.updatePhotos(postId, postDetails.getPhotos(), postDetails.getPhotoPositions());
+    return postRepository.save(post);
   }
 
   // 게시글 삭제
   @Transactional
   public void deletePost(Long postId) {
-    postRepository.deleteById(postId);
+    Post post = postRepository.findById(postId)
+        .orElseThrow(() -> new ResourceNotFoundException("Post not found with id: " + postId));
+    postRepository.delete(post);
   }
 
   // 조회수 증가

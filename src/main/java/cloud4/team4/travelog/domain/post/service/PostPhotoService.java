@@ -2,6 +2,7 @@ package cloud4.team4.travelog.domain.post.service;
 
 import cloud4.team4.travelog.domain.post.entity.Post;
 import cloud4.team4.travelog.domain.post.entity.PostPhoto;
+import cloud4.team4.travelog.domain.post.exception.ResourceNotFoundException;
 import cloud4.team4.travelog.domain.post.repository.PostPhotoRepository;
 import cloud4.team4.travelog.domain.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,29 +23,22 @@ public class PostPhotoService {
   private final PostPhotoRepository postPhotoRepository;
   private final PostRepository postRepository;
 
-  public void uploadPhotos(Post post, List<MultipartFile> photos) {
-
+  public void uploadPhotos(Post post, List<MultipartFile> photos, List<String> positions) {
     try {
-      // 이미지 파일 저장을 위한 경로 설정
       String uploadsDir = "src/main/resources/static/uploads/post_photos/";
-
-      // 각 사진에 대해 업로드와 db에 저장
-      for (MultipartFile photo : photos) {
+      for (int i = 0; i < photos.size(); i++) {
+        MultipartFile photo = photos.get(i);
+        String position = positions.get(i);
 
         if (photo.isEmpty()) {
           continue;
         }
 
-        // db 저장 경로
         String dbFilePath = savePhoto(photo, uploadsDir);
-
-        // CommentPhotos 엔티티 생성
         PostPhoto postPhoto = new PostPhoto(post, dbFilePath);
-
-        // 생성한 엔티티 저장
+        postPhoto.setPosition(position);
         postPhotoRepository.save(postPhoto);
       }
-
     } catch (IOException e) {
       throw new RuntimeException("Failed to store file", e);
     }
@@ -68,17 +62,15 @@ public class PostPhotoService {
   }
 
   @Transactional
-  public void updatePhotos(Long postId, List<MultipartFile> photos) {
+  public void updatePhotos(Long postId, List<MultipartFile> photos, List<String> positions) {
+    Post post = postRepository.findById(postId)
+        .orElseThrow(() -> new ResourceNotFoundException("Post not found with id: " + postId));
 
-    // 기존의 이미지들은 모두 삭제
+    // 기존 사진 삭제
     postPhotoRepository.deleteAll(postPhotoRepository.findPostPhotoByPostId(postId));
 
-    // 업데이트된 이미지들 모두 저장
-    Post post = postRepository.findById(postId)
-        .orElseThrow(() -> new IllegalArgumentException("Post not found with id: " + postId));
-
-    // 업데이트된 이미지들 모두 저장
-    uploadPhotos(post, photos);
+    // 새 사진 업로드
+    uploadPhotos(post, photos, positions);
   }
 
   public List<String> findPhotosPathByPostId(Long postId) {

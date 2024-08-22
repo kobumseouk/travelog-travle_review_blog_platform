@@ -1,6 +1,7 @@
 package cloud4.team4.travelog.domain.post.entity;
 
 import jakarta.persistence.Entity;
+import cloud4.team4.travelog.domain.member.entity.MemberEntity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.OneToMany;

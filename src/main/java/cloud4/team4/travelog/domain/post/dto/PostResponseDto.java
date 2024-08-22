@@ -29,6 +29,8 @@ public class PostResponseDto {
 
   private List<String> photos;    // 게시글에 첨부된 이미지 경로
 
-  // private List<CommentDto> comments;
+  private List<CommentDto> comments;
+
+
 }
 

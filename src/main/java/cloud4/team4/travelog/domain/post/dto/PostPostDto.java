@@ -21,6 +21,7 @@ public class PostPostDto {
   private String periodStart;
   private String periodEnd;
   private List<MultipartFile> photos;
+  private List<String> photoPositions;
 
 //  private LocalDateTime createdAt;
 //  private LocalDateTime editedAt;
