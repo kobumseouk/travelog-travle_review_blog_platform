@@ -1,6 +1,6 @@
 package cloud4.team4.travelog.domain.post.dto;
 
-import cloud4.team4.travelog.domain.comment.dto.CommentDto;
+import cloud4.team4.travelog.domain.comment.entity.Comment;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,7 +29,7 @@ public class PostResponseDto {
 
   private List<String> photos;    // 게시글에 첨부된 이미지 경로
 
-  private List<CommentDto> comments;
+  private List<Comment> comments;
 
 
 }

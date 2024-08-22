@@ -51,17 +51,10 @@ public class MemberController {
 
     }
     //아이디 찾기 (이름&전화번호 방식)
-    @GetMapping("/find-id-by-email")
-    public ResponseEntity<String> findMemberIdByNum(@RequestParam String name, @RequestParam String phoneNumber) {
-        return ResponseEntity.ok(memberService.findMemberIdByNum(name,phoneNumber));
-
-    }
-
-
-
-
-
-
-
+//    @GetMapping("/find-id-by-phone")
+//    public ResponseEntity<String> findMemberIdByNum(@RequestParam String name, @RequestParam String phoneNumber) {
+//        return ResponseEntity.ok(memberService.findMemberIdByNum(name,phoneNumber));
+//
+//    }
 
 }

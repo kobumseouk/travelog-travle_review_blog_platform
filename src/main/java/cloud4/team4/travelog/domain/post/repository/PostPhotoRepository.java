@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface PostPhotoRepository extends JpaRepository<PostPhoto, Long> {
 
-  List<PostPhoto> findPostPhotoByPostId(Long postId);
+  List<PostPhoto> findPostPhotoByPost_PostId(Long postId);
 
 }
 
