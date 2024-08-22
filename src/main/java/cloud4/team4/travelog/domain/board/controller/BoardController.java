@@ -17,7 +17,7 @@ public class BoardController {
     private final BoardService boardService;
 
     // Create: 게시판 생성
-    @PostMapping("/create")
+    @PostMapping("/board-create")
     public void createBoard(@RequestBody BoardCreateRequestDto boardCreateRequestDto) {
         boardService.save(boardCreateRequestDto);
     }

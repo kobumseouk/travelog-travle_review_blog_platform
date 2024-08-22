@@ -5,6 +5,7 @@ import cloud4.team4.travelog.domain.board.dto.BoardUpdateRequestDto;
 import cloud4.team4.travelog.domain.board.dto.BoardUpdateResponseDto;
 import cloud4.team4.travelog.domain.board.dto.BoardViewResponse;
 import cloud4.team4.travelog.domain.board.entity.Board;
+import cloud4.team4.travelog.domain.board.entity.BoardMapper;
 import cloud4.team4.travelog.domain.board.repository.BoardRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -18,13 +19,11 @@ import java.util.stream.Collectors;
 @Service
 public class BoardService {
     private final BoardRepository boardRepository;
+    private final BoardMapper boardMapper;
 
     /*----------Create----------*/
     public void save(BoardCreateRequestDto request) {
-        Board board = Board.builder()
-                .title(request.getTitle())
-                .region(request.getRegion())
-                .build();
+        Board board = boardMapper.toEntity(request);
         boardRepository.save(board);
     }
 
@@ -42,12 +41,9 @@ public class BoardService {
         Board board = boardRepository.findById(id)
                 .orElseThrow(RuntimeException::new);
 
-        board.update(requestDto.getTitle(), requestDto.getRegion());
+        board.update(requestDto.getDescription());
         return new BoardUpdateResponseDto(board);
     }
-
-
-
 
     /*----------Delete----------*/
     public void deleteBoard(Long id) {
