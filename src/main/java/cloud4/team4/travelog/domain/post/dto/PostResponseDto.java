@@ -19,8 +19,8 @@ public class PostResponseDto {
   private String content;
   private Long boardId;
   private Long memberId;
-  private LocalDateTime periodStart;
-  private LocalDateTime periodEnd;
+  private String periodStart;
+  private String periodEnd;
   private String region;
   private LocalDateTime createdAt;
   private LocalDateTime editedAt;

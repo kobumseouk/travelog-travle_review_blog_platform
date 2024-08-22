@@ -31,10 +31,9 @@ public class PostPhoto {
   private String position;
 
 
-  public PostPhoto(Post post, String imagePath, String position){
+  public PostPhoto(Post post, String imagePath){
     this.post = post;
     this.imagePath = imagePath;
-    this.position = position;
   }
 
 }

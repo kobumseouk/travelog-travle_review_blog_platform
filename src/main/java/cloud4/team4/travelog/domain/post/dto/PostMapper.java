@@ -1,12 +1,13 @@
-package cloud4.team4.travelog.domain.post.Mapper;
+package cloud4.team4.travelog.domain.post.dto;
 
-import cloud4.team4.travelog.domain.post.dto.PostPostDto;
-import cloud4.team4.travelog.domain.post.dto.PostResponseDto;
 import cloud4.team4.travelog.domain.post.entity.Post;
 import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
 public interface PostMapper {
+
+  PostMapper INSTANCE = Mappers.getMapper(PostMapper.class);;
 
   Post postPostDtoToPost(PostPostDto postPostDto);
   PostResponseDto postToPostResponseDto(Post createdPost);

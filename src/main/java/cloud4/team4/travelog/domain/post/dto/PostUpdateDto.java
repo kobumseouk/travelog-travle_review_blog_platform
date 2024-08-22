@@ -13,17 +13,13 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostPostDto {
+public class PostUpdateDto {
   private String title;
   private String content;
-  private Long boardId;
-  private Long memberId;
   private String periodStart;
   private String periodEnd;
-  private List<MultipartFile> photos;
 
-//  private LocalDateTime createdAt;
-//  private LocalDateTime editedAt;
-//  private Integer views;
-//  private Integer recommends;
+  //private List<MultipartFile> photos;
+  // private Long memberId;
+  // private Long boardId;  // 게시판 변경
 }

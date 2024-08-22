@@ -39,12 +39,10 @@ public class Post {
   private MemberEntity meber;
 
   @Column(name = "period_start")
-  private LocalDateTime periodStart;
+  private String periodStart;
 
   @Column(name = "period_end")
-  private LocalDateTime periodEnd;
-
-  private String region;
+  private String periodEnd;
 
   @Column(name = "created_at")
   private LocalDateTime createdAt;

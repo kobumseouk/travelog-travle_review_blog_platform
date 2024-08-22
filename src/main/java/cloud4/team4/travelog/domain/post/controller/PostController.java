@@ -3,36 +3,34 @@ package cloud4.team4.travelog.domain.post.controller;
 
 import cloud4.team4.travelog.domain.post.dto.PostPostDto;
 import cloud4.team4.travelog.domain.post.dto.PostResponseDto;
+import cloud4.team4.travelog.domain.post.dto.PostUpdateDto;
 import cloud4.team4.travelog.domain.post.entity.Post;
-import cloud4.team4.travelog.domain.post.Mapper.PostMapper;
+import cloud4.team4.travelog.domain.post.dto.PostMapper;
 import cloud4.team4.travelog.domain.post.service.PostService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.*;
 import java.lang.Void;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/posts")
 public class PostController {
   private final PostService postService;
   private final PostMapper postMapper;
 
-
-  public PostController(PostService postService, PostMapper postMapper) {
-    this.postService = postService;
-    this.postMapper = postMapper;
-  }
-
   // 게시글 생성
   @PostMapping
-  public ResponseEntity<PostResponseDto> createPost(@RequestBody PostPostDto postPostDto) {
-    Post post = postMapper.postPostDtoToPost(postPostDto);
-    Post createdPost = postService.createPost(post);
-
-    return new ResponseEntity<>(postMapper.postToPostResponseDto(createdPost), HttpStatus.CREATED);
+  public ResponseEntity<PostResponseDto> createPost(@PathVariable("postId") Long postId,
+                                                    @ModelAttribute PostPostDto postPostDto) {
+    Post createdPost = postService.createPost(postId, postPostDto);
+    PostResponseDto responseDto = postMapper.postToPostResponseDto(createdPost);
+    return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
   }
 
   // 모든 게시글 조회
@@ -59,10 +57,12 @@ public class PostController {
   }
 
   // 게시글 수정
-  @PutMapping("/{postId}")
-  public ResponseEntity<PostResponseDto> updatePost(@PathVariable("postId") Long postId, @RequestBody PostPostDto postPostDto) {
-    Post post = postMapper.postPostDtoToPost(postPostDto);
-    Post updatedPost = postService.updatePost(postId, post);
+  @PutMapping(value = "update/{postId}", consumes = "multipart/form-data")
+  public ResponseEntity<PostResponseDto> updatePost(@PathVariable("postId") Long postId,
+                                                    @ModelAttribute PostUpdateDto postUpdateDto,
+                                                    @RequestParam(value = "photos", required = false) List<MultipartFile> newPhotos) {
+
+    Post updatedPost = postService.updatePost(postId, postUpdateDto, newPhotos);
 
     if (updatedPost != null) {
       return new ResponseEntity<>(postMapper.postToPostResponseDto(updatedPost), HttpStatus.OK);
@@ -72,7 +72,7 @@ public class PostController {
   }
 
   // 게시글 삭제
-  @DeleteMapping("/{postId}")
+  @DeleteMapping("delete/{postId}")
   public ResponseEntity<Void> deletePost(@PathVariable("postId") Long postId) {
     postService.deletePost(postId);
 
