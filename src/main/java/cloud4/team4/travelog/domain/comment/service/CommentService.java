@@ -4,7 +4,10 @@ import cloud4.team4.travelog.domain.comment.dto.CommentMapper;
 import cloud4.team4.travelog.domain.comment.dto.CommentRequestDto;
 import cloud4.team4.travelog.domain.comment.dto.CommentUpdateDto;
 import cloud4.team4.travelog.domain.comment.entity.Comment;
+import cloud4.team4.travelog.domain.comment.entity.ExMember;
+import cloud4.team4.travelog.domain.comment.entity.ExPost;
 import cloud4.team4.travelog.domain.comment.repository.CommentRepository;
+import cloud4.team4.travelog.domain.comment.repository.ExMemberRepository;
 import cloud4.team4.travelog.domain.member.entity.MemberEntity;
 import cloud4.team4.travelog.domain.member.repository.MemberRepository;
 import cloud4.team4.travelog.domain.post.entity.Post;
@@ -12,7 +15,6 @@ import cloud4.team4.travelog.domain.post.service.PostService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -53,7 +55,7 @@ public class CommentService {
      */
     @Transactional
     // 파라미터 통일 필요, 예시 엔티티 사용 -> 변경 필수!
-    public void saveComment(Long postId, CommentRequestDto commentRequestDto, List<MultipartFile> photos) {
+    public void saveComment(Long postId, CommentRequestDto commentRequestDto) {
 
         // 아직 member와 post를 설정하지 않음
         Comment comment = CommentMapper.INSTANCE.toEntity(commentRequestDto);
@@ -78,7 +80,11 @@ public class CommentService {
 
         Comment savedComment = commentRepository.save(comment);
 
-        commentPhotosService.savePhotos(photos, savedComment);
+        try {
+            commentPhotosService.savePhotos(commentRequestDto.getPhotos(), savedComment);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
 
@@ -87,13 +93,15 @@ public class CommentService {
      * updateComment: comment 찾고 내부 메서드 update 호출
      */
     @Transactional
-    public Comment updateComment(Long commentId, CommentUpdateDto commentUpdateDto, List<MultipartFile> photos) {
+    public void updateComment(Long commentId, CommentUpdateDto commentUpdateDto) {
         Comment findComment = commentRepository.findCommentById(commentId);
 
         findComment.update(commentUpdateDto.getContent(), LocalDateTime.now());
-        commentPhotosService.updatePhotos(commentId, photos);
-
-        return findComment;
+        try {
+            commentPhotosService.updatePhotos(commentUpdateDto.getPhotos(), findComment);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     /**

@@ -3,18 +3,14 @@ package cloud4.team4.travelog.domain.comment.entity;
 import jakarta.persistence.*;
 import cloud4.team4.travelog.domain.member.entity.MemberEntity;
 import cloud4.team4.travelog.domain.post.entity.Post;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
+@Getter @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Comment {

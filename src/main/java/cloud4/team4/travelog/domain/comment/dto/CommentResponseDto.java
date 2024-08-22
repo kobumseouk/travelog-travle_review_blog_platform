@@ -10,7 +10,7 @@ public class CommentResponseDto {
 
     private String content;
 
-    private String memberId;
+    private Long memberId;
     private Long postId;
 
     private LocalDateTime created_at;
