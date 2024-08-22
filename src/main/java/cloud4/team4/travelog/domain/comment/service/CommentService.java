@@ -4,11 +4,9 @@ import cloud4.team4.travelog.domain.comment.dto.CommentMapper;
 import cloud4.team4.travelog.domain.comment.dto.CommentRequestDto;
 import cloud4.team4.travelog.domain.comment.dto.CommentUpdateDto;
 import cloud4.team4.travelog.domain.comment.entity.Comment;
-import cloud4.team4.travelog.domain.comment.entity.ExMember;
-import cloud4.team4.travelog.domain.comment.entity.ExPost;
 import cloud4.team4.travelog.domain.comment.repository.CommentRepository;
-import cloud4.team4.travelog.domain.comment.repository.ExMemberRepository;
 import cloud4.team4.travelog.domain.member.entity.MemberEntity;
+import cloud4.team4.travelog.domain.member.repository.MemberRepository;
 import cloud4.team4.travelog.domain.post.entity.Post;
 import cloud4.team4.travelog.domain.post.service.PostService;
 import jakarta.transaction.Transactional;
@@ -36,6 +34,8 @@ public class CommentService {
     /**
      * READ
      * findAll: 해당 게시글의 모든 댓글 반환
+     *
+     *
      */
     public List<Comment> findAllByPostId(Long postId) {
 
