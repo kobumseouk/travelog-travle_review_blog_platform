@@ -37,6 +37,8 @@ public class CommentService {
     /**
      * READ
      * findAll: 해당 게시글의 모든 댓글 반환
+     *
+     *
      */
     public List<Comment> findAllByPostId(Long postId) {
 
