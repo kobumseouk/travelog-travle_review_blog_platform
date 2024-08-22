@@ -14,7 +14,7 @@ public interface CommentMapper {
     @Mapping(source = "member", target="memberId")
     CommentResponseDto toResponseDto(Comment comment);
 
-    default Long mapMemberToString(MemberEntity member) {
+    default Long mapMemberToLong(MemberEntity member) {
         return member != null ? member.getId() : null;
     }
 
