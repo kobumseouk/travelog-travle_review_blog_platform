@@ -11,7 +11,7 @@ public class CommentRequestDto {
 
     private String content;
 
-    private String memberId;
+    private Long memberId;
 
     private List<MultipartFile> photos;
 
