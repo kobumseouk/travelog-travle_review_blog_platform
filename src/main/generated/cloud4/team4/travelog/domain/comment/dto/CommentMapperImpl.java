@@ -5,7 +5,7 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-08-23T22:08:40+0900",
+    date = "2024-08-23T23:23:32+0900",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 22.0.2 (Oracle Corporation)"
 )
 public class CommentMapperImpl implements CommentMapper {
@@ -20,8 +20,8 @@ public class CommentMapperImpl implements CommentMapper {
 
         commentResponseDto.setMemberId( mapMemberToLong( comment.getMember() ) );
         commentResponseDto.setContent( comment.getContent() );
-        commentResponseDto.setCreated_at( comment.getCreated_at() );
-        commentResponseDto.setEdited_at( comment.getEdited_at() );
+        commentResponseDto.setCreatedAt( comment.getCreatedAt() );
+        commentResponseDto.setEditedAt( comment.getEditedAt() );
 
         return commentResponseDto;
     }
@@ -36,7 +36,7 @@ public class CommentMapperImpl implements CommentMapper {
 
         comment.content( commentRequestDto.getContent() );
 
-        comment.created_at( java.time.LocalDateTime.now() );
+        comment.createdAt( java.time.LocalDateTime.now() );
 
         return comment.build();
     }

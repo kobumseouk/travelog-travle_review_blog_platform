@@ -5,7 +5,7 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-08-23T16:56:26+0900",
+    date = "2024-08-23T23:23:31+0900",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 22.0.2 (Oracle Corporation)"
 )
 public class MemberMapperImpl implements MemberMapper {
