@@ -1,5 +1,6 @@
 package cloud4.team4.travelog.domain.post.dto;
 
+import jakarta.validation.constraints.*;
 import cloud4.team4.travelog.domain.comment.entity.Comment;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,8 +15,11 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostResponseDto {
+  @NotNull
   private Long postId;
+  @NotBlank
   private String title;
+  @NotBlank
   private String content;
   private Long boardId;
   private Long memberId;

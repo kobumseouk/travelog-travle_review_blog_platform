@@ -8,11 +8,17 @@ import cloud4.team4.travelog.domain.post.entity.Post;
 import cloud4.team4.travelog.domain.post.dto.PostMapper;
 import cloud4.team4.travelog.domain.post.exception.ResourceNotFoundException;
 import cloud4.team4.travelog.domain.post.service.PostService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.List;
 import java.util.stream.*;
@@ -26,13 +32,17 @@ public class PostController {
   private final PostMapper postMapper;
 
   @PostMapping(consumes = "multipart/form-data")
-  public ResponseEntity<PostResponseDto> createPost(@ModelAttribute PostPostDto postPostDto) {
+  public ResponseEntity<?> createPost(@Valid @ModelAttribute PostPostDto postPostDto, BindingResult bindingResult) {
+    if (bindingResult.hasErrors()) {
+      return ResponseEntity.badRequest().body("유효성 검사 오류");
+    }
+
     try {
       Post createdPost = postService.createPost(postPostDto);
       PostResponseDto responseDto = postMapper.postToPostResponseDto(createdPost);
       return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류");
     }
   }
 
@@ -62,15 +72,20 @@ public class PostController {
   }
 
   @PutMapping(value = "update/{postId}", consumes = "multipart/form-data")
-  public ResponseEntity<PostResponseDto> updatePost(@PathVariable("postId") Long postId,
-                                                    @ModelAttribute PostUpdateDto postUpdateDto) {
+  public ResponseEntity<?> updatePost(@PathVariable("postId") Long postId,
+                                                    @Valid @ModelAttribute PostUpdateDto postUpdateDto,
+                                                    BindingResult bindingResult) {
+    if (bindingResult.hasErrors()) {
+      return ResponseEntity.badRequest().body("유효성 검사 오류");
+    }
+
     try {
       Post updatedPost = postService.updatePost(postId, postUpdateDto);
       return ResponseEntity.ok(postMapper.postToPostResponseDto(updatedPost));
     } catch (ResourceNotFoundException e) {
       return ResponseEntity.notFound().build();
     } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류");
     }
   }
 
