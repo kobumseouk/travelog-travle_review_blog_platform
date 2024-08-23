@@ -13,8 +13,8 @@ public class CommentResponseDto {
     private Long memberId;
     private Long postId;
 
-    private LocalDateTime created_at;
-    private LocalDateTime edited_at;
+    private LocalDateTime createdAt;
+    private LocalDateTime editedAt;
 
     // 댓글에 첨부된 사진의 경로
     private List<String> photos;
