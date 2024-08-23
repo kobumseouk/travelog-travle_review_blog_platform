@@ -1,5 +1,11 @@
 package cloud4.team4.travelog.domain.post.service;
 
+import cloud4.team4.travelog.domain.board.entity.Board;
+import cloud4.team4.travelog.domain.board.repository.BoardRepository;
+import cloud4.team4.travelog.domain.board.service.BoardService;
+import cloud4.team4.travelog.domain.member.entity.Member;
+import cloud4.team4.travelog.domain.member.repository.MemberRepository;
+import cloud4.team4.travelog.domain.post.dto.PostMapper;
 import cloud4.team4.travelog.domain.post.dto.PostPostDto;
 import cloud4.team4.travelog.domain.post.dto.PostUpdateDto;
 import cloud4.team4.travelog.domain.post.entity.Post;
@@ -20,17 +26,29 @@ public class PostService {
   @Autowired
   private final PostRepository postRepository;
   private final PostPhotoService postPhotoService;
-
+  private final MemberRepository memberRepository;
+  private final BoardRepository boardRepository;
 
 
   // 게시글 생성
   @Transactional
   public Post createPost(PostPostDto postPostDto) {
-    Post post = new Post();
-    post.setTitle(postPostDto.getTitle());
-    post.setContent(postPostDto.getContent());
-    post.setPeriodStart(postPostDto.getPeriodStart());
-    post.setPeriodEnd(postPostDto.getPeriodEnd());
+    Post post = PostMapper.INSTANCE.postPostDtoToPost(postPostDto);
+
+    // post.setTitle(postPostDto.getTitle());
+    // post.setContent(postPostDto.getContent());
+
+    Member member = memberRepository.findById(postPostDto.getMemberId())
+        .orElseThrow(() -> new ResourceNotFoundException("member not found"));
+
+    Board board = boardRepository.findById(postPostDto.getBoardId())
+        .orElseThrow(() -> new ResourceNotFoundException("board not found"));
+
+    post.setMember(member);
+    post.setBoard(board);
+
+    // post.setPeriodStart(postPostDto.getPeriodStart());
+    // post.setPeriodEnd(postPostDto.getPeriodEnd());
     post.setCreatedAt(LocalDateTime.now());
     post.setEditedAt(LocalDateTime.now());
     post.setViews(0);

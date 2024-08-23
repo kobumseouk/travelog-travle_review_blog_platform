@@ -21,7 +21,6 @@ public class PostResponseDto {
   private Long memberId;
   private String periodStart;
   private String periodEnd;
-  private String region;
   private LocalDateTime createdAt;
   private LocalDateTime editedAt;
   private Integer views;
