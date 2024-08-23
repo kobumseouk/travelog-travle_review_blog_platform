@@ -1,5 +1,6 @@
 package cloud4.team4.travelog.domain.post.dto;
 
+import cloud4.team4.travelog.domain.board.entity.Board;
 import cloud4.team4.travelog.domain.post.entity.Post;
 import cloud4.team4.travelog.domain.post.entity.PostPhoto;
 import org.mapstruct.Mapper;
@@ -12,8 +13,11 @@ public interface PostMapper {
 
   PostMapper INSTANCE = Mappers.getMapper(PostMapper.class);;
 
+  @Mapping(target = "member", ignore = true)
+  @Mapping(target = "board", ignore = true)  // member, board 필드 매핑 제외
   Post postPostDtoToPost(PostPostDto postPostDto);
 
+  @Mapping(source = "board", target="boardId")
   @Mapping(source = "member", target="memberId")
   @Mapping(source = "postPhoto", target = "photos")
   PostResponseDto postToPostResponseDto(Post post);
@@ -21,7 +25,9 @@ public interface PostMapper {
   default Long mapMemberToLong(Member member) {
     return member != null ? member.getId() : null;
   }
-
+  default Long mapBoardToLong(Board board) {
+    return board != null ? board.getId() : null;
+  }
 //  @Mapping(target = "postId", ignore = true)
 //  PostPhoto postPhotoDtoToPostPhoto(PostPhotoDto postPhotoDto);
 //
