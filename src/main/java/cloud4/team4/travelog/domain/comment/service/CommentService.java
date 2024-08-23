@@ -25,10 +25,6 @@ public class CommentService {
     private final MemberRepository memberRepository;
     private final PostService postService;
 
-    // 테스트 용 코드
-//    private final ExMemberRepository exMemberRepository;
-//    private final ExPostService exPostService;
-
     private final CommentPhotosService commentPhotosService;
 
     /**
@@ -41,10 +37,6 @@ public class CommentService {
 
         Post post = postService.getPostById(postId);
         return commentRepository.findCommentsByPost(post);
-
-        // 테스트 용 코드
-//        ExPost post = exPostService.getPostById(postId);
-//        return commentRepository.findCommentsByPost(post);
 
     }
 
@@ -68,14 +60,6 @@ public class CommentService {
 
         comment.setMember(member);
         comment.setPost(post);
-
-        // 테스트 용 코드
-//        ExMember member = exMemberRepository.findById(commentRequestDto.getMemberId())
-//                    .orElseThrow(() -> new IllegalArgumentException("member not found"));
-//        ExPost post = exPostService.getPostById(postId);
-//
-//        comment.setMember(member);
-//        comment.setPost(post);
 
         Comment savedComment = commentRepository.save(comment);
 

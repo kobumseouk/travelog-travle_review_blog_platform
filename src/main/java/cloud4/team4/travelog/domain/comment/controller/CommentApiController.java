@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URI;
 import java.util.List;
@@ -46,9 +47,8 @@ public class CommentApiController {
         // 저장
         try {
             commentService.saveComment(postId, commentRequestDto);
-            return ResponseEntity.status(HttpStatus.FOUND)
-                    .location(URI.create("/")) // 리다이렉트할 URL 수정 필요
-                    .build();
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body("comment created");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(e.getMessage());
@@ -63,8 +63,7 @@ public class CommentApiController {
         try {
             commentService.updateComment(commentId, commentUpdateDto);
             return ResponseEntity.status(HttpStatus.OK)
-                    .location(URI.create("/")) // 리다이렉트할 URL 수정 필요
-                    .build();
+                    .body("comment updated");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(e.getMessage());
