@@ -1,6 +1,5 @@
 package cloud4.team4.travelog.domain.comment.service;
 
-import cloud4.team4.travelog.domain.comment.dto.CommentUpdateDto;
 import cloud4.team4.travelog.domain.comment.entity.Comment;
 import cloud4.team4.travelog.domain.comment.entity.CommentPhotos;
 import cloud4.team4.travelog.domain.comment.exception.CommentPhotosSizeException;
@@ -13,9 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -37,8 +34,6 @@ public class CommentPhotosService {
                  return;
              }
 
-             String saveDir = "src/main/resources/static/uploads/comment_photos/";
-
              // 사진 업로드 개수 > 5 인지 체크
              if(photos.size() > 5) {
                  throw new CommentPhotosSizeException("최대 사진 업로드 개수는 5개 입니다!");
@@ -55,11 +50,11 @@ public class CommentPhotosService {
                  // 파일이 비어있는 경우 패스
                  if(Objects.requireNonNull(photo.getOriginalFilename()).isEmpty()) continue;
 
-                 // db 저장 경로
-                 String dbFilePath = saveImage(photo, saveDir);
+                 // 이미지 이름 앞에 랜덤값 추가 (중복 안되게)
+                 String fileName = UUID.randomUUID().toString().replace("-", "") + "_" + photo.getOriginalFilename();
 
                  // CommentPhotos 엔티티 생성
-                 CommentPhotos commentPhotos = new CommentPhotos(dbFilePath, comment);
+                 CommentPhotos commentPhotos = new CommentPhotos(fileName, photo.getBytes(), comment);
 
                  // 생성한 엔티티 저장
                  commentPhotosRepository.save(commentPhotos);
@@ -89,31 +84,6 @@ public class CommentPhotosService {
         }
 
      }
-
-    // 이미지 파일을 저장하는 메서드
-    private String saveImage(MultipartFile image, String saveDir) throws IOException {
-        // 파일명 생성 -> 중복안되게 랜덤 값 + 기존 파일명으로 설정
-        String fileName = UUID.randomUUID().toString().replace("-", "") + "_" + image.getOriginalFilename();
-
-        // 실제 파일이 저장될 경로: savePhotos 메서드의 파일 경로 + 파일명
-        String filePath = saveDir + fileName;
-
-        // DB에 저장할 경로: static 이전은 모두 자름
-        String dbFilePath = "/uploads/comment_photos/" + fileName;
-
-        Path path = Paths.get(filePath); // Path 객체 생성
-        Files.createDirectories(path.getParent()); // 디렉토리 생성
-        Files.write(path, image.getBytes()); // 디렉토리에 파일 저장
-
-        return dbFilePath;
-    }
-
-    public List<String> findPhotosPathByCommentId(Long commentId) {
-        return commentPhotosRepository.findCommentPhotosByComment_Id(commentId)
-                .stream()
-                .map(CommentPhotos::getImagePath)
-                .toList();
-    }
 
     public List<CommentPhotos> findPhotosByCommentId(Long commentId) {
         return commentPhotosRepository.findCommentPhotosByComment_Id(commentId);

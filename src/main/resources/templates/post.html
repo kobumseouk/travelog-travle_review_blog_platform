@@ -64,8 +64,8 @@
                         <div class="bg-gray-200 p-4 rounded-lg">
                             <span th:text="${comment.content}"></span>
                             <div class="mt-1" th:each="photo : ${comment.getCommentPhotos()}">
-                                <a th:href="${photo.imagePath}" target="_blank" class="image-link">
-                                    <img th:src="${photo.imagePath}" class="object-cover" />
+                                <a href="" target="_blank" class="image-link">
+                                    <img th:src="'data:image/jpeg;base64,' + ${photo.base64Image}" class="object-cover" />
                                 </a>
                             </div>
 
