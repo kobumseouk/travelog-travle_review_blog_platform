@@ -3,6 +3,7 @@ package cloud4.team4.travelog.domain.post.entity;
 import cloud4.team4.travelog.domain.board.entity.Board;
 import cloud4.team4.travelog.domain.comment.entity.Comment;
 import jakarta.persistence.Entity;
+import jakarta.validation.constraints.*;
 import cloud4.team4.travelog.domain.member.entity.Member;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,34 +28,45 @@ public class Post {
   @Column(name = "post_id")
   private Long postId;
 
+  @NotBlank
+  @Size(max = 50)
   @Column(nullable = false)
   private String title;
 
+  @NotBlank
   @Column(columnDefinition = "TEXT")
   private String content;
 
+  @NotNull
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "board_id")
   private Board board;
 
+  @NotNull
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "member_id")
   private Member member;
 
+  @NotNull
   @Column(name = "period_start")
   private String periodStart;
 
+  @NotNull
   @Column(name = "period_end")
   private String periodEnd;
 
+  @NotNull
   @Column(name = "created_at")
   private LocalDateTime createdAt;
 
+  @NotNull
   @Column(name = "edited_at")
   private LocalDateTime editedAt;
 
+  @PositiveOrZero
   private Integer views;
 
+  @PositiveOrZero
   private Integer recommends;
 
 
