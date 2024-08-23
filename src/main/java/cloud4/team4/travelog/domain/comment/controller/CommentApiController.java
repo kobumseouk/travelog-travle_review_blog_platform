@@ -24,7 +24,7 @@ public class CommentApiController {
     private final CommentService commentService;
     private final CommentPhotosService commentPhotosService;
 
-    // READ
+    // READ -> 사용 x (Controller에서 조회)
     @GetMapping("/{postId}")
     public ResponseEntity<List<CommentResponseDto>> findAllComments(@PathVariable("postId") Long postId) {
 

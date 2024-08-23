@@ -4,6 +4,7 @@
 <body class="h-full flex flex-col">
 <div th:replace="~{fragments/bodyHeader :: bodyHeader}"></div>
 <link rel="stylesheet" href="/css/comment_photos.css">
+<link rel="stylesheet" href="/css/comment_paging.css">
 <header>
     <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         <h1 class="text-3xl font-bold tracking-tight text-gray-900">게시글 제목</h1>
@@ -55,7 +56,7 @@
             </form>
 
 
-            <div th:each="comment : ${post.getComments()}" class="flex items-start mb-4">
+            <div th:each="comment : ${comments}" class="flex items-start mb-4">
                 <div class="flex w-2 h-2 bg-gray-400 rounded-full mr-4 mt-3"></div>
                 <div class="flex-1">
                     <p class="font-bold mt-1 mb-2" th:text="${comment.getMember().name}"></p>
@@ -82,9 +83,27 @@
                         </div>
                     </div>
                     <div class="flex justify-end mb-2">
-                        <span class="text-gray-500 text-sm ml-1" th:text="${#temporals.format(comment.created_at, 'yyyy-MM-dd HH:mm')}"></span>
+                        <span class="text-gray-500 text-sm ml-1" th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
                     </div>
                 </div>
+            </div>
+
+            <div class="pagination">
+                <button class="pagination-button" th:disabled="${comments.getNumber()}==0"
+                        th:onclick="|location.href='@{/post/{postId}(postId=${postId}, commentPage=${1}) }'|">
+                    <<</button>
+                <button class="pagination-button" th:disabled="${!comments.hasPrevious()}"
+                        th:onclick="|location.href='@{/post/{postId}(postId=${postId}, commentPage=${comments.getNumber()}) }'|">
+                    <</button>
+                &nbsp; &nbsp;
+                <span class="pagination-info">[[${comments.getNumber()+1}]] / [[${comments.getTotalElements() == 0 ? 1 : comments.getTotalPages()}]]</span>
+                &nbsp; &nbsp;
+                <button class="pagination-button" th:disabled="${!comments.hasNext()}"
+                        th:onclick="|location.href='@{/post/{postId}(postId=${postId}, commentPage=${comments.getNumber()+2}) }'|">
+                    ></button>
+                <button class="pagination-button" th:disabled="${!comments.hasNext()}"
+                        th:onclick="|location.href='@{/post/{postId}(postId=${postId}, commentPage=${comments.getTotalPages()}) }'|">
+                    >></button>
             </div>
         </div>
     </main>
