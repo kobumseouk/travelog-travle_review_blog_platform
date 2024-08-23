@@ -4,7 +4,6 @@ import cloud4.team4.travelog.domain.board.dto.BoardCreateRequestDto;
 import cloud4.team4.travelog.domain.board.dto.BoardUpdateRequestDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
@@ -18,18 +17,18 @@ public interface BoardMapper {
 
     // CreateRequestDto -> Board 매핑
     @Mapping(target = "id", ignore = true) // ID는 자동 생성되므로 무시
-    Board toEntity(BoardCreateRequestDto dto);
+    Board toCreateEntity(BoardCreateRequestDto dto);
 
     /*---------- Update 매핑 ----------*/
 
-    // Board -> UpdateRequestDto 매핑
-    BoardUpdateRequestDto toUpdateRequestDto(Board board);
+    // Entity -> UpdateRequestDto 매핑
+    BoardUpdateRequestDto toBoardUpdateRequestDto(Board board);
 
-    // UpdateRequestDto -> Board 매핑
-    @Mapping(target = "id", ignore = true)
-    void toUpdateEntity(BoardUpdateRequestDto dto, @MappingTarget Board entity);
+    // UpdateRequestDto -> Entity 매핑
+    @Mapping(target = "id", ignore = true) // ID는 무시 (기존 엔티티의 ID 유지)
+    @Mapping(target = "description")
+    Board toUpdateEntity(BoardUpdateRequestDto boardUpdateRequestDto);
 
-
-
-
+    /*@Mapping(target = "id", ignore = true) // ID는 무시 (기존 엔티티의 ID 유지)
+    void updateBoardFromDto(BoardUpdateRequestDto dto, @MappingTarget Board entity);*/
 }
