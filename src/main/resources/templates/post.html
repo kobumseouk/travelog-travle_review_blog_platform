@@ -84,6 +84,10 @@
                     </div>
                     <div class="flex justify-end mb-2">
                         <span class="text-gray-500 text-sm ml-1" th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
+                        <span class="text-gray-500 text-sm ml-1" th:text="${#temporals.format(comment.created_at, 'yyyy-MM-dd HH:mm')}"></span>
+                        <span class="text-gray-500 text-sm ml-1"
+                              th:text="${comment.editedAt==null} ?
+                                    ${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')} : ${'(수정) ' + #temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
                     </div>
                 </div>
             </div>
