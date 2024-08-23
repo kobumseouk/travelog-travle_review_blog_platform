@@ -35,8 +35,8 @@ public class Comment {
 
     private String content;
 
-    private LocalDateTime created_at;
-    private LocalDateTime edited_at;
+    private LocalDateTime createdAt;
+    private LocalDateTime editedAt;
 
     // 테스트 용 주석처리
     public void setMember(Member member) {
@@ -50,24 +50,14 @@ public class Comment {
         post.getComments().add(this);
     }
 
-    // 테스트 용 코드
-//    public void setMember(ExMember member) {
-//        this.member = member;
-//        member.getComments().add(this);
-//    }
-//    public void setPost(ExPost post) {
-//        this.post = post;
-//        post.getComments().add(this);
-//    }
-
-    public Comment(String content, LocalDateTime created_at) {
+    public Comment(String content, LocalDateTime createdAt) {
         this.content = content;
-        this.created_at = created_at;
+        this.createdAt = createdAt;
     }
 
     // comment update 메서드
-    public void update(String content, LocalDateTime edited_at) {
+    public void update(String content, LocalDateTime editedAt) {
         this.content = content;
-        this.edited_at = edited_at;
+        this.editedAt = editedAt;
     }
 }
