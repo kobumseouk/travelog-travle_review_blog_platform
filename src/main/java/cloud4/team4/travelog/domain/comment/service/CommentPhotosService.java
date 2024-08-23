@@ -31,6 +31,12 @@ public class CommentPhotosService {
     @Transactional
     public void savePhotos(List<MultipartFile> photos, Comment comment) throws Exception{
          try {
+             // 업로드한 파일이 없다면 리턴
+             if(photos == null) {
+                 System.out.println("파일 없음");
+                 return;
+             }
+
              String saveDir = "src/main/resources/static/uploads/comment_photos/";
 
              // 사진 업로드 개수 > 5 인지 체크
