@@ -1,6 +1,6 @@
 package cloud4.team4.travelog.domain.board.service;
 
-import cloud4.team4.travelog.domain.board.dto.BoardCreateRequestDto;
+import cloud4.team4.travelog.domain.board.dto.BoardRequestDto;
 import cloud4.team4.travelog.domain.board.dto.BoardUpdateRequestDto;
 import cloud4.team4.travelog.domain.board.dto.BoardUpdateResponseDto;
 import cloud4.team4.travelog.domain.board.dto.BoardViewResponse;
@@ -21,10 +21,25 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final BoardMapper boardMapper;
 
+    private final BoardPhotoService boardPhotoService;
+
     /*----------Create----------*/
-    public void save(BoardCreateRequestDto request) {
-        Board board = boardMapper.toEntity(request);
+    public void save(BoardRequestDto requestDto) {
+        Board board = boardMapper.toEntity(requestDto);
         boardRepository.save(board);
+    }
+
+    @Transactional
+    public void saveBoard(Long id, BoardRequestDto requestDto) {
+
+        Board board = BoardMapper.INSTANCE.toEntity(requestDto);
+        Board savedBoard = boardRepository.save(board);
+
+        try {
+            boardPhotoService.savePhoto(requestDto.getPhoto(), savedBoard);
+        } catch(Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     /*----------Read----------*/

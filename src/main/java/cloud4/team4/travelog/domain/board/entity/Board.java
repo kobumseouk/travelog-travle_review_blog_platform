@@ -11,7 +11,6 @@ import java.util.List;
 @Entity
 @Getter
 @Builder
-//@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor
 @AllArgsConstructor
 public class Board {
@@ -36,13 +35,11 @@ public class Board {
     @Column(name = "description")
     private String description;             // 사용자가 설명을 추가하도록 한다.
 
+    // ToDo: 사진 추가
+    @OneToOne(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+    private BoardPhoto boardPhoto;
 
-//    필요성 검토
-//    @Column(name = "current_time")
-//    private LocalDateTime currentTime; -> 차라리 생성일로 두면?
-//    private long postId;
-
-    @Builder
+    //@Builder
     public Board(String description, String regionMajor, String regionMiddle) {
         this.description = description;
         this.regionMajor = regionMajor;
