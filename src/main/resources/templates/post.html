@@ -3,6 +3,7 @@
 <head th:replace="~{fragments/header :: header}"></head>
 <body class="h-full flex flex-col">
 <div th:replace="~{fragments/bodyHeader :: bodyHeader}"></div>
+<link rel="stylesheet" href="/css/comment_photos.css">
 <header>
     <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         <h1 class="text-3xl font-bold tracking-tight text-gray-900">게시글 제목</h1>
@@ -62,8 +63,11 @@
                         <div class="bg-gray-200 p-4 rounded-lg">
                             <span th:text="${comment.content}"></span>
                             <div class="mt-1" th:each="photo : ${comment.getCommentPhotos()}">
-                                <img th:src="${photo.imagePath}"/>
+                                <a th:href="${photo.imagePath}" target="_blank" class="image-link">
+                                    <img th:src="${photo.imagePath}" class="object-cover" />
+                                </a>
                             </div>
+
                             <!-- 아직은 정보 일치하는 회원만 수정, 삭제만 가능함 (추후에 관리자도 가능?)-->
                             <div class="flex justify-end mt-2 mb-1">
                                 <p th:if="${loginMember != null and loginMember == comment.member.id}">

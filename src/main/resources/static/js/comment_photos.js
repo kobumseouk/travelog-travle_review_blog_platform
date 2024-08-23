@@ -48,8 +48,6 @@ $(document).ready(function() {
     });
 });
 
-
-
 function validateForm() {
     const fileInput = document.getElementById('file-input');
     if (fileInput.files.length === 0) {
