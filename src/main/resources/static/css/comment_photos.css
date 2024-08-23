@@ -1,0 +1,8 @@
+.image-link {
+    position: relative;
+    display: inline-block;
+}
+
+.image-link:hover {
+    cursor: zoom-in;
+}
