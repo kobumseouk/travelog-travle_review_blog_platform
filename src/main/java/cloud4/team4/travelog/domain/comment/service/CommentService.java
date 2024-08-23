@@ -11,6 +11,9 @@ import cloud4.team4.travelog.domain.post.entity.Post;
 import cloud4.team4.travelog.domain.post.service.PostService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -35,6 +38,19 @@ public class CommentService {
 
         Post post = postService.getPostById(postId);
         return commentRepository.findCommentsByPost(post);
+
+    }
+
+    /**
+     * READ
+     * findPaging: 해당 게시글의 댓글 반환, 페이징 적용
+     */
+    public Page<Comment> findPagedCommentsByPostId(Long postId, int commentPage) {
+
+        // 페이징 -> 댓글 5개씩 출력
+        PageRequest commentPageRequest = PageRequest.of(commentPage - 1, 5, Sort.by("createdAt").descending());
+
+        return commentRepository.findCommentsByPost(postService.getPostById(postId), commentPageRequest);
 
     }
 
