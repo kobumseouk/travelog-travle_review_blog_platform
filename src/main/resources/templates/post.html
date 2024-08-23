@@ -26,8 +26,8 @@
             <!--            </div>-->
         </div>
 
-        <div class="w-full md:w-1/3 w-90% mb-10 md:m-10 bg-gray-50 p-6 shadow-xl rounded-lg flex-shrink-0" style="align-self: flex-start;">
-
+        <div class="w-full md:w-[37%] w-90% mb-10 md:m-10 bg-gray-50 p-6 shadow-xl rounded-lg flex-shrink-0" style="align-self: flex-start;">
+            <h2 th:text="'로그인 멤버 id = ' + ${loginMember}"></h2>
             <form class="mt-5 mb-5" th:action="@{/api/comment/{postId}(postId=${postId})}" th:object="${commentRequestDto}" method="post" enctype="multipart/form-data" onsubmit="return validateForm()"
                   th:data-post-id="${postId}">
                 <label th:for="content" class="block text-lg font-semibold mb-2"><strong>댓글 작성</strong></label>
@@ -57,16 +57,27 @@
             <div th:each="comment : ${post.getComments()}" class="flex items-start mb-4">
                 <div class="flex w-2 h-2 bg-gray-400 rounded-full mr-4 mt-3"></div>
                 <div class="flex-1">
+                    <p class="font-bold mt-1 mb-2" th:text="${comment.getMember().name}"></p>
                     <div class="relative mb-1">
                         <div class="bg-gray-200 p-4 rounded-lg">
                             <span th:text="${comment.content}"></span>
-                            <div th:each="photo : ${comment.getCommentPhotos()}">
+                            <div class="mt-1" th:each="photo : ${comment.getCommentPhotos()}">
                                 <img th:src="${photo.imagePath}"/>
+                            </div>
+                            <!-- 아직은 정보 일치하는 회원만 수정, 삭제만 가능함 (추후에 관리자도 가능?)-->
+                            <div class="flex justify-end mt-2 mb-1">
+                                <p th:if="${loginMember != null and loginMember == comment.member.id}">
+                                    <a th:href="@{/post/{postId}/comment/update/{commentId}(postId=${postId}, commentId=${comment.id})}">
+                                        <span class="material-symbols-outlined" style="color: blue">edit_note</span>
+                                    </a>
+                                    <button type="button" onclick="deleteComment(this)" th:data-id="${comment.id}">
+                                        <span class="material-symbols-outlined" style="color: red">delete</span>
+                                    </button>
+                                </p>
                             </div>
                         </div>
                     </div>
-                    <div class="flex justify-between mb-2">
-                        <span class="text-sm" th:text="${comment.getMember().name}"></span>
+                    <div class="flex justify-end mb-2">
                         <span class="text-gray-500 text-sm ml-1" th:text="${#temporals.format(comment.created_at, 'yyyy-MM-dd HH:mm')}"></span>
                     </div>
                 </div>
@@ -80,4 +91,5 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="/js/footer.js"></script>
 <script src="/js/comment_photos.js"></script>
+<script src="/js/comment_delete.js"></script>
 </html>

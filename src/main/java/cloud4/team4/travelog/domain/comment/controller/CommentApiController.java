@@ -4,6 +4,7 @@ import cloud4.team4.travelog.domain.comment.dto.CommentMapper;
 import cloud4.team4.travelog.domain.comment.dto.CommentRequestDto;
 import cloud4.team4.travelog.domain.comment.dto.CommentResponseDto;
 import cloud4.team4.travelog.domain.comment.dto.CommentUpdateDto;
+import cloud4.team4.travelog.domain.comment.entity.Comment;
 import cloud4.team4.travelog.domain.comment.service.CommentPhotosService;
 import cloud4.team4.travelog.domain.comment.service.CommentService;
 import lombok.RequiredArgsConstructor;
@@ -59,8 +60,9 @@ public class CommentApiController {
     @PutMapping("/update/{commentId}")
     public ResponseEntity<String> updateComment(@PathVariable("commentId") Long commentId,
                                                 @ModelAttribute CommentUpdateDto commentUpdateDto) {
-
         try {
+            System.out.println("commentId.getClass() = " + commentId.getClass());
+            System.out.println("commentId = " + commentId);
             commentService.updateComment(commentId, commentUpdateDto);
             return ResponseEntity.status(HttpStatus.OK)
                     .body("comment updated");
