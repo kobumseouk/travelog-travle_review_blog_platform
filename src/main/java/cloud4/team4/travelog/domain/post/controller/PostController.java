@@ -10,6 +10,10 @@ import cloud4.team4.travelog.domain.post.exception.ResourceNotFoundException;
 import cloud4.team4.travelog.domain.post.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -42,13 +46,12 @@ public class PostController {
   }
 
   @GetMapping
-  public ResponseEntity<List<PostResponseDto>> getAllPosts() {
+  public ResponseEntity<Page<PostResponseDto>> getAllPosts(
+      @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
     try {
-      List<PostResponseDto> postResponses = postService.getAllPosts()
-          .stream()
-          .map(postMapper::postToPostResponseDto)
-          .collect(Collectors.toList());
-      return ResponseEntity.ok(postResponses);
+      Page<Post> postPage = postService.getAllPosts(pageable);
+      Page<PostResponseDto> postResponsePage = postPage.map(postMapper::postToPostResponseDto);
+      return ResponseEntity.ok(postResponsePage);
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
