@@ -49,12 +49,10 @@ public class PostViewController {
   }
 
   private Sort createSort(String sortBy) {
-    switch (sortBy) {
-      case "recommends":
-        return Sort.by("recommends").descending().and(Sort.by("createdAt").descending());
-      case "createdAt":
-      default:
-        return Sort.by("createdAt").descending();
+    if ("recommends".equals(sortBy)) {  // 추천순 + 최신순 정렬
+      return Sort.by("recommends").descending().and(Sort.by("createdAt").descending());
+    } else {  // 작성일 기준 최신순 정렬 (기본값)
+      return Sort.by("createdAt").descending();
     }
   }
 
