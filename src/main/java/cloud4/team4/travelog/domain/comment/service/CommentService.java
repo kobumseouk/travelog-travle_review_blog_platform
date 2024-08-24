@@ -102,7 +102,7 @@ public class CommentService {
     public void updateComment(Long commentId, CommentUpdateDto commentUpdateDto) {
         Comment findComment = commentRepository.findCommentById(commentId);
 
-        findComment.update(commentUpdateDto.getContent(), LocalDateTime.now());
+        findComment.update(commentUpdateDto.getContent(), LocalDateTime.now(), commentUpdateDto.getRating());
         try {
             commentPhotosService.updatePhotos(commentUpdateDto.getPhotos(), findComment);
         } catch (Exception e) {

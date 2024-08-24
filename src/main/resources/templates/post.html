@@ -5,6 +5,7 @@
 <div th:replace="~{fragments/bodyHeader :: bodyHeader}"></div>
 <link rel="stylesheet" href="/css/comment_photos.css">
 <link rel="stylesheet" href="/css/comment_paging.css">
+<link rel="stylesheet" href="/css/comment_star.css">
 <header>
     <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         <h1 class="text-3xl font-bold tracking-tight text-gray-900">게시글 제목</h1>
@@ -36,6 +37,16 @@
 
                 <div class="flex flex-col">
                     <input type="text" th:field="*{memberId}" placeholder="멤버 id" required />
+
+                    <label for="rating" class="block text-sm text-gray-700 mb-1">평점</label>
+                    <select th:field="*{rating}" id="rating" class="border border-gray-300 rounded-lg p-2 mb-2" style="max-width: 120px;">
+                        <option value="5">★★★★★</option>
+                        <option value="4">★★★★☆</option>
+                        <option value="3">★★★☆☆</option>
+                        <option value="2">★★☆☆☆</option>
+                        <option value="1">★☆☆☆☆</option>
+                    </select>
+
                     <textarea th:field="*{content}" class="flex-1 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2" placeholder="작성 내용을 입력하세요" rows="5" required></textarea>
 
                     <div class="mb-2">
@@ -59,7 +70,16 @@
             <div th:each="comment : ${comments}" class="flex items-start mb-4">
                 <div class="flex w-2 h-2 bg-gray-400 rounded-full mr-4 mt-3"></div>
                 <div class="flex-1">
-                    <p class="font-bold mt-1 mb-2" th:text="${comment.getMember().name}"></p>
+                    <div class="flex flex-row justify-start">
+                        <p class="font-bold mt-1 mb-2" th:text="${comment.getMember().name}"></p>
+                        <div class="ml-2 star-rating">
+                            <span th:each="i : ${#numbers.sequence(1, comment.getRating())}" class="star">★</span>
+                            <span th:each="i : ${#numbers.sequence(comment.getRating() + 1, 5)}" class="star empty"
+                                  th:if="${comment.getRating() < 5}">☆</span>
+                        </div>
+                    </div>
+
+
                     <div class="relative mb-1">
                         <div class="bg-gray-200 p-4 rounded-lg">
                             <span th:text="${comment.content}"></span>

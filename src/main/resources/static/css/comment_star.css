@@ -1,0 +1,13 @@
+.star-rating {
+    display: flex; /* 플렉스 박스 사용 */
+    align-items: center; /* 수직 정렬 */
+}
+.star {
+    color: gold; /* 별 색상 */
+    font-size: 20px; /* 별 크기 조정 */
+    margin: 0; /* 마진 제거 */
+    padding: 0; /* 패딩 제거 */
+}
+.empty {
+    color: lightgray; /* 비어있는 별 색상 */
+}
