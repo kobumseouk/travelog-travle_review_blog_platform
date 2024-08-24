@@ -1,5 +1,6 @@
 package cloud4.team4.travelog.domain.post.entity;
 
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,13 +21,16 @@ public class PostPhoto {
   @Column(name = "post_photo_id")
   private Long post_photoId;
 
+  @NotNull
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "post_id")
   private Post post;
 
+  @NotBlank
   @Column(name = "image_path")
   private String imagePath;
 
+  @NotBlank
   @Column(name = "position")   // 위치 정보 추가
   private String position;
 

@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head th:replace="~{fragments/header :: header}"></head>
+<body class="h-full flex flex-col">
+<div th:replace="~{fragments/bodyHeader :: bodyHeader}"></div><br>
+<header>
+    <div class="flex justify-center mb-4">
+        <h1 class="text-3xl font-bold tracking-tight text-gray-900">댓글 수정</h1>
+    </div>
+</header>
+<div class="h-full flex justify-center">
+
+    <main class="flex justify-center items-center w-[90%] bg-gray-100 rounded-md">
+        <form class="m-5 p-6 w-full" th:object="${commentUpdateDto}" enctype="multipart/form-data" th:data-comment-id="${commentId}" th:data-post-id="${postId}"
+              onsubmit="return validateForm()">
+            <div class="flex flex-col">
+                <textarea th:field="*{content}" class="flex-1 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2" placeholder="작성 내용을 입력하세요" rows="5" required></textarea>
+
+                <div class="mb-2">
+                    <input type="file" th:field="*{photos}" multiple id="file-input" class="hidden" />
+                    <span class="text-sm text-gray-500 mt-2 block">최대 5개 파일 선택 가능</span>
+                    <div id="file-info" class="mt-2 text-gray-500"></div>
+
+                    <div class="flex flex-row justify-between">
+                        <label for="file-input" class="flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg cursor-pointer hover:bg-blue-700 transition duration-300">
+                            파일 선택하기
+                        </label>
+                        <button type="submit" class="bg-blue-500 text-white rounded-lg px-2 py-2 hover:bg-blue-600 transition duration-300">댓글 수정</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="error-class mt-2 text-red-600" th:errors="*{content}"></div>
+        </form>
+
+    </main>
+
+
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="/js/footer.js"></script>
+<script src="/js/comment_update.js"></script>
+</html>

@@ -11,6 +11,9 @@ import cloud4.team4.travelog.domain.post.entity.Post;
 import cloud4.team4.travelog.domain.post.service.PostService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -25,27 +28,39 @@ public class CommentService {
     private final MemberRepository memberRepository;
     private final PostService postService;
 
-    // 테스트 용 코드
-//    private final ExMemberRepository exMemberRepository;
-//    private final ExPostService exPostService;
-
     private final CommentPhotosService commentPhotosService;
 
     /**
      * READ
      * findAll: 해당 게시글의 모든 댓글 반환
-     *
-     *
      */
     public List<Comment> findAllByPostId(Long postId) {
 
         Post post = postService.getPostById(postId);
         return commentRepository.findCommentsByPost(post);
 
-        // 테스트 용 코드
-//        ExPost post = exPostService.getPostById(postId);
-//        return commentRepository.findCommentsByPost(post);
+    }
 
+    /**
+     * READ
+     * findPaging: 해당 게시글의 댓글 반환, 페이징 적용
+     */
+    public Page<Comment> findPagedCommentsByPostId(Long postId, int commentPage) {
+
+        // 페이징 -> 댓글 5개씩 출력
+        PageRequest commentPageRequest = PageRequest.of(commentPage - 1, 5, Sort.by("createdAt").descending());
+
+        return commentRepository.findCommentsByPost(postService.getPostById(postId), commentPageRequest);
+
+    }
+
+    /**
+     * READ
+     * 댓글 단건 조회
+     */
+    public Comment findCommentByCommentId(Long commentId) {
+
+        return commentRepository.findCommentById(commentId);
     }
 
     /**
@@ -68,14 +83,6 @@ public class CommentService {
 
         comment.setMember(member);
         comment.setPost(post);
-
-        // 테스트 용 코드
-//        ExMember member = exMemberRepository.findById(commentRequestDto.getMemberId())
-//                    .orElseThrow(() -> new IllegalArgumentException("member not found"));
-//        ExPost post = exPostService.getPostById(postId);
-//
-//        comment.setMember(member);
-//        comment.setPost(post);
 
         Comment savedComment = commentRepository.save(comment);
 

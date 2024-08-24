@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Base64;
+
 @Entity
 @Getter
 @NoArgsConstructor
@@ -13,14 +15,25 @@ public class CommentPhotos {
     @Column(name = "comment_photos_id")
     private Long id;
 
-    private String imagePath;
+    private String imageName;
+
+    @Lob
+    @Column(columnDefinition = "MEDIUMBLOB")
+    private byte[] imageData;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comment_id")
     private Comment comment;
 
-    public CommentPhotos(String imagePath, Comment comment) {
-        this.imagePath = imagePath;
+    public CommentPhotos(String imageName, byte[] imageData, Comment comment) {
+        this.imageName = imageName;
+        this.imageData = imageData;
         this.comment = comment;
+    }
+
+    // Base64 문자열 추가
+    public String getBase64Image() {
+        return Base64.getEncoder().encodeToString(this.imageData);
     }
 }
