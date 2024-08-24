@@ -31,12 +31,15 @@ public class Comment {
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
     private List<CommentPhotos> commentPhotos = new ArrayList<>();
 
+    @Column(nullable = false)
     private String content;
 
+    @Column(nullable = false)
     private LocalDateTime createdAt;
     private LocalDateTime editedAt;
 
     // 평점 (1 ~ 5점 선택 가능)
+    @Column(nullable = false)
     private Long rating;
 
     public void setMember(Member member) {
