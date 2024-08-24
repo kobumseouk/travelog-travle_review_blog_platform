@@ -13,6 +13,8 @@ import cloud4.team4.travelog.domain.post.exception.ResourceNotFoundException;
 import cloud4.team4.travelog.domain.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,10 +61,10 @@ public class PostService {
     return createdPost;
   }
 
-  // 모든 게시글 조회
-  public List<Post> getAllPosts() {
-    return postRepository.findAll();
-  }
+//  // 모든 게시글 조회
+//  public List<Post> getAllPosts() {
+//    return postRepository.findAll();
+//  }
 
   // 특정 게시글 조회
   public Post getPostById(Long postId) {
@@ -112,6 +114,11 @@ public class PostService {
           post.setRecommends(post.getRecommends() + 1);
           postRepository.save(post);
         });
+  }
+
+  // 게시글 페이징 기능
+  public Page<Post> getAllPosts(Pageable pageable) {
+    return postRepository.findAll(pageable);
   }
 
   // 제목으로 게시글 검색

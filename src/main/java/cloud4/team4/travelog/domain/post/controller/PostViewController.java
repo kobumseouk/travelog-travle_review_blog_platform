@@ -9,6 +9,11 @@ import cloud4.team4.travelog.domain.post.dto.PostViewResponse;
 import cloud4.team4.travelog.domain.post.entity.Post;
 import cloud4.team4.travelog.domain.post.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.ui.Model;
@@ -24,16 +29,33 @@ public class PostViewController {
   private final PostService postService;
   private final CommentService commentService;
 
-  @GetMapping("/board/post") // 상세 게시판
-  public String post(Model model) {
-    List<PostListViewResponse> posts = postService.getAllPosts()
-        .stream()
-        .map(PostListViewResponse::new)
-        .toList();
+  @GetMapping("/board/posts") // 상세 게시판
+  public String listPosts(Model model,
+                          @RequestParam(defaultValue = "1") int page,
+                          @RequestParam(defaultValue = "createdAt") String sortBy) {
 
-    model.addAttribute("Posts", posts);
+    Sort sort = createSort(sortBy);
+    Pageable pageable = PageRequest.of(page, 10, sort);
+    Page<Post> postPage = postService.getAllPosts(pageable);
+
+    Page<PostListViewResponse> postListViewResponsePage = postPage.map(PostListViewResponse::new);
+
+    model.addAttribute("posts", postListViewResponsePage);
+    model.addAttribute("currentPage", page);
+    model.addAttribute("totalPages", postPage.getTotalPages());
+    model.addAttribute("sortBy", sortBy);
 
     return "boardPost";
+  }
+
+  private Sort createSort(String sortBy) {
+    switch (sortBy) {
+      case "recommends":
+        return Sort.by("recommends").descending().and(Sort.by("createdAt").descending());
+      case "createdAt":
+      default:
+        return Sort.by("createdAt").descending();
+    }
   }
 
   @GetMapping("board/post/{postId}")
