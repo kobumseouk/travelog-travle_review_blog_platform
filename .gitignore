@@ -38,10 +38,7 @@ out/
 /src/main/generated/cloud4/team4/travelog/domain/board/entity/BoardMapperImpl.java
 /src/main/generated/cloud4/team4/travelog/domain/comment/dto/CommentMapperImpl.java
 /src/main/generated/cloud4/team4/travelog/domain/post/dto/PostMapperImpl.java
-/src/main/generated/cloud4/team4/travelog/domain/member/dto/MemberMapperImpl.java
-
 
 *MapperImpl.java          // 매퍼 클래스는자동 생성되므로 불필요
 application.properties
 build.gradle
-
