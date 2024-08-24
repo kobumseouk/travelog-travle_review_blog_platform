@@ -63,10 +63,15 @@
                     <div class="relative mb-1">
                         <div class="bg-gray-200 p-4 rounded-lg">
                             <span th:text="${comment.content}"></span>
-                            <div class="mt-1" th:each="photo : ${comment.getCommentPhotos()}">
-                                <a href="" target="_blank" class="image-link">
-                                    <img th:src="'data:image/jpeg;base64,' + ${photo.base64Image}" class="object-cover" />
-                                </a>
+                            <div th:if="${comment.getCommentPhotos().size() > 0}">
+                                <p class="text-sm mt-6">첨부한 이미지</p>
+                                <div class="img-container">
+                                    <div class="mt-1" th:each="photo : ${comment.getCommentPhotos()}">
+                                        <a href="#" class="image-link" th:data-base64="${photo.base64Image}" onclick="openImage(this.dataset.base64)">
+                                            <img th:src="'data:image/jpeg;base64,' + ${photo.base64Image}"/>
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- 아직은 정보 일치하는 회원만 수정, 삭제만 가능함 (추후에 관리자도 가능?)-->
