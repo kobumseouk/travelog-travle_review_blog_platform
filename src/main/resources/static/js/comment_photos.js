@@ -57,3 +57,9 @@ function validateForm() {
     }
     return true; // 폼 제출을 계속 진행
 }
+
+function openImage(base64) {
+    const newWindow = window.open();
+    newWindow.document.write('<img src="data:image/jpeg;base64,' + base64 + '" style="max-width:100%;"/>');
+    newWindow.document.close();
+}
