@@ -4,11 +4,8 @@ package cloud4.team4.travelog.domain.comment.controller;
 import cloud4.team4.travelog.domain.comment.dto.CommentRequestDto;
 import cloud4.team4.travelog.domain.comment.dto.CommentUpdateDto;
 import cloud4.team4.travelog.domain.comment.service.CommentService;
-import cloud4.team4.travelog.domain.post.entity.Post;
 import cloud4.team4.travelog.domain.post.service.PostService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,7 +35,8 @@ public class CommentController {
     @GetMapping("/post/{postId}/comment/update/{commentId}")
     public String updateCommentForm(@PathVariable("postId") Long postId,
                                     @PathVariable("commentId") Long commentId, Model model) {
-        CommentUpdateDto commentUpdateDto = new CommentUpdateDto(commentService.findCommentByCommentId(commentId).getContent());
+        CommentUpdateDto commentUpdateDto = new CommentUpdateDto(commentService.findCommentByCommentId(commentId).getContent(),
+                commentService.findCommentByCommentId(commentId).getRating());
 
         model.addAttribute("commentUpdateDto", commentUpdateDto);
 

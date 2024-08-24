@@ -54,8 +54,6 @@ public class CommentApiController {
     public ResponseEntity<String> updateComment(@PathVariable("commentId") Long commentId,
                                                 @ModelAttribute CommentUpdateDto commentUpdateDto) {
         try {
-            System.out.println("commentId.getClass() = " + commentId.getClass());
-            System.out.println("commentId = " + commentId);
             commentService.updateComment(commentId, commentUpdateDto);
             return ResponseEntity.status(HttpStatus.OK)
                     .body("comment updated");

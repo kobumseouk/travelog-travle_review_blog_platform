@@ -16,7 +16,9 @@ public class CommentUpdateDto {
 
     private List<MultipartFile> photos;
 
-    public CommentUpdateDto(String content) {
+    private Long rating;
+
+    public CommentUpdateDto(String content, Long rating) {
         this.content = content;
         this.photos = null;
     }
