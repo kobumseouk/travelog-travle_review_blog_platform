@@ -4,6 +4,7 @@ import cloud4.team4.travelog.domain.board.service.BoardService;
 import cloud4.team4.travelog.domain.comment.dto.CommentRequestDto;
 import cloud4.team4.travelog.domain.comment.service.CommentService;
 import cloud4.team4.travelog.domain.post.dto.PostListViewResponse;
+import cloud4.team4.travelog.domain.post.dto.PostPostDto;
 import cloud4.team4.travelog.domain.post.dto.PostResponseDto;
 import cloud4.team4.travelog.domain.post.dto.PostViewResponse;
 import cloud4.team4.travelog.domain.post.entity.Post;
@@ -56,7 +57,7 @@ public class PostViewController {
     }
   }
 
-  @GetMapping("board/post/{postId}")
+  @GetMapping("board/posts/{postId}")
   public String post(@PathVariable("postId") Long postId, Model model) {
     Post post = postService.getPostById(postId);
 
@@ -66,12 +67,12 @@ public class PostViewController {
     return "post";
   }
 
-  @GetMapping("/new-post")
+  @GetMapping("board/new-post")
   public String newPost(@RequestParam(required = false, name = "postId") Long postId, Model model) {
     // id 가 없으면 새롭게 블로그를 만든다.
     // id 가 있으면 수정
     if (postId == null) {
-      model.addAttribute("post", new PostViewResponse());
+      model.addAttribute("post", new PostPostDto());
     } else {
       Post post = postService.getPostById(postId); // 조회하고 DTO객체에 감싸서 수정
       model.addAttribute("post", new PostViewResponse(post));
