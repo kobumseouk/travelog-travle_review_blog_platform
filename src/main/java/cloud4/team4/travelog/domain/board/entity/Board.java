@@ -37,7 +37,7 @@ public class Board {
 
     // ToDo: 사진 추가
     @OneToOne(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
-    private BoardPhoto boardPhoto;
+    private BoardImage boardImage;
 
     //@Builder
     public Board(String description, String regionMajor, String regionMiddle) {

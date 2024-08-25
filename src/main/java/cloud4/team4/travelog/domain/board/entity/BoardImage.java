@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-public class BoardPhoto {
+public class BoardImage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,7 +20,7 @@ public class BoardPhoto {
     @JoinColumn(name = "board_id")
     private Board board;
 
-    public BoardPhoto(String imagePath, Board board) {
+    public BoardImage(String imagePath, Board board) {
         this.imagePath = imagePath;
         this.board = board;
     }

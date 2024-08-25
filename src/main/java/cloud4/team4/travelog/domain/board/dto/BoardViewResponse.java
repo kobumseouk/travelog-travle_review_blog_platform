@@ -15,6 +15,6 @@ public class BoardViewResponse {
         this.description = board.getDescription();
         this.regionMajor = board.getRegionMajor();
         this.regionMiddle = board.getRegionMiddle();
-        this.imagePath = board.getBoardPhoto().getImagePath();
+        this.imagePath = board.getBoardImage().getImagePath();
     }
 }

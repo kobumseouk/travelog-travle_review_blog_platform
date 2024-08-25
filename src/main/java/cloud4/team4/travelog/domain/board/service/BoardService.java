@@ -21,7 +21,7 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final BoardMapper boardMapper;
 
-    private final BoardPhotoService boardPhotoService;
+    private final BoardImageService boardImageService;
 
     /*----------Create----------*/
     public void save(BoardRequestDto requestDto) {
@@ -36,7 +36,7 @@ public class BoardService {
         Board savedBoard = boardRepository.save(board);
 
         try {
-            boardPhotoService.savePhoto(requestDto.getPhoto(), savedBoard);
+            boardImageService.saveImage(requestDto.getPhoto(), savedBoard);
         } catch(Exception e) {
             throw new RuntimeException(e.getMessage());
         }

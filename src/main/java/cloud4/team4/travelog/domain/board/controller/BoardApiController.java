@@ -4,7 +4,7 @@ import cloud4.team4.travelog.domain.board.dto.BoardRequestDto;
 import cloud4.team4.travelog.domain.board.dto.BoardUpdateRequestDto;
 import cloud4.team4.travelog.domain.board.dto.BoardUpdateResponseDto;
 import cloud4.team4.travelog.domain.board.dto.BoardViewResponse;
-import cloud4.team4.travelog.domain.board.service.BoardPhotoService;
+import cloud4.team4.travelog.domain.board.service.BoardImageService;
 import cloud4.team4.travelog.domain.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,7 +19,7 @@ import java.util.List;
 @RequestMapping("/api/main")
 public class BoardApiController {
     private final BoardService boardService;
-    private final BoardPhotoService boardPhotoService;
+    private final BoardImageService boardImageService;
 
     /*----------Create----------*/
 
