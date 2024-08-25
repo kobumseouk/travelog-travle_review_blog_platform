@@ -22,7 +22,8 @@ public class PostViewResponse {
   private Integer views;
   private Integer recommends;
 
-  private List<String> photos;    // 게시글에 첨부된 이미지 경로
+  private String photoPath;    // 게시글에 첨부된 이미지 경로
+  private String photoPosition;   // 이미지를 삽입할 위치
 
   public PostViewResponse(Post post) {
     this.postId = post.getPostId();
@@ -34,8 +35,7 @@ public class PostViewResponse {
     this.createdAt = post.getCreatedAt();
     this.views = post.getViews();
     this.recommends = post.getRecommends();
-    this.photos = post.getPostPhoto().stream()
-        .map(PostPhoto::getImagePath)
-        .collect(Collectors.toList());
+    this.photoPath = post.getPostPhoto() != null ? post.getPostPhoto().getImagePath() : null;
+    this.photoPosition = post.getPostPhoto() != null ? post.getPostPhoto().getPosition() : null;
   }
 }

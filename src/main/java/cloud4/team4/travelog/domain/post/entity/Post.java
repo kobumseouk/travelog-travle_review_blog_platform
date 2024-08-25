@@ -70,8 +70,8 @@ public class Post {
   private Integer recommends;
 
 
-  @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  private List<PostPhoto> postPhoto = new ArrayList<>();
+  @OneToOne(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+  private PostPhoto postPhoto;
 
   // 댓글 추가
   @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
