@@ -2,7 +2,6 @@ package cloud4.team4.travelog.domain.post.service;
 
 import cloud4.team4.travelog.domain.board.entity.Board;
 import cloud4.team4.travelog.domain.board.repository.BoardRepository;
-import cloud4.team4.travelog.domain.board.service.BoardService;
 import cloud4.team4.travelog.domain.member.entity.Member;
 import cloud4.team4.travelog.domain.member.repository.MemberRepository;
 import cloud4.team4.travelog.domain.post.dto.PostMapper;
@@ -12,7 +11,6 @@ import cloud4.team4.travelog.domain.post.entity.Post;
 import cloud4.team4.travelog.domain.post.exception.ResourceNotFoundException;
 import cloud4.team4.travelog.domain.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -25,7 +23,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostService {
 
-  @Autowired
   private final PostRepository postRepository;
   private final PostPhotoService postPhotoService;
   private final MemberRepository memberRepository;
@@ -57,7 +54,7 @@ public class PostService {
     post.setRecommends(0);
 
     Post createdPost = postRepository.save(post);
-    postPhotoService.uploadPhotos(createdPost, postPostDto.getPhotos(), postPostDto.getPhotoPositions());
+    postPhotoService.uploadPhoto(createdPost, postPostDto.getPhoto(), postPostDto.getPhotoPosition());
     return createdPost;
   }
 
@@ -84,7 +81,7 @@ public class PostService {
     post.setPeriodEnd(postDetails.getPeriodEnd());
     post.setEditedAt(LocalDateTime.now());
 
-    postPhotoService.updatePhotos(postId, postDetails.getPhotos(), postDetails.getPhotoPositions());
+    postPhotoService.updatePhoto(postId, postDetails.getPhoto(), postDetails.getPhotoPosition());
     return postRepository.save(post);
   }
 
