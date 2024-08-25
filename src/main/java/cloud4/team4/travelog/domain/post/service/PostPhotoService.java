@@ -2,6 +2,7 @@ package cloud4.team4.travelog.domain.post.service;
 
 import cloud4.team4.travelog.domain.post.entity.Post;
 import cloud4.team4.travelog.domain.post.entity.PostPhoto;
+import cloud4.team4.travelog.domain.post.exception.FileStorageException;
 import cloud4.team4.travelog.domain.post.exception.ResourceNotFoundException;
 import cloud4.team4.travelog.domain.post.repository.PostPhotoRepository;
 import cloud4.team4.travelog.domain.post.repository.PostRepository;
@@ -9,11 +10,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,66 +26,67 @@ public class PostPhotoService {
   private final PostPhotoRepository postPhotoRepository;
   private final PostRepository postRepository;
 
-  public void uploadPhotos(Post post, List<MultipartFile> photos, List<String> positions) {
+  @Value("${upload.dir}")
+  private String uploadDir;
+
+  @Transactional
+  public void uploadPhoto(Post post, MultipartFile photo, String position) {
+    if (photo == null || photo.isEmpty()) {
+      throw new IllegalArgumentException("사진은 필수입니다.");
+    }
+
+    if (position == null || position.trim().isEmpty()) {
+      throw new IllegalArgumentException("사진의 위치 정보는 필수입니다.");
+    }
+
     try {
-      String uploadsDir = "src/main/resources/static/uploads/post_photos/";
-      for (int i = 0; i < photos.size(); i++) {
-        MultipartFile photo = photos.get(i);
-        String position = positions.get(i);
-
-        if (photo.isEmpty()) {
-          continue;
-        }
-
-        String dbFilePath = savePhoto(photo, uploadsDir);
-        PostPhoto postPhoto = new PostPhoto(post, dbFilePath, position);
-        postPhotoRepository.save(postPhoto);
-      }
+      String dbFilePath = savePhoto(photo);
+      PostPhoto postPhoto = new PostPhoto(post, dbFilePath, position);
+      postPhotoRepository.save(postPhoto);
     } catch (IOException e) {
-      throw new RuntimeException("Failed to store file", e);
+      throw new FileStorageException("파일을 저장할 수 없습니다. " + photo.getOriginalFilename(), e);
     }
   }
 
 
   // 이미지 파일을 저장하는 메서드
-  private String savePhoto(MultipartFile photo, String uploadsDir) throws IOException {
-    // 파일 이름 생성
-    String fileName = UUID.randomUUID().toString().replace("-", "") + "_" + photo.getOriginalFilename();
-    // 실제 파일이 저장될 경로
-    String filePath = uploadsDir + fileName;
-    // DB에 저장할 경로 문자열
-    String dbFilePath = "/uploads/post_photos/" + fileName;
+  private String savePhoto(MultipartFile photo) throws IOException {
+    if (!isImageFile(photo)) {
+      throw new IllegalArgumentException("File must be an image");
+    }
 
-    Path path = Paths.get(filePath); // Path 객체 생성
-    Files.createDirectories(path.getParent()); // 디렉토리 생성
-    Files.write(path, photo.getBytes()); // 디렉토리에 파일 저장
+    String fileName = UUID.randomUUID().toString() + getFileExtension(photo.getOriginalFilename());
+    Path targetLocation = Paths.get(uploadDir).resolve(fileName);
+    Files.copy(photo.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
-    return dbFilePath;
+    return "/uploads/post_photos/" + fileName;
   }
+
+  private boolean isImageFile(MultipartFile file) {
+    String contentType = file.getContentType();
+    return contentType != null && contentType.startsWith("image/");
+  }
+
+  private String getFileExtension(String fileName) {
+    return fileName.substring(fileName.lastIndexOf("."));
+  }
+
 
   @Transactional
-  public void updatePhotos(Long postId, List<MultipartFile> photos, List<String> positions) {
+  public void updatePhoto(Long postId, MultipartFile photo, String position) {
     Post post = postRepository.findById(postId)
-        .orElseThrow(() -> new ResourceNotFoundException("Post not found with id: " + postId));
+        .orElseThrow(() -> new ResourceNotFoundException(postId + ": 해당 아이디로 게시글을 찾을 수 없습니다."));
 
     // 기존 사진 삭제
-    postPhotoRepository.deleteAll(postPhotoRepository.findPostPhotoByPost_PostId(postId));
+    postPhotoRepository.deleteByPost(post);
 
     // 새 사진 업로드
-    uploadPhotos(post, photos, positions);
+    uploadPhoto(post, photo, position);
   }
 
-  public List<String> findPhotosPathByPostId(Long postId) {
-    return postPhotoRepository.findPostPhotoByPost_PostId(postId)
-        .stream()
-        .map(PostPhoto::getImagePath)
-        .toList();
+  public PostPhoto findPhotoByPostId(Long postId) {
+    return postPhotoRepository.findByPost_PostId(postId)
+        .orElse(null);
   }
-
-  public List<PostPhoto> findPhotosByPostId(Long postId) {
-    return postPhotoRepository.findPostPhotoByPost_PostId(postId);
-  }
-
-
 
 }
