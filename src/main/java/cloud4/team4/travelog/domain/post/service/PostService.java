@@ -2,7 +2,6 @@ package cloud4.team4.travelog.domain.post.service;
 
 import cloud4.team4.travelog.domain.board.entity.Board;
 import cloud4.team4.travelog.domain.board.repository.BoardRepository;
-import cloud4.team4.travelog.domain.board.service.BoardService;
 import cloud4.team4.travelog.domain.member.entity.Member;
 import cloud4.team4.travelog.domain.member.repository.MemberRepository;
 import cloud4.team4.travelog.domain.post.dto.PostMapper;
@@ -12,7 +11,6 @@ import cloud4.team4.travelog.domain.post.entity.Post;
 import cloud4.team4.travelog.domain.post.exception.ResourceNotFoundException;
 import cloud4.team4.travelog.domain.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -25,26 +23,25 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostService {
 
-  @Autowired
   private final PostRepository postRepository;
   private final PostPhotoService postPhotoService;
   private final MemberRepository memberRepository;
   private final BoardRepository boardRepository;
-
+  private final PostMapper postMapper;
 
   // 게시글 생성
   @Transactional
   public Post createPost(PostPostDto postPostDto) {
-    Post post = PostMapper.INSTANCE.postPostDtoToPost(postPostDto);
+    Post post = postMapper.postPostDtoToPost(postPostDto);
 
     // post.setTitle(postPostDto.getTitle());
     // post.setContent(postPostDto.getContent());
 
     Member member = memberRepository.findById(postPostDto.getMemberId())
-        .orElseThrow(() -> new ResourceNotFoundException("member not found"));
+        .orElseThrow(() -> new ResourceNotFoundException("회원을 찾을 수 없다."));
 
     Board board = boardRepository.findById(postPostDto.getBoardId())
-        .orElseThrow(() -> new ResourceNotFoundException("board not found"));
+        .orElseThrow(() -> new ResourceNotFoundException("게시판을 찾을 수 없다."));
 
     post.setMember(member);
     post.setBoard(board);
@@ -57,7 +54,7 @@ public class PostService {
     post.setRecommends(0);
 
     Post createdPost = postRepository.save(post);
-    postPhotoService.uploadPhotos(createdPost, postPostDto.getPhotos(), postPostDto.getPhotoPositions());
+    postPhotoService.uploadPhoto(createdPost, postPostDto.getPhoto(), postPostDto.getPhotoPosition());
     return createdPost;
   }
 
@@ -69,14 +66,14 @@ public class PostService {
   // 특정 게시글 조회
   public Post getPostById(Long postId) {
     return postRepository.findById(postId)
-        .orElseThrow(() -> new ResourceNotFoundException("Post not found with id: " + postId));
+        .orElseThrow(() -> new ResourceNotFoundException(postId + ": 해당 아이디로 게시글을 찾을 수 없습니다."));
   }
 
   // 게시글 수정
   @Transactional
   public Post updatePost(Long postId, PostUpdateDto postDetails) {
     Post post = postRepository.findById(postId)
-        .orElseThrow(() -> new ResourceNotFoundException("Post not found with id: " + postId));
+        .orElseThrow(() -> new ResourceNotFoundException(postId + ": 해당 아이디로 게시글을 찾을 수 없습니다."));
 
     post.setTitle(postDetails.getTitle());
     post.setContent(postDetails.getContent());
@@ -84,7 +81,7 @@ public class PostService {
     post.setPeriodEnd(postDetails.getPeriodEnd());
     post.setEditedAt(LocalDateTime.now());
 
-    postPhotoService.updatePhotos(postId, postDetails.getPhotos(), postDetails.getPhotoPositions());
+    postPhotoService.updatePhoto(postId, postDetails.getPhoto(), postDetails.getPhotoPosition());
     return postRepository.save(post);
   }
 
@@ -92,7 +89,7 @@ public class PostService {
   @Transactional
   public void deletePost(Long postId) {
     Post post = postRepository.findById(postId)
-        .orElseThrow(() -> new ResourceNotFoundException("Post not found with id: " + postId));
+        .orElseThrow(() -> new ResourceNotFoundException(postId + ": 해당 아이디로 게시글을 찾을 수 없습니다."));
     postRepository.delete(post);
   }
 
