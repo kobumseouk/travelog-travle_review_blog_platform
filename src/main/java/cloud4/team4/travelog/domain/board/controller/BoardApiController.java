@@ -16,7 +16,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/main")
+@RequestMapping("/api/main")
 public class BoardApiController {
     private final BoardService boardService;
     private final BoardPhotoService boardPhotoService;
