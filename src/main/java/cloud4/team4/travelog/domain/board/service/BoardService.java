@@ -43,18 +43,26 @@ public class BoardService {
     }
 
     /*----------Read----------*/
-    // 모든 대분류(regionMajor) 게시판 조회
+    // Todo: 사진을 포함한 모든 게시판 조회 - 완료
     public List<BoardViewResponse> getAllBoards() {
-        return boardRepository.findAll().stream()
+        List<Board> boards = boardRepository.findAll();
+
+        List<BoardViewResponse> result = boards.stream()
                 .map(BoardViewResponse::new)
                 .collect(Collectors.toList());
+
+        return result;
     }
 
-    // 모든 소분류(regionMiddle) 게시판 조회
+    // Todo: 사진을 포함, 대분류에 따른(regionMajor) 게시판 조회 - 완료
     public List<BoardViewResponse> getMiddleBoards(String regionMajor) {
-        return boardRepository.findByRegionMajor(regionMajor).stream()
+        List<Board> boards = boardRepository.findByRegionMajor(regionMajor);
+
+        List<BoardViewResponse> result = boards.stream()
                 .map(BoardViewResponse::new)
                 .collect(Collectors.toList());
+
+        return result;
     }
 
     /*----------Update----------*/

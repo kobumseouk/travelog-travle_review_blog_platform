@@ -8,11 +8,13 @@ public class BoardViewResponse {
     private String description;
     private String regionMajor;
     private String regionMiddle;
+    private String imagePath;
 
     //    @Builder
     public BoardViewResponse(Board board) {
         this.description = board.getDescription();
         this.regionMajor = board.getRegionMajor();
         this.regionMiddle = board.getRegionMiddle();
+        this.imagePath = board.getBoardPhoto().getImagePath();
     }
 }

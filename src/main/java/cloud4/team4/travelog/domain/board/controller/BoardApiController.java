@@ -53,7 +53,7 @@ public class BoardApiController {
         return boardService.getAllBoards();
     }
 
-    // 모든 소분류(regionMiddle) 게시판 조회
+    // Todo: 사진과 함께 소분류 게시판 조회 - 완료
     @GetMapping("/boardlist-{regionMajor}")
     public List<BoardViewResponse> getMiddleBoards(@PathVariable("regionMajor") String regionMajor) {
         return boardService.getMiddleBoards(regionMajor);
