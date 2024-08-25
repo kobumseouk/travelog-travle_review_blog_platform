@@ -22,14 +22,16 @@ public class PostPhoto {
   private Long post_photoId;
 
   @NotNull
-  @ManyToOne(fetch = FetchType.LAZY)
+  @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "post_id")
   private Post post;
 
+  @NotNull
   @NotBlank
   @Column(name = "image_path")
   private String imagePath;
 
+  @NotNull
   @NotBlank
   @Column(name = "position")   // 위치 정보 추가
   private String position;

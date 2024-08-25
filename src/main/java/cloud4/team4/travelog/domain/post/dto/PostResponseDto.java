@@ -21,6 +21,7 @@ public class PostResponseDto {
   private String title;
   @NotBlank
   private String content;
+
   private Long boardId;
   private Long memberId;
   private String periodStart;
@@ -30,7 +31,8 @@ public class PostResponseDto {
   private Integer views;
   private Integer recommends;
 
-  private List<String> photos;    // 게시글에 첨부된 이미지 경로
+  private String photoPath;    // 게시글에 첨부된 이미지 경로
+  private String photoPosition;   // 이미지를 삽입할 위치
 
   private List<Comment> comments;
 
