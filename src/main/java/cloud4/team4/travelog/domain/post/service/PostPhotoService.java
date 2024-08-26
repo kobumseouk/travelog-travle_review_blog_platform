@@ -55,7 +55,7 @@ public class PostPhotoService {
         .orElseThrow(() -> new ResourceNotFoundException(postId + ": 해당 아이디로 게시글을 찾을 수 없습니다."));
 
     // 기존 이미지 삭제
-    List<PostPhoto> existPhotos = postPhotoRepository.findAllPhotosByPost_PostId(postId);
+    List<PostPhoto> existPhotos = findPhotosByPostId(postId);
     if (!existPhotos.isEmpty()) {
       postPhotoRepository.deleteAll(existPhotos);
     }
@@ -65,6 +65,10 @@ public class PostPhotoService {
       uploadPhoto(post, photos, positions);
     }
 
+  }
+
+  public List<PostPhoto> findPhotosByPostId(Long postId) {
+    return postPhotoRepository.findAllPhotosByPost_PostId(postId);
   }
 
 }

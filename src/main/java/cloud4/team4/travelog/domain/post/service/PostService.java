@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class PostService {
 
   // 게시글 생성
   @Transactional
-  public Post createPost(PostPostDto postPostDto) {
+  public Post createPost(PostPostDto postPostDto) throws IOException {
     Post post = postMapper.postPostDtoToPost(postPostDto);
 
     // post.setTitle(postPostDto.getTitle());
@@ -54,7 +55,7 @@ public class PostService {
     post.setRecommends(0);
 
     Post createdPost = postRepository.save(post);
-    postPhotoService.uploadPhoto(createdPost, postPostDto.getPhoto(), postPostDto.getPhotoPosition());
+    postPhotoService.uploadPhoto(createdPost, postPostDto.getPhotos(), postPostDto.getPhotoPositions());
     return createdPost;
   }
 
@@ -71,7 +72,7 @@ public class PostService {
 
   // 게시글 수정
   @Transactional
-  public Post updatePost(Long postId, PostUpdateDto postDetails) {
+  public Post updatePost(Long postId, PostUpdateDto postDetails) throws IOException {
     Post post = postRepository.findById(postId)
         .orElseThrow(() -> new ResourceNotFoundException(postId + ": 해당 아이디로 게시글을 찾을 수 없습니다."));
 
@@ -81,7 +82,7 @@ public class PostService {
     post.setPeriodEnd(postDetails.getPeriodEnd());
     post.setEditedAt(LocalDateTime.now());
 
-    postPhotoService.updatePhoto(postId, postDetails.getPhoto(), postDetails.getPhotoPosition());
+    postPhotoService.updatePhoto(postId, postDetails.getPhotos(), postDetails.getPhotoPositions());
     return postRepository.save(post);
   }
 
