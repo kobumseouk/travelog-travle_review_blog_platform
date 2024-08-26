@@ -35,8 +35,9 @@ public class PostViewController {
                           @RequestParam(defaultValue = "1") int page,
                           @RequestParam(defaultValue = "createdAt") String sortBy) {
 
-    Sort sort = createSort(sortBy);
-    Pageable pageable = PageRequest.of(page, 10, sort);
+    Sort sort = createSort(sortBy);  // 최신순/추천순 값에 따라 정렬
+
+    Pageable pageable = PageRequest.of(page, 10, sort);  // 페이징 기능
     Page<Post> postPage = postService.getAllPosts(pageable);
 
     Page<PostListViewResponse> postListViewResponsePage = postPage.map(PostListViewResponse::new);
@@ -63,6 +64,18 @@ public class PostViewController {
 
     model.addAttribute("commentRequestDto", new CommentRequestDto());
     model.addAttribute("post", new PostViewResponse(post));
+
+    return "post";
+  }
+
+  @GetMapping("/post/{postId}")
+  public String post(@PathVariable("postId") Long postId,
+                     @RequestParam(required = false, value = "commentPage", defaultValue = "1") int commentPage,
+                     Model model) {
+
+    model.addAttribute("commentRequestDto", new CommentRequestDto());
+//        model.addAttribute("post", postService.getPostById(postId));
+    model.addAttribute("comments", commentService.findPagedCommentsByPostId(postId, commentPage));
 
     return "post";
   }
