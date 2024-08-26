@@ -23,8 +23,6 @@
     content: '★'; /* 채워진 별 */
     color: gold; /* 채워진 별 색상 */
     position: absolute; /* 절대 위치 지정 */
-    /*left: 0; !* 왼쪽 정렬 *!*/
-    /*top: 0; !* 위쪽 정렬 *!*/
     width: 50%; /* 반만 보이게 설정 */
     overflow: hidden; /* 넘치는 부분 숨기기 */
 }
