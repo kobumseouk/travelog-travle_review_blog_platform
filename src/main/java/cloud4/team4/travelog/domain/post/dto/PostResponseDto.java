@@ -36,7 +36,7 @@ public class PostResponseDto {
 
   /*private String photoPath;    // 게시글에 첨부된 이미지 경로
   private String photoPosition;   // 이미지를 삽입할 위치*/
-  private List<PostPhotoDto> photos;
+  private List<PostPhoto> photos;
 
   private List<Comment> comments;
 
