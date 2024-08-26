@@ -117,4 +117,17 @@ public class CommentService {
     public void deleteComment(Long commentId) {
         commentRepository.deleteById(commentId);
     }
+
+    // 게시글의 모든 댓글의 평점 평균 (소숫점 첫째자리 까지 출력)
+    public double getAverageRating(Long postId) {
+        Post post = postService.getPostById(postId);
+        List<Comment> comments = commentRepository.findCommentsByPost(post);
+
+
+        // 평균 평점 반환 -> 평점이 없다면 0.0 반환
+        double average = comments.stream()
+                .mapToLong(Comment::getRating)
+                .average().orElse(0.0);
+        return Math.round(average * 10.0) / 10.0;
+    }
 }
