@@ -5,7 +5,6 @@ import cloud4.team4.travelog.domain.comment.dto.CommentRequestDto;
 import cloud4.team4.travelog.domain.comment.service.CommentService;
 import cloud4.team4.travelog.domain.post.dto.PostListViewResponse;
 import cloud4.team4.travelog.domain.post.dto.PostPostDto;
-import cloud4.team4.travelog.domain.post.dto.PostResponseDto;
 import cloud4.team4.travelog.domain.post.dto.PostViewResponse;
 import cloud4.team4.travelog.domain.post.entity.Post;
 import cloud4.team4.travelog.domain.post.service.PostService;
@@ -32,18 +31,19 @@ public class PostViewController {
 
   @GetMapping("/board/posts") // 상세 게시판
   public String listPosts(Model model,
-                          @RequestParam(defaultValue = "1") int page,
+                          @RequestParam(defaultValue = "1") int postPage,
                           @RequestParam(defaultValue = "createdAt") String sortBy) {
 
-    Sort sort = createSort(sortBy);
-    Pageable pageable = PageRequest.of(page, 10, sort);
-    Page<Post> postPage = postService.getAllPosts(pageable);
+    Sort sort = createSort(sortBy);  // 최신순/추천순 값에 따라 정렬
 
-    Page<PostListViewResponse> postListViewResponsePage = postPage.map(PostListViewResponse::new);
+    Pageable pageable = PageRequest.of(postPage, 10, sort);  // 페이징 기능
+    Page<Post> currentPostPage = postService.getAllPosts(pageable);
+
+    Page<PostListViewResponse> postListViewResponsePage = currentPostPage.map(PostListViewResponse::new);
 
     model.addAttribute("posts", postListViewResponsePage);
-    model.addAttribute("currentPage", page);
-    model.addAttribute("totalPages", postPage.getTotalPages());
+    model.addAttribute("currentPage", currentPostPage);
+    model.addAttribute("totalPages", currentPostPage.getTotalPages());
     model.addAttribute("sortBy", sortBy);
 
     return "boardPost";
@@ -58,12 +58,15 @@ public class PostViewController {
   }
 
   @GetMapping("board/posts/{postId}")
-  public String post(@PathVariable("postId") Long postId, Model model) {
+  public String post(@PathVariable("postId") Long postId,
+                     @RequestParam(required = false, value = "commentPage", defaultValue = "1") int commentPage,
+                     Model model) {
     Post post = postService.getPostById(postId);
     postService.incrementViews(postId);  // 방문마다 조회수 증가
 
     model.addAttribute("commentRequestDto", new CommentRequestDto());
     model.addAttribute("post", new PostViewResponse(post));
+    model.addAttribute("comments", commentService.findPagedCommentsByPostId(postId, commentPage));
 
     return "post";
   }

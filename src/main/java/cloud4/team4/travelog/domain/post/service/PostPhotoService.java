@@ -1,8 +1,8 @@
 package cloud4.team4.travelog.domain.post.service;
 
+import cloud4.team4.travelog.domain.comment.exception.CommentPhotosSizeException;
 import cloud4.team4.travelog.domain.post.entity.Post;
 import cloud4.team4.travelog.domain.post.entity.PostPhoto;
-import cloud4.team4.travelog.domain.post.exception.FileStorageException;
 import cloud4.team4.travelog.domain.post.exception.ResourceNotFoundException;
 import cloud4.team4.travelog.domain.post.repository.PostPhotoRepository;
 import cloud4.team4.travelog.domain.post.repository.PostRepository;
@@ -10,13 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,40 +21,27 @@ public class PostPhotoService {
   private final PostPhotoRepository postPhotoRepository;
   private final PostRepository postRepository;
 
-  @Value("${upload.dir}")
-  private String uploadDir;
-
   @Transactional
-  public void uploadPhoto(Post post, MultipartFile photo, String position) {
-    if (photo == null || photo.isEmpty()) {
-      throw new IllegalArgumentException("사진은 필수입니다.");
+  public void uploadPhoto(Post post, List<MultipartFile> photos, List<String> positions) throws IOException {
+    if (photos == null || photos.isEmpty()) {
+      return;
+    }
+    if(photos.size() > 1) {   // 업로드 사진 개수 제한
+      throw new IllegalArgumentException("최대 사진 업로드 개수는 1개 입니다!");
     }
 
-    if (position == null || position.trim().isEmpty()) {
-      throw new IllegalArgumentException("사진의 위치 정보는 필수입니다.");
-    }
+    for (int i = 0; i < photos.size(); i++) {
+      MultipartFile photo = photos.get(i);
+      String position = positions.get(i);
 
-    try {
-      String dbFilePath = savePhoto(photo);
-      PostPhoto postPhoto = new PostPhoto(post, dbFilePath, position);
+      if (!isImageFile(photo)) {
+        throw new IllegalArgumentException("사진 이외의 파일은 업로드 불가능합니다!");
+      }
+
+      String imageName = UUID.randomUUID().toString().replace("-", "") + "_" + photo.getOriginalFilename();
+      PostPhoto postPhoto = new PostPhoto(imageName, photo.getBytes(), post, position);
       postPhotoRepository.save(postPhoto);
-    } catch (IOException e) {
-      throw new FileStorageException("파일을 저장할 수 없습니다. " + photo.getOriginalFilename(), e);
     }
-  }
-
-
-  // 이미지 파일을 저장하는 메서드
-  private String savePhoto(MultipartFile photo) throws IOException {
-    if (!isImageFile(photo)) {
-      throw new IllegalArgumentException("File must be an image");
-    }
-
-    String fileName = UUID.randomUUID().toString() + getFileExtension(photo.getOriginalFilename());
-    Path targetLocation = Paths.get(uploadDir).resolve(fileName);
-    Files.copy(photo.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
-
-    return "/uploads/post_photos/" + fileName;
   }
 
   private boolean isImageFile(MultipartFile file) {
@@ -67,26 +49,22 @@ public class PostPhotoService {
     return contentType != null && contentType.startsWith("image/");
   }
 
-  private String getFileExtension(String fileName) {
-    return fileName.substring(fileName.lastIndexOf("."));
-  }
-
-
   @Transactional
-  public void updatePhoto(Long postId, MultipartFile photo, String position) {
+  public void updatePhoto(Long postId, List<MultipartFile> photos, List<String> positions) throws IOException {
     Post post = postRepository.findById(postId)
         .orElseThrow(() -> new ResourceNotFoundException(postId + ": 해당 아이디로 게시글을 찾을 수 없습니다."));
 
-    // 기존 사진 삭제
-    postPhotoRepository.deleteByPost(post);
+    // 기존 이미지 삭제
+    List<PostPhoto> existPhotos = postPhotoRepository.findAllByPost_PostId(postId);
+    if (!existPhotos.isEmpty()) {
+      postPhotoRepository.deleteAll(existPhotos);
+    }
 
-    // 새 사진 업로드
-    uploadPhoto(post, photo, position);
-  }
+    // 새 이미지 업로드
+    if (photos != null && !photos.isEmpty()) {
+      uploadPhoto(post, photos, positions);
+    }
 
-  public PostPhoto findPhotoByPostId(Long postId) {
-    return postPhotoRepository.findByPost_PostId(postId)
-        .orElse(null);
   }
 
 }

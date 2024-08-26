@@ -41,10 +41,12 @@ public class PostController {
       Post createdPost = postService.createPost(postPostDto);
       PostResponseDto responseDto = postMapper.postToPostResponseDto(createdPost);
       return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
+    } catch (IllegalArgumentException e) {
+      return ResponseEntity.badRequest().body(e.getMessage());  // 적절한 입력을 하지 못했을 때 오류
     } catch (IOException e) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 업로드 중 오류 발생");
     } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류");
     }
   }
 
@@ -83,10 +85,12 @@ public class PostController {
     try {
       Post updatedPost = postService.updatePost(postId, postUpdateDto);
       return ResponseEntity.ok(postMapper.postToPostResponseDto(updatedPost));
+    } catch (IllegalArgumentException e) {    // 적절한 입력을 하지 못했을 때 오류
+      return ResponseEntity.badRequest().body(e.getMessage());
     } catch (ResourceNotFoundException e) {
       return ResponseEntity.notFound().build();
     } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류");
     }
   }
 
