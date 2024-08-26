@@ -60,6 +60,7 @@ public class PostViewController {
   @GetMapping("board/posts/{postId}")
   public String post(@PathVariable("postId") Long postId, Model model) {
     Post post = postService.getPostById(postId);
+    postService.incrementViews(postId);  // 방문마다 조회수 증가
 
     model.addAttribute("commentRequestDto", new CommentRequestDto());
     model.addAttribute("post", new PostViewResponse(post));
