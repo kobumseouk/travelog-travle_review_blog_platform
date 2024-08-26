@@ -21,7 +21,10 @@ public class BoardImageService {
     private final BoardImageRepository boardImageRepository;
     private final BoardRepository boardRepository;
 
-    // Todo: 사진 추가
+
+    /* CREATE */
+
+    // 사진 추가
     @Transactional
     public void saveImage(MultipartFile image, Board board) throws Exception {
         try {
@@ -63,6 +66,27 @@ public class BoardImageService {
         return dbFilePath;
     }
 
+
+    /* UPDATE */
+
+    @Transactional
+    public void T_updateImage(MultipartFile image, Board board) {
+
+        // 기존 이미지 삭제
+        boardImageRepository.delete(findPhotoByBoardId(board.getId()));
+
+        // 이미지 업데이트
+        try {
+            saveImage(image, board);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+    }
+
+
+    /* 기타 메서드 */
+
     // 사진 경로를 반환
     public String findImagePathByBoardId(Long id) {
         return boardImageRepository.findBoardImageByBoard_Id(id)
@@ -83,6 +107,6 @@ public class BoardImageService {
     private boolean isImageFile(MultipartFile photo) {
         String contentType = photo.getContentType();
         return contentType != null && contentType.startsWith("image/");
-    };
+    }
 
 }

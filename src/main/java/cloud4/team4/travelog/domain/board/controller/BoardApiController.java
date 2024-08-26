@@ -21,19 +21,12 @@ public class BoardApiController {
     private final BoardService boardService;
     private final BoardImageService boardImageService;
 
-    /*----------Create----------*/
+    /* CREATE */
 
-    // 게시판 생성
-    // 기존 게시판 추가 메서드
-    @PostMapping("/board-create")
-    public void createBoard(@RequestBody BoardRequestDto boardRequestDto) {
-        boardService.save(boardRequestDto);
-    }
-
-    // 사진과 함께 게시판을 추가하는 메서드
-    @PostMapping(value = "/t-board-create/{id}", consumes = "multipart/form-data")
-    public ResponseEntity<String> T_createBoard(@PathVariable("id") Long id,
-                                                @ModelAttribute BoardRequestDto boardRequestDto) {
+    // 사진과 함께 게시판을 추가
+    @PostMapping(value = "/board-create/{id}", consumes = "multipart/form-data")
+    public ResponseEntity<String> createBoard(@PathVariable("id") Long id,
+                                              @ModelAttribute BoardRequestDto boardRequestDto) {
         try {
             boardService.saveBoard(id, boardRequestDto);
             return ResponseEntity.status(HttpStatus.FOUND)
@@ -45,7 +38,8 @@ public class BoardApiController {
         }
     }
 
-    /*----------Read----------*/
+
+    /* READ */
 
     // 모든 대분류(regionMajor) 게시판 조회
     @GetMapping
@@ -53,21 +47,39 @@ public class BoardApiController {
         return boardService.getAllBoards();
     }
 
-    // Todo: 사진과 함께 소분류 게시판 조회 - 완료
+    // 사진과 함께 대분류(regionMajor)에 따른 게시판 조회
     @GetMapping("/boardlist-{regionMajor}")
     public List<BoardViewResponse> getMiddleBoards(@PathVariable("regionMajor") String regionMajor) {
         return boardService.getMiddleBoards(regionMajor);
     }
 
-    /*----------Update----------*/
+
+    /* UPDATE */
 
     // 게시판 수정
-    @PutMapping("/board-update/{id}")
-    public BoardUpdateResponseDto update(@PathVariable("id") Long id, @RequestBody BoardUpdateRequestDto requestDto) {
-        return boardService.update(id, requestDto);
+    @PutMapping(value = "/t-board-update/{id}")
+    public ResponseEntity<String> T_updateBoard(@PathVariable("id") Long id,
+                                                @ModelAttribute BoardUpdateRequestDto requestDto) {
+        try {
+            boardService.T_updateBoard(id, requestDto);
+
+            return ResponseEntity.status(HttpStatus.FOUND)
+                    .location(URI.create("/"))
+                    .build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(e.getMessage());
+        }
     }
 
-    // Delete: 게시판 삭제
+    @PutMapping("/board-update/{id}")
+    public BoardUpdateResponseDto update(@PathVariable("id") Long id, @RequestBody BoardUpdateRequestDto requestDto) {
+        return boardService.updateBoard(id, requestDto);
+    }
+
+
+    /* DELETE */
+
     @DeleteMapping("/board-delete/{id}")
     public void delete(@PathVariable("id") Long id) {
         boardService.deleteBoard(id);

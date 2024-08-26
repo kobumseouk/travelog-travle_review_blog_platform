@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class BoardRequestDto {
+    private Long boardId;
     private String regionMajor;
     private String regionMiddle;
     private String description;

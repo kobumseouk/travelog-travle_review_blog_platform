@@ -23,11 +23,8 @@ public class BoardService {
 
     private final BoardImageService boardImageService;
 
-    /*----------Create----------*/
-    public void save(BoardRequestDto requestDto) {
-        Board board = boardMapper.toEntity(requestDto);
-        boardRepository.save(board);
-    }
+
+    /* CREATE */
 
     @Transactional
     public void saveBoard(Long id, BoardRequestDto requestDto) {
@@ -42,8 +39,10 @@ public class BoardService {
         }
     }
 
-    /*----------Read----------*/
-    // Todo: 사진을 포함한 모든 게시판 조회 - 완료
+
+    /* READ */
+
+    // 사진을 포함한 모든 게시판 조회
     public List<BoardViewResponse> getAllBoards() {
         List<Board> boards = boardRepository.findAll();
 
@@ -54,7 +53,7 @@ public class BoardService {
         return result;
     }
 
-    // Todo: 사진을 포함, 대분류에 따른(regionMajor) 게시판 조회 - 완료
+    // 사진과 함께 대분류(regionMajor)에 따른 게시판 조회
     public List<BoardViewResponse> getMiddleBoards(String regionMajor) {
         List<Board> boards = boardRepository.findByRegionMajor(regionMajor);
 
@@ -65,10 +64,22 @@ public class BoardService {
         return result;
     }
 
-    /*----------Update----------*/
+
+    /* UPDATE */
+
     // 업데이트
     @Transactional
-    public BoardUpdateResponseDto update(Long id, BoardUpdateRequestDto requestDto) {
+    public void T_updateBoard(Long id, BoardUpdateRequestDto requestDto) {
+        Board board = boardRepository.findById(id).orElseThrow(RuntimeException::new);
+
+        board.update(requestDto.getDescription());
+
+        boardImageService.T_updateImage(requestDto.getImage(), board);
+    }
+
+    // 기존
+    @Transactional
+    public BoardUpdateResponseDto updateBoard(Long id, BoardUpdateRequestDto requestDto) {
         Board board = boardRepository.findById(id).orElseThrow(RuntimeException::new);
 
         board.update(requestDto.getDescription());
@@ -86,14 +97,14 @@ public class BoardService {
         return new BoardUpdateResponseDto(board);
     }*/
 
-    /*----------Delete----------*/
+
+    /* DELETE*/
+
     public void deleteBoard(Long id) {
         Board board = boardRepository.findById(id)
                 .orElseThrow(RuntimeException::new);
 
         boardRepository.delete(board);
     }
-
-
 
 }
