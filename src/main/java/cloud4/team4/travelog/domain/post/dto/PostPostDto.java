@@ -39,11 +39,8 @@ public class PostPostDto {
   @Pattern(regexp = "\\d{4}-\\d{2}-\\d{2}", message = "종료 날짜는 YYYY-MM-DD 형식이어야 합니다.")
   private String periodEnd;
 
-  // @Size(max = 1, message = "사진은 최대 1개까지 업로드할 수 있습니다.")
-  private MultipartFile photo;
-
-  // @Size(max = 1, message = "사진 위치 정보는 최대 1개까지 입력할 수 있습니다.")
-  private String photoPosition;
+  private List<MultipartFile> photos;
+  private List<String> photoPositions;
 
   // photos와 photoPositions의 크기가 일치하는지 확인하는 커스텀 유효성 검사 메서드
   /*@AssertTrue(message = "조건: 사진 개수와 위치 정보 개수 일치")

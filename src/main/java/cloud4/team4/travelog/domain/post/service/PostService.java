@@ -54,7 +54,7 @@ public class PostService {
     post.setRecommends(0);
 
     Post createdPost = postRepository.save(post);
-    postPhotoService.uploadPhoto(createdPost, postPostDto.getPhoto(), postPostDto.getPhotoPosition());
+    postPhotoService.uploadPhoto(createdPost, postPostDto.getPhotos(), postPostDto.getPhotoPositions());
     return createdPost;
   }
 
@@ -82,7 +82,7 @@ public class PostService {
 
     post.setEditedAt(LocalDateTime.now());
 
-    postPhotoService.updatePhoto(postId, postDetails.getPhoto(), postDetails.getPhotoPosition());
+    postPhotoService.updatePhoto(postId, postDetails.getPhotos(), postDetails.getPhotoPositions());
     return postRepository.save(post);
   }
 
