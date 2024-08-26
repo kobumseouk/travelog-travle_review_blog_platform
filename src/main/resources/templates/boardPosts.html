@@ -1,0 +1,87 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head th:replace="~{fragments/header :: header}"></head>
+<body class="h-full flex flex-col">
+<div th:replace="~{fragments/bodyHeader :: bodyHeader}"></div><br>
+
+<div class="h-full">
+    <!--이 div 태그 안에 본문 작성하시면 됩니다!-->
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold mb-6">여행 게시글 목록</h1>
+
+        <div class="mb-6 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <!-- 임의의 지역 게시판 옵션 생성 -->
+                <select id="boardSelect" class="p-2 border rounded" th:value="${currentBoard}">
+                    <option value="" selected>게시판 선택</option>
+                    <option value="seoul">서울</option>
+                    <option value="busan">부산</option>
+                    <option value="incheon">인천</option>
+                    <option value="daegu">대구</option>
+                    <option value="gwangju">광주</option>
+                </select>
+                <select id="regionSelect" class="p-2 border rounded" th:value="${currentRegion}">
+                    <!-- 지역 옵션 동적 생성 -->
+                </select>
+                <input type="text" id="detailRegion" placeholder="상세 지역 입력" class="p-2 border rounded" th:value="${currentDetailRegion}">
+                <input type="text" id="searchInput" placeholder="게시글 찾기" class="p-2 border rounded">
+                <button id="searchBtn" class="bg-blue-500 text-white px-4 py-2 rounded">검색</button>
+            </div>
+            <button id="writeBtn" class="bg-green-500 text-white px-4 py-2 rounded">작성</button>
+        </div>
+
+        <div class="mb-6">
+            <button id="sortLatest" class="bg-gray-200 px-4 py-2 rounded mr-2" th:classappend="${currentSort == 'latest'} ? 'active bg-blue-500 text-white' : ''">최신순</button>
+            <button id="sortRecommends" class="bg-gray-200 px-4 py-2 rounded" th:classappend="${currentSort == 'recommends'} ? 'active bg-blue-500 text-white' : ''">추천순</button>
+        </div>
+
+        <table class="w-full border-collapse border">
+            <thead>
+            <tr class="bg-gray-100">
+                <th class="border p-2">번호</th>
+                <th class="border p-2">제목</th>
+                <th class="border p-2">작성자</th>
+                <th class="border p-2">작성일</th>
+                <th class="border p-2">조회</th>
+                <th class="border p-2">추천</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Thymeleaf를 사용하여 게시글 목록을 동적으로 생성 -->
+            <tr th:each="post : ${posts}">
+                <td class="border p-2" th:text="${post.id}"></td>
+                <td class="border p-2" th:text="${post.title}"></td>
+                <td class="border p-2" th:text="${post.author}"></td>
+                <td class="border p-2" th:text="${post.date}"></td>
+                <td class="border p-2" th:text="${post.views}"></td>
+                <td class="border p-2" th:text="${post.recommends}"></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="mt-6 flex justify-center">
+            <nav class="inline-flex">
+                <a th:each="pageNum : ${#numbers.sequence(1, totalPages)}"
+                   th:href="@{/posts(board=${currentBoard},region=${currentRegion},detailRegion=${currentDetailRegion},sort=${currentSort},page=${pageNum})}"
+                   th:text="${pageNum}"
+                   th:class="${pageNum == currentPage} ? 'px-3 py-2 bg-blue-500 text-white' : 'px-3 py-2 border border-gray-300 bg-white text-gray-500 hover:bg-gray-50'"
+                   th:attr="data-page=${pageNum}">
+                </a>
+            </nav>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        var currentBoard = /*[[${currentBoard}]]*/ '';
+        var currentRegion = /*[[${currentRegion}]]*/ '';
+        var currentSort = /*[[${currentSort}]]*/ 'latest';
+    </script>
+
+    <script src="/js/board_postList.js"></script>
+
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+<script src="/js/footer.js"></script>
+</html>
