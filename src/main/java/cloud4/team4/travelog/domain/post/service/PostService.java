@@ -13,6 +13,7 @@ import cloud4.team4.travelog.domain.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -92,6 +93,15 @@ public class PostService {
     Post post = postRepository.findById(postId)
         .orElseThrow(() -> new ResourceNotFoundException(postId + ": 해당 아이디로 게시글을 찾을 수 없습니다."));
     postRepository.delete(post);
+  }
+
+  // 정렬 방식 선택
+  public Sort createSort(String sortBy) {
+    if ("recommends".equals(sortBy)) {  // 추천순 + 최신순 정렬
+      return Sort.by("recommends").descending().and(Sort.by("createdAt").descending());
+    } else {  // 작성일 기준 최신순 정렬 (기본값)
+      return Sort.by("createdAt").descending();
+    }
   }
 
   // 조회수 증가

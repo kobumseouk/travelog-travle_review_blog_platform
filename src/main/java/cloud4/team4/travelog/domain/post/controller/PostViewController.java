@@ -33,7 +33,7 @@ public class PostViewController {
                           @RequestParam(defaultValue = "1") int postPage,
                           @RequestParam(defaultValue = "createdAt") String sortBy) {
 
-    Sort sort = createSort(sortBy);  // 최신순/추천순 값에 따라 정렬
+    Sort sort = postService.createSort(sortBy);  // 최신순/추천순 값에 따라 정렬
 
     Pageable pageable = PageRequest.of(postPage - 1, 10, sort);  // 페이징 기능
     Page<Post> currentPostPage = postService.getAllPosts(pageable);
@@ -48,13 +48,7 @@ public class PostViewController {
     return "boardPost";
   }
 
-  private Sort createSort(String sortBy) {
-    if ("recommends".equals(sortBy)) {  // 추천순 + 최신순 정렬
-      return Sort.by("recommends").descending().and(Sort.by("createdAt").descending());
-    } else {  // 작성일 기준 최신순 정렬 (기본값)
-      return Sort.by("createdAt").descending();
-    }
-  }
+
 
   @GetMapping("board/posts/{postId}")
   public String post(@PathVariable("postId") Long postId,
