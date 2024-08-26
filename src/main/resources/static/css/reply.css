@@ -69,18 +69,6 @@
     margin-bottom: 8px;
 }
 
-.star-rating {
-    margin-left: 8px;
-}
-
-.star {
-    color: gold; /* 채워진 별 색 */
-}
-
-.empty {
-    color: lightgray; /* 비어 있는 별 색 */
-}
-
 .comment-box {
     background-color: #E2E8F0; /* bg-gray-200 */
     padding: 16px;

@@ -5,7 +5,6 @@
 <div th:replace="~{fragments/bodyHeader :: bodyHeader}"></div>
 <link rel="stylesheet" href="/css/comment_photos.css">
 <link rel="stylesheet" href="/css/comment_paging.css">
-<link rel="stylesheet" href="/css/comment_star.css">
 <link rel="stylesheet" href="/css/reply.css">
 <header>
     <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
@@ -32,17 +31,22 @@
 
         <div class="w-full md:w-[37%] w-90% mb-10 md:m-10 bg-gray-50 p-6 shadow-xl rounded-lg flex-shrink-0" style="align-self: flex-start;">
 
-            <p th:text="${averageRating == 0.0} ? '등록된 평점이 없습니다!' : '평균 평점 : ' + ${averageRating}"></p>
-            <div th:if="${averageRating != 0.0}" class="star-rating">
-                <span th:each="i : ${#numbers.sequence(1, averageRating)}" class="star">★</span>
-                <div th:if="${averageRating%1.0 != 0}">
-                    <span class="star half-star">☆</span>
-                </div>
-                <span th:each="i : ${#numbers.sequence(averageRating + 2, 5)}" class="star empty"
-                      th:if="${averageRating + 2 < 5}">☆</span>
+            <p class="font-bold text-gray-500" th:text="${averageRating == 0.0} ? '등록된 평점이 없습니다!' : '평균 평점 : ' + ${averageRating}"></p>
+            <div th:if="${averageRating != 0.0}" class="flex flex-row justify-start align-center">
+                <img th:each="i : ${#numbers.sequence(1, averageRating)}" src="/images/full_star.png" style="width: 20px; height: 20px" class="flex flex-inline"/>
+                <span th:if="${averageRating%1.0 != 0}" class="flex flex-inline">
+                    <!-- 반 별 출력-->
+                    <img src="/images/half_star.png" style="width: 20px; height: 20px"/>
+                    <span th:if="${averageRating < 4}" class="flex flex-inline">
+                        <img th:each="i : ${#numbers.sequence(averageRating + 2, 5)}" src="/images/empty_star.png" style="width: 20px; height: 20px"
+                            th:if="${averageRating < 5}"/>
+                    </span>
+                </span>
+                <span th:if="${averageRating%1.0 == 0}" class="flex flex-inline">
+                    <img th:each="i : ${#numbers.sequence(averageRating + 1, 5)}"
+                    th:if="${averageRating < 5}" src="/images/empty_star.png" style="width: 20px; height: 20px"/>
+                </span>
             </div>
-
-
             <h2 th:text="'로그인 멤버 id = ' + ${loginMember}"></h2>
             <form class="mt-5 mb-5" th:action="@{/api/comment/{postId}(postId=${postId})}" th:object="${commentRequestDto}" method="post" enctype="multipart/form-data" onsubmit="return validateForm()"
                   th:data-post-id="${postId}">
@@ -83,15 +87,13 @@
             <div th:each="comment : ${comments}" class="flex items-start mb-4">
                 <div class="flex w-2 h-2 bg-gray-400 rounded-full mr-4 mt-3"></div>
                 <div class="flex-1">
-                    <div class="flex flex-row justify-start">
+                    <div class="flex flex-row items-center">
                         <p class="font-bold mt-1 mb-2" th:text="${comment.getMember().name}"></p>
-                        <div class="ml-2 star-rating">
-                            <span th:each="i : ${#numbers.sequence(1, comment.getRating())}" class="star">★</span>
-                            <span th:each="i : ${#numbers.sequence(comment.getRating() + 1, 5)}" class="star empty"
-                                  th:if="${comment.getRating() < 5}">☆</span>
+                        <div class="ml-2 flex flex-row items-center">
+                            <img th:each="i : ${#numbers.sequence(1, comment.getRating())}" src="/images/full_star.png" class="w-5 h-5 -translate-y-1"/>
+                            <img th:each="i : ${#numbers.sequence(comment.getRating() + 1, 5)}" src="/images/empty_star.png" class="w-5 h-5 -translate-y-1" th:if="${comment.getRating() < 5}"/>
                         </div>
                     </div>
-
 
                     <div class="relative mb-1">
                         <div class="bg-gray-200 p-4 rounded-lg">
