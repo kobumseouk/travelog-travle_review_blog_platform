@@ -28,6 +28,7 @@ public class CommentController {
         model.addAttribute("commentRequestDto", new CommentRequestDto());
         model.addAttribute("post", postService.getPostById(postId));
         model.addAttribute("comments", commentService.findPagedCommentsByPostId(postId, commentPage));
+        model.addAttribute("averageRating", commentService.getAverageRating(postId));
 
         return "post";
     }
