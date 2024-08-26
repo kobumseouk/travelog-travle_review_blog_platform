@@ -35,7 +35,7 @@ public class PostViewController {
 
     Sort sort = createSort(sortBy);  // 최신순/추천순 값에 따라 정렬
 
-    Pageable pageable = PageRequest.of(postPage, 10, sort);  // 페이징 기능
+    Pageable pageable = PageRequest.of(postPage - 1, 10, sort);  // 페이징 기능
     Page<Post> currentPostPage = postService.getAllPosts(pageable);
 
     Page<PostListViewResponse> postListViewResponsePage = currentPostPage.map(PostListViewResponse::new);
