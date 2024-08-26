@@ -6,6 +6,7 @@
 <link rel="stylesheet" href="/css/comment_photos.css">
 <link rel="stylesheet" href="/css/comment_paging.css">
 <link rel="stylesheet" href="/css/comment_star.css">
+<link rel="stylesheet" href="/css/reply.css">
 <header>
     <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         <h1 class="text-3xl font-bold tracking-tight text-gray-900">게시글 제목</h1>
@@ -119,11 +120,17 @@
                             </div>
                         </div>
                     </div>
-                    <div class="flex justify-end mb-2">
+                    <div class="flex justify-between mb-2">
+
+                        <button class="text-gray-500" id="showRepliesButton" onclick="toggleReplies(this)" th:data-comment-id="${comment.id}" >대댓글 보기</button>
+
                         <span class="text-gray-500 text-sm ml-1"
                               th:text="${comment.editedAt==null} ?
                                     ${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')} : ${'(수정) ' + #temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
                     </div>
+
+                    <div th:id="'replyContainer-' + ${comment.id}" th:data-login-member-id="${loginMember}" class="mt-10 border border-gray-300 rounded-lg p-4" style="display: none;"></div> <!-- 기본적으로 숨김 -->
+
                 </div>
             </div>
 
@@ -154,4 +161,5 @@
 <script src="/js/footer.js"></script>
 <script src="/js/comment_photos.js"></script>
 <script src="/js/comment_delete.js"></script>
+<script src="/js/reply.js"></script>
 </html>

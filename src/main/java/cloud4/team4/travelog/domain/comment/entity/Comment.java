@@ -31,6 +31,9 @@ public class Comment {
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
     private List<CommentPhotos> commentPhotos = new ArrayList<>();
 
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
+    private List<Reply> replies = new ArrayList<>();
+
     @Column(nullable = false)
     private String content;
 
