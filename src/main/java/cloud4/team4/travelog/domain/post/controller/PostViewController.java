@@ -66,20 +66,23 @@ public class PostViewController {
 
 
 
-  @GetMapping("/{boardId}/posts/{postId}")
+  @GetMapping("/post/{postId}")
   public String post(@PathVariable("postId") Long postId,
                      @RequestParam(required = false, value = "commentPage", defaultValue = "1") int commentPage,
+                     @ModelAttribute("commentPagingInfo")CommentPagingInfo commentPagingInfo,
                      Model model) {
     Post post = postService.getPostById(postId);
     postService.incrementViews(postId);  // 방문마다 조회수 증가
 
     model.addAttribute("commentRequestDto", new CommentRequestDto());
-    model.addAttribute("post", postMapper.postToPostResponseDto(post));
-    model.addAttribute("comments", commentService.findPagedCommentsByPostId(postId, commentPage));
+    model.addAttribute("post", postService.getPostById(postId));
+    model.addAttribute("comments", commentService.findPagedCommentsByPostId(postId, commentPage, commentPagingInfo));
     model.addAttribute("averageRating", commentService.getAverageRating(postId));
 
     return "post";
   }
+  
+
 
   @GetMapping("/{boardId}/new-post")
   public String newPost(@RequestParam(required = false, name = "postId") Long postId, Model model) {
