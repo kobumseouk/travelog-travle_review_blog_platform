@@ -30,23 +30,25 @@
         </div>
 
         <div class="w-full md:w-[37%] w-90% mb-10 md:m-10 bg-gray-50 p-6 shadow-xl rounded-lg flex-shrink-0" style="align-self: flex-start;">
-
-            <p class="font-bold text-gray-500" th:text="${averageRating == 0.0} ? '등록된 평점이 없습니다!' : '평균 평점 : ' + ${averageRating}"></p>
-            <div th:if="${averageRating != 0.0}" class="flex flex-row justify-start align-center">
-                <img th:each="i : ${#numbers.sequence(1, averageRating)}" src="/images/full_star.png" style="width: 20px; height: 20px" class="flex flex-inline"/>
-                <span th:if="${averageRating%1.0 != 0}" class="flex flex-inline">
+            <div class="flex flex-row justify-start">
+                <p class="font-bold text-gray-500 mr-2" th:text="${averageRating == 0.0} ? '등록된 평점이 없습니다!' : '평균 평점 : ' + ${averageRating}"></p>
+                <div th:if="${averageRating != 0.0}" class="flex flex-row justify-start align-center">
+                    <img th:each="i : ${#numbers.sequence(1, averageRating)}" src="/images/full_star.png" style="width: 20px; height: 20px" class="flex flex-inline"/>
+                    <span th:if="${averageRating%1.0 != 0}" class="flex flex-inline">
                     <!-- 반 별 출력-->
                     <img src="/images/half_star.png" style="width: 20px; height: 20px"/>
                     <span th:if="${averageRating < 4}" class="flex flex-inline">
                         <img th:each="i : ${#numbers.sequence(averageRating + 2, 5)}" src="/images/empty_star.png" style="width: 20px; height: 20px"
-                            th:if="${averageRating < 5}"/>
+                             th:if="${averageRating < 5}"/>
                     </span>
                 </span>
-                <span th:if="${averageRating%1.0 == 0}" class="flex flex-inline">
+                    <span th:if="${averageRating%1.0 == 0}" class="flex flex-inline">
                     <img th:each="i : ${#numbers.sequence(averageRating + 1, 5)}"
-                    th:if="${averageRating < 5}" src="/images/empty_star.png" style="width: 20px; height: 20px"/>
+                         th:if="${averageRating < 5}" src="/images/empty_star.png" style="width: 20px; height: 20px"/>
                 </span>
+                </div>
             </div>
+
             <h2 th:text="'로그인 멤버 id = ' + ${loginMember}"></h2>
             <form class="mt-5 mb-5" th:action="@{/api/comment/{postId}(postId=${postId})}" th:object="${commentRequestDto}" method="post" enctype="multipart/form-data" onsubmit="return validateForm()"
                   th:data-post-id="${postId}">
@@ -84,12 +86,21 @@
             </form>
 
             <!-- 정렬 조건 입력 -->
-            <form id="sortForm" th:action="@{/post/{postId}(postId=${postId})}" method="get" class="flex flex-col space-y-4 p-4 mb-4">
-                <label for="commentSort" class="font-semibold text-lg">댓글 정렬 기준 선택</label>
+            <form id="sortForm" th:action="@{/post/{postId}(postId=${postId})}" method="get" th:object="${commentPagingInfo}"
+                  class="flex flex-col space-y-4 p-4 mb-4">
+                <label class="font-semibold text-lg">댓글 정렬 기준 선택</label>
                 <div class="flex justify-start">
-                    <select id="commentSort" name="commentSort" class="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="createdAt" th:selected="${commentSort == 'createdAt'}">작성 일자</option>
-                        <option value="commentLikes" th:selected="${commentSort == 'commentLikes'}">추천 수</option>
+                    <select id="commentPagingSize" name="commentPagingSize" th:field="*{commentPagingSize}"
+                            class="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 mr-2">
+                        <option value="1" th:selected="${commentPagingInfo.commentPagingSize == 1}">1개씩 보기</option>
+                        <option value="5" th:selected="${commentPagingInfo.commentPagingSize == 5}">5개씩 보기</option>
+                        <option value="10" th:selected="${commentPagingInfo.commentPagingSize == 10}">10개씩 보기</option>
+
+                    </select>
+                    <select id="commentSort" name="commentSort" th:field="*{commentSort}"
+                            class="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="createdAt" th:selected="${commentPagingInfo.commentSort == 'createdAt'}">최신순</option>
+                        <option value="commentLikes" th:selected="${commentPagingInfo.commentSort == 'commentLikes'}">추천순</option>
                     </select>
 
                     <button type="button" onclick="submitForm()" class="ml-2 bg-orange-500 text-white py-2 px-4 rounded-md hover:bg-orange-600 transition duration-200">
@@ -165,19 +176,19 @@
 
             <div class="pagination">
                 <button class="pagination-button" th:disabled="${comments.getNumber()}==0"
-                        th:onclick="|location.href='@{/post/{postId}(postId=${postId}, commentPage=${1}, commentSort=${commentSort} ) }'|">
+                        th:onclick="|location.href='@{/post/{postId}(postId=${postId}, commentPage=${1}, commentPagingSize=${commentPagingInfo.commentPagingSize}, commentSort=${commentPagingInfo.commentSort} ) }'|">
                     <<</button>
                 <button class="pagination-button" th:disabled="${!comments.hasPrevious()}"
-                        th:onclick="|location.href='@{/post/{postId}(postId=${postId}, commentPage=${comments.getNumber()}, commentSort=${commentSort} ) }'|">
+                        th:onclick="|location.href='@{/post/{postId}(postId=${postId}, commentPage=${comments.getNumber()}, commentPagingSize=${commentPagingInfo.commentPagingSize}, commentSort=${commentPagingInfo.commentSort} ) }'|">
                     <</button>
                 &nbsp; &nbsp;
                 <span class="pagination-info">[[${comments.getNumber()+1}]] / [[${comments.getTotalElements() == 0 ? 1 : comments.getTotalPages()}]]</span>
                 &nbsp; &nbsp;
                 <button class="pagination-button" th:disabled="${!comments.hasNext()}"
-                        th:onclick="|location.href='@{/post/{postId}(postId=${postId}, commentPage=${comments.getNumber()+2}, commentSort=${commentSort} ) }'|">
+                        th:onclick="|location.href='@{/post/{postId}(postId=${postId}, commentPage=${comments.getNumber()+2}, commentPagingSize=${commentPagingInfo.commentPagingSize}, commentSort=${commentPagingInfo.commentSort} ) }'|">
                     ></button>
                 <button class="pagination-button" th:disabled="${!comments.hasNext()}"
-                        th:onclick="|location.href='@{/post/{postId}(postId=${postId}, commentPage=${comments.getTotalPages()}, commentSort=${commentSort} ) }'|">
+                        th:onclick="|location.href='@{/post/{postId}(postId=${postId}, commentPage=${comments.getTotalPages()}, commentPagingSize=${commentPagingInfo.commentPagingSize}, commentSort=${commentPagingInfo.commentSort} ) }'|">
                     >></button>
             </div>
         </div>
