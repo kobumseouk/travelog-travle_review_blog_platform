@@ -120,15 +120,15 @@ function createReplyElement(reply, loginMemberId, commentId) {
     const contentWrapper = document.createElement('div');
     contentWrapper.classList.add('content-wrapper');
 
-    const header = document.createElement('div');
-    header.classList.add('header');
+    const headerV = document.createElement('div');
+    headerV.classList.add('headerV');
 
     const nameElement = document.createElement('p');
     nameElement.classList.add('name');
     nameElement.textContent = reply.nickname;
 
-    header.appendChild(nameElement);
-    contentWrapper.appendChild(header);
+    headerV.appendChild(nameElement);
+    contentWrapper.appendChild(headerV);
 
     const commentWrapper = document.createElement('div');
     commentWrapper.classList.add('relative', 'mb-1', 'comment-box'); // comment-box 클래스를 추가하여 회색 박스 스타일 적용

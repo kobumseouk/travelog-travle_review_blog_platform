@@ -58,7 +58,7 @@
     flex: 1;
 }
 
-.header {
+.headerV {
     display: flex;
     align-items: center;
 }
