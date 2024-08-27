@@ -69,31 +69,13 @@ public class BoardApiController {
     }
 
 
+
     // 게시판 사진 수정
     @PutMapping(value = "/update/{id}", consumes = "multipart/form-data")
     public ResponseEntity<String> updateImage(@PathVariable("id") Long id,
                                               @ModelAttribute BoardImageRequestDto requestDto) {
         try {
             boardService.updateImage(id, requestDto);
-            return ResponseEntity.status(HttpStatus.FOUND)
-                    .location(URI.create("/"))
-                    .build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(e.getMessage());
-        }
-    }
-
-
-
-
-    // 게시판 사진 수정
-    @PutMapping(value = "/t-board-update/{id}")
-    public ResponseEntity<String> T_updateBoard(@PathVariable("id") Long id,
-                                                @RequestBody BoardDescRequestDto boardDescRequestDto) {
-        try {
-            boardService.updateDescription(id, boardDescRequestDto);
-
             return ResponseEntity.status(HttpStatus.FOUND)
                     .location(URI.create("/"))
                     .build();

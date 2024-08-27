@@ -85,8 +85,7 @@ public class BoardService {
     public void updateImage(Long id, BoardImageRequestDto requestDto) {
         Board board = boardRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시판이 없습니다. id= " + id));
 
-
-        // board.updateImage(requestDto.getImage());
+        boardImageService.deleteImage(board.getImagePath());
 
         try {
             String imagePath = boardImageService.saveImage(requestDto.getImage());
