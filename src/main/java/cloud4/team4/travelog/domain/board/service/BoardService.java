@@ -1,9 +1,6 @@
 package cloud4.team4.travelog.domain.board.service;
 
-import cloud4.team4.travelog.domain.board.dto.BoardDescRequestDto;
-import cloud4.team4.travelog.domain.board.dto.BoardRequestDto;
-import cloud4.team4.travelog.domain.board.dto.BoardResponseDto;
-import cloud4.team4.travelog.domain.board.dto.BoardViewResponse;
+import cloud4.team4.travelog.domain.board.dto.*;
 import cloud4.team4.travelog.domain.board.entity.Board;
 import cloud4.team4.travelog.domain.board.entity.BoardMapper;
 import cloud4.team4.travelog.domain.board.repository.BoardRepository;
@@ -82,6 +79,29 @@ public class BoardService {
         Board board= boardRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시판이 없습니다. id= " + id));
         board.updateDescription(requestDto.getDescription());
         return id;
+    }
+
+    @Transactional
+    public void updateImage(Long id, BoardImageRequestDto requestDto) {
+        Board board = boardRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시판이 없습니다. id= " + id));
+
+
+        // board.updateImage(requestDto.getImage());
+
+        try {
+            String imagePath = boardImageService.saveImage(requestDto.getImage());
+
+            // board에 imagePath 저장
+            board.setImagePath(imagePath);
+
+            // Mapper로 나머지 항목 저장
+            boardRepository.save(board);
+
+        } catch (Exception e) {
+            // 예외 처리 결과 보류
+            e.getMessage();
+        }
+
     }
 
 
