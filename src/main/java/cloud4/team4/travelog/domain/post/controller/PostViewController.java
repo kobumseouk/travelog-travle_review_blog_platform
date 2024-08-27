@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -43,14 +44,18 @@ public class PostViewController {
     Pageable pageable = PageRequest.of(page - 1, 10, postService.createSort(sortBy));
     Page<PostListViewResponse> posts = postService.getPostsByRegionMajor(regionMajor, searchType, keyword, pageable);
 
-    List<BoardViewResponse> allBoards = boardService.getAllBoards();
+    // 모든 게시판 중복 제거 후 찾기
+    List<String> uniqueRegionMajors = boardService.getAllBoards().stream()
+        .map(BoardViewResponse::getRegionMajor)
+        .distinct()
+        .collect(Collectors.toList());
     List<BoardViewResponse> MiddleBoards = boardService.getMiddleBoards(regionMajor);
 
     model.addAttribute("posts", posts);
     model.addAttribute("currentPage", posts.getNumber() + 1);
     model.addAttribute("totalPages", posts.getTotalPages());
     model.addAttribute("regionMajor", regionMajor);
-    model.addAttribute("allBoards", allBoards);
+    model.addAttribute("allRegionMajors", uniqueRegionMajors);
     model.addAttribute("middleBoards", MiddleBoards);
     model.addAttribute("sortBy", sortBy);
     model.addAttribute("searchType", searchType);

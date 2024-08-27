@@ -6,16 +6,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const sortSelect = document.getElementById('sortSelect');
     const sortButton = document.getElementById('sortButton');
 
-    sortButton.addEventListener('click', sort);
 
     // 게시판 이동
     regionMajorSelect.addEventListener('change', function() {
-        window.location.href = `/board/${this.value}/posts`;
+        const currentRegionMajor = new URL(window.location.href).pathname.split('/')[2]; // 값 받기
+        if (this.value !== currentRegionMajor) {        // 값이 변경되면 페이지 이동
+            window.location.href = `/board/${this.value}/posts`;
+        }
     });
 
     searchBtn.addEventListener('click', search);
-    sortLatestBtn.addEventListener('click', () => sort('createdAt'));
-    sortRecommendsBtn.addEventListener('click', () => sort('recommends'));
+    sortButton.addEventListener('click', sort);
 
     // 제목, 내용, 세부 지역으로 분류를 나누고 현재 정렬 방식으로 찾기
     function search() {
