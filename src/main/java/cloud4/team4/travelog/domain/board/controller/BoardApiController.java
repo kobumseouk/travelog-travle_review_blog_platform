@@ -57,20 +57,20 @@ public class BoardApiController {
     /* UPDATE */
 
     // 게시판 수정
-    @PutMapping(value = "/t-board-update/{id}")
-    public ResponseEntity<String> T_updateBoard(@PathVariable("id") Long id,
-                                                @ModelAttribute BoardUpdateRequestDto requestDto) {
-        try {
-            boardService.T_updateBoard(id, requestDto);
-
-            return ResponseEntity.status(HttpStatus.FOUND)
-                    .location(URI.create("/"))
-                    .build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(e.getMessage());
-        }
-    }
+//    @PutMapping(value = "/t-board-update/{id}")
+//    public ResponseEntity<String> T_updateBoard(@PathVariable("id") Long id,
+//                                                @ModelAttribute BoardUpdateRequestDto requestDto) {
+//        try {
+//            boardService.T_updateBoard(id, requestDto);
+//
+//            return ResponseEntity.status(HttpStatus.FOUND)
+//                    .location(URI.create("/"))
+//                    .build();
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+//                    .body(e.getMessage());
+//        }
+//    }
 
     @PutMapping("/board-update/{id}")
     public BoardUpdateResponseDto update(@PathVariable("id") Long id, @RequestBody BoardUpdateRequestDto requestDto) {

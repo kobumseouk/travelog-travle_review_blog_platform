@@ -30,12 +30,21 @@ public class BoardService {
     public void saveBoard(Long id, BoardRequestDto requestDto) {
 
         Board board = BoardMapper.INSTANCE.toEntity(requestDto);
-        Board savedBoard = boardRepository.save(board);
 
         try {
-            boardImageService.saveImage(requestDto.getPhoto(), savedBoard);
-        } catch(Exception e) {
-            throw new RuntimeException(e.getMessage());
+            String imagePath = boardImageService.saveImage(requestDto.getImage());
+
+            /* 사진을 같이 저장하기 때문에, 사진은 필수로 업로드해야 함 */
+
+            // board에 imagePath 저장
+            board.setImagePath(imagePath);
+
+            // Mapper로 나머지 항목 저장
+            boardRepository.save(board);
+
+        } catch (Exception e) {
+            // 예외 처리 결과 보류
+            e.getMessage();
         }
     }
 
@@ -68,14 +77,14 @@ public class BoardService {
     /* UPDATE */
 
     // 업데이트
-    @Transactional
-    public void T_updateBoard(Long id, BoardUpdateRequestDto requestDto) {
-        Board board = boardRepository.findById(id).orElseThrow(RuntimeException::new);
-
-        board.update(requestDto.getDescription());
-
-        boardImageService.T_updateImage(requestDto.getImage(), board);
-    }
+//    @Transactional
+//    public void T_updateBoard(Long id, BoardUpdateRequestDto requestDto) {
+//        Board board = boardRepository.findById(id).orElseThrow(RuntimeException::new);
+//
+//        board.update(requestDto.getDescription());
+//
+//        boardImageService.T_updateImage(requestDto.getImage(), board);
+//    }
 
     // 기존
     @Transactional

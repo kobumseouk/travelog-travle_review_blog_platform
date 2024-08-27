@@ -40,9 +40,9 @@ public class Board {
     @Column(name = "description")
     private String description;             // 사용자가 설명을 추가하도록 한다.
 
-    // 사진 필드
-    @OneToOne(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
-    private BoardImage boardImage;
+    // 사진 필드 - 미사용
+//    @OneToOne(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private BoardImage boardImage;
 
     // 게시판 분류
     @Column(name = "board_category")
@@ -57,6 +57,15 @@ public class Board {
     @Column(name = "edited_at")
     @LastModifiedDate
     private LocalDateTime editedAt;
+
+    @Column(name = "image_path")
+    private String imagePath;
+
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
 
     //@Builder
     public Board(String description, String regionMajor, String regionMiddle,
