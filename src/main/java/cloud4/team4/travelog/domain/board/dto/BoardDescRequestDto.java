@@ -1,7 +1,6 @@
 package cloud4.team4.travelog.domain.board.dto;
 
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @NoArgsConstructor

@@ -24,40 +24,45 @@ public class Board {
     @Column(name = "board_id")
     private Long id;
 
+
     // post와 일대다 관계 설정
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts = new ArrayList<>();
+
 
     //  여행지 대분류 - 서울, 경기도, 충청도 등.
     @Column(name = "region_major")
     private String regionMajor;             //  미리 정의할 필드
 
+
     // 여행지 소분류 - 강남, 강북 등.
     @Column(name = "region_middle")
     private String regionMiddle;            // 사용자 입력으로 받을 필드
+
 
     // 게시판에 대한 설명
     @Column(name = "description")
     private String description;             // 사용자가 설명을 추가하도록 한다.
 
-    // 사진 필드 - 미사용
-//    @OneToOne(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private BoardImage boardImage;
 
     // 게시판 분류
     @Column(name = "board_category")
     private String boardCategory;
+
 
     // 생성일
     @Column(name = "created_at")
     @CreatedDate
     private LocalDateTime createdAt;
 
+
     // 수정일
     @Column(name = "edited_at")
     @LastModifiedDate
     private LocalDateTime editedAt;
 
+
+    // 이미지 저장 경로
     @Column(name = "image_path")
     private String imagePath;
 

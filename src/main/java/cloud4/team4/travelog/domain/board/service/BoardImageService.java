@@ -1,6 +1,5 @@
 package cloud4.team4.travelog.domain.board.service;
 
-import cloud4.team4.travelog.domain.board.entity.Board;
 import cloud4.team4.travelog.domain.board.repository.BoardRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class BoardImageService {
-//    private final BoardImageRepository boardImageRepository;
+
     private final BoardRepository boardRepository;
 
 
@@ -47,6 +46,8 @@ public class BoardImageService {
             throw new RuntimeException("업로드 중 오류 발생", e);
         }
     }
+
+
 
     private String saveImage(MultipartFile image, String saveDir) throws IOException {
         // 파일명 생성

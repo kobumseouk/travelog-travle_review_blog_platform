@@ -10,7 +10,6 @@ public class BoardViewResponse {
     private String regionMiddle;
     private String imagePath;
 
-    //    @Builder
     public BoardViewResponse(Board board) {
         this.description = board.getDescription();
         this.regionMajor = board.getRegionMajor();

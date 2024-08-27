@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
-//@NoArgsConstructor
 @Service
 public class BoardService {
     private final BoardRepository boardRepository;

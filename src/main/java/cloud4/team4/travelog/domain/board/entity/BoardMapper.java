@@ -1,7 +1,7 @@
 package cloud4.team4.travelog.domain.board.entity;
 
+import cloud4.team4.travelog.domain.board.dto.BoardDescRequestDto;
 import cloud4.team4.travelog.domain.board.dto.BoardRequestDto;
-import cloud4.team4.travelog.domain.board.dto.BoardUpdateRequestDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -14,7 +14,7 @@ public interface BoardMapper {
 
     // @Mapping(source = "board", target = "post")
 
-    /*---------- Create 매핑 ----------*/
+    /* Create 매핑 */
 
     // CreateRequestDto -> Board 매핑
     @Mapping(target = "id", ignore = true) // ID는 자동 생성되므로 무시
@@ -22,16 +22,15 @@ public interface BoardMapper {
     @Mapping(target = "regionMiddle", source = "regionMiddle")
     @Mapping(target = "description", source = "description")
     @Mapping(target = "boardCategory", source = "boardCategory")
-    //@Mapping(target = "editedAt", ignore = true)
     Board toEntity(BoardRequestDto dto);
 
     /*---------- Update 매핑 ----------*/
 
     // Board -> UpdateRequestDto 매핑
-    BoardUpdateRequestDto toUpdateRequestDto(Board board);
+    BoardDescRequestDto toUpdateRequestDto(Board board);
 
     // UpdateRequestDto -> Board 매핑
     @Mapping(target = "id", ignore = true)
-    void toUpdateEntity(BoardUpdateRequestDto dto, @MappingTarget Board entity);
+    void toUpdateEntity(BoardDescRequestDto dto, @MappingTarget Board entity);
 
 }
