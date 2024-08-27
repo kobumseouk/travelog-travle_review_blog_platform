@@ -3,6 +3,7 @@ package cloud4.team4.travelog.domain.post.controller;
 import cloud4.team4.travelog.domain.board.dto.BoardViewResponse;
 import cloud4.team4.travelog.domain.board.entity.Board;
 import cloud4.team4.travelog.domain.board.service.BoardService;
+import cloud4.team4.travelog.domain.comment.dto.CommentPagingInfo;
 import cloud4.team4.travelog.domain.comment.dto.CommentRequestDto;
 import cloud4.team4.travelog.domain.comment.service.CommentService;
 import cloud4.team4.travelog.domain.post.dto.PostListViewResponse;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -69,7 +71,7 @@ public class PostViewController {
   @GetMapping("/post/{postId}")
   public String post(@PathVariable("postId") Long postId,
                      @RequestParam(required = false, value = "commentPage", defaultValue = "1") int commentPage,
-                     @ModelAttribute("commentPagingInfo")CommentPagingInfo commentPagingInfo,
+                     @ModelAttribute("commentPagingInfo") CommentPagingInfo commentPagingInfo,
                      Model model) {
     Post post = postService.getPostById(postId);
     postService.incrementViews(postId);  // 방문마다 조회수 증가
