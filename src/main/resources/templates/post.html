@@ -72,7 +72,7 @@
                         <div id="file-info" class="mt-2 text-gray-500"></div>
 
                         <div class="flex flex-row justify-between">
-                            <label for="file-input" class="flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg cursor-pointer hover:bg-blue-700 transition duration-300">
+                            <label for="file-input" class="flex items-center justify-center px-4 py-2 bg-blue-500 text-white rounded-lg cursor-pointer hover:bg-blue-600 transition duration-300">
                                 파일 선택하기
                             </label>
                             <button type="submit" class="bg-blue-500 text-white rounded-lg px-2 py-2 hover:bg-blue-600 transition duration-300">댓글 작성</button>
@@ -83,16 +83,43 @@
                 <div class="error-class mt-2 text-red-600" th:errors="*{content}"></div>
             </form>
 
+            <!-- 정렬 조건 입력 -->
+            <form id="sortForm" th:action="@{/post/{postId}(postId=${postId})}" method="get" class="flex flex-col space-y-4 p-4 mb-4">
+                <label for="commentSort" class="font-semibold text-lg">댓글 정렬 기준 선택</label>
+                <div class="flex justify-start">
+                    <select id="commentSort" name="commentSort" class="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="createdAt" th:selected="${commentSort == 'createdAt'}">작성 일자</option>
+                        <option value="commentLikes" th:selected="${commentSort == 'commentLikes'}">추천 수</option>
+                    </select>
+
+                    <button type="button" onclick="submitForm()" class="ml-2 bg-orange-500 text-white py-2 px-4 rounded-md hover:bg-orange-600 transition duration-200">
+                        정렬
+                    </button>
+                </div>
+
+            </form>
 
             <div th:each="comment : ${comments}" class="flex items-start mb-4">
                 <div class="flex w-2 h-2 bg-gray-400 rounded-full mr-4 mt-3"></div>
                 <div class="flex-1">
-                    <div class="flex flex-row items-center">
-                        <p class="font-bold mt-1 mb-2" th:text="${comment.getMember().name}"></p>
-                        <div class="ml-2 flex flex-row items-center">
-                            <img th:each="i : ${#numbers.sequence(1, comment.getRating())}" src="/images/full_star.png" class="w-5 h-5 -translate-y-1"/>
-                            <img th:each="i : ${#numbers.sequence(comment.getRating() + 1, 5)}" src="/images/empty_star.png" class="w-5 h-5 -translate-y-1" th:if="${comment.getRating() < 5}"/>
+                    <div class="flex flex-row justify-between items-center">
+
+                        <div class="flex flex-row items-center">
+                            <p class="font-bold mt-1 mb-2" th:text="${comment.getMember().name}"></p>
+                            <div class="ml-2 flex flex-row items-center">
+                                <img th:each="i : ${#numbers.sequence(1, comment.getRating())}" src="/images/full_star.png" class="w-5 h-5 -translate-y-1"/>
+                                <img th:each="i : ${#numbers.sequence(comment.getRating() + 1, 5)}" src="/images/empty_star.png" class="w-5 h-5 -translate-y-1" th:if="${comment.getRating() < 5}"/>
+                            </div>
                         </div>
+
+                        <!-- 로그인 한 회원만 가능 -> 수정 필요 -->
+                        <a th:if="${loginMember != null}"
+                           th:href="@{/post/{postId}/comment/{commentId}/like(postId=${postId}, commentId=${comment.id})}"
+                           class="bg-purple-500 text-white font-semibold py-1 px-2 rounded hover:bg-purple-700 items-center rounded-lg mb-2">
+
+                            <span class="material-symbols-outlined" style="font-size: 16px">thumb_up</span>
+                            <span th:text="${comment.getCommentLikes().size()}" style="font-size: 12px"></span>
+                        </a>
                     </div>
 
                     <div class="relative mb-1">
@@ -138,19 +165,19 @@
 
             <div class="pagination">
                 <button class="pagination-button" th:disabled="${comments.getNumber()}==0"
-                        th:onclick="|location.href='@{/post/{postId}(postId=${postId}, commentPage=${1}) }'|">
+                        th:onclick="|location.href='@{/post/{postId}(postId=${postId}, commentPage=${1}, commentSort=${commentSort} ) }'|">
                     <<</button>
                 <button class="pagination-button" th:disabled="${!comments.hasPrevious()}"
-                        th:onclick="|location.href='@{/post/{postId}(postId=${postId}, commentPage=${comments.getNumber()}) }'|">
+                        th:onclick="|location.href='@{/post/{postId}(postId=${postId}, commentPage=${comments.getNumber()}, commentSort=${commentSort} ) }'|">
                     <</button>
                 &nbsp; &nbsp;
                 <span class="pagination-info">[[${comments.getNumber()+1}]] / [[${comments.getTotalElements() == 0 ? 1 : comments.getTotalPages()}]]</span>
                 &nbsp; &nbsp;
                 <button class="pagination-button" th:disabled="${!comments.hasNext()}"
-                        th:onclick="|location.href='@{/post/{postId}(postId=${postId}, commentPage=${comments.getNumber()+2}) }'|">
+                        th:onclick="|location.href='@{/post/{postId}(postId=${postId}, commentPage=${comments.getNumber()+2}, commentSort=${commentSort} ) }'|">
                     ></button>
                 <button class="pagination-button" th:disabled="${!comments.hasNext()}"
-                        th:onclick="|location.href='@{/post/{postId}(postId=${postId}, commentPage=${comments.getTotalPages()}) }'|">
+                        th:onclick="|location.href='@{/post/{postId}(postId=${postId}, commentPage=${comments.getTotalPages()}, commentSort=${commentSort} ) }'|">
                     >></button>
             </div>
         </div>
@@ -163,5 +190,6 @@
 <script src="/js/footer.js"></script>
 <script src="/js/comment_photos.js"></script>
 <script src="/js/comment_delete.js"></script>
+<script src="/js/comment_sort.js"></script>
 <script src="/js/reply.js"></script>
 </html>
