@@ -11,6 +11,7 @@ public class BoardRequestDto {
     private String regionMajor;
     private String regionMiddle;
     private String description;
+    private String boardCategory;
 
     // Todo: 사진 추가
     private MultipartFile photo;

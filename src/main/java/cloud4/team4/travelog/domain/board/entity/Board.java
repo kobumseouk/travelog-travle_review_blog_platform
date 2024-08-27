@@ -3,7 +3,11 @@ package cloud4.team4.travelog.domain.board.entity;
 import cloud4.team4.travelog.domain.post.entity.Post;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +17,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,15 +40,32 @@ public class Board {
     @Column(name = "description")
     private String description;             // 사용자가 설명을 추가하도록 한다.
 
-    // ToDo: 사진 추가
+    // 사진 필드
     @OneToOne(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     private BoardImage boardImage;
 
+    // 게시판 분류
+    @Column(name = "board_category")
+    private String boardCategory;
+
+    // 생성일
+    @Column(name = "created_at")
+    @CreatedDate
+    private LocalDateTime createdAt;
+
+    // 수정일
+    @Column(name = "edited_at")
+    @LastModifiedDate
+    private LocalDateTime editedAt;
+
     //@Builder
-    public Board(String description, String regionMajor, String regionMiddle) {
+    public Board(String description, String regionMajor, String regionMiddle,
+                 String boardCategory, LocalDateTime createdAt) {
         this.description = description;
         this.regionMajor = regionMajor;
         this.regionMiddle = regionMiddle;
+        this.boardCategory = boardCategory;
+        this.createdAt = createdAt;
     }
 
     public void update(String description) {
