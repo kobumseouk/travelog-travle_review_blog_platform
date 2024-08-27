@@ -26,7 +26,7 @@ public class SecurityConfig {
                 .csrf((auth) -> auth.disable())
                 .authorizeHttpRequests(authorize->authorize
                         // api/member 뒤에서 들어온 접근권한 요청은 전부 허용하겠다.
-                        .requestMatchers("/api/member/**").permitAll()
+                        .requestMatchers("/**").permitAll()
                                 .anyRequest()
                                 .authenticated()
                         );

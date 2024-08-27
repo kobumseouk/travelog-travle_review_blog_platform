@@ -8,14 +8,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.*;
 @Slf4j
 @RestController
 @RequestMapping("/api/member")
 @RequiredArgsConstructor
 public class MemberController {
     private final MemberService memberService;
-
 
     //회원가입
     @PostMapping("/sign-up")
@@ -46,12 +44,14 @@ public class MemberController {
         return ResponseEntity.ok("회원 삭제 성공");
     }
 
+
     //로그인
     @PostMapping("/login")
     public ResponseEntity<MemberDto> login(@RequestParam("loginId") String loginId, @RequestParam("password") String password, HttpSession session) {
         MemberDto memberDto = memberService.login(loginId, password, session);
         return ResponseEntity.ok(memberDto);
     }
+
 
     // 로그아웃
     @PostMapping("/logout")

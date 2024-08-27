@@ -38,7 +38,7 @@ public class MemberService {
         //중복처리
         Optional<Member> member = memberRepository.findByLoginId(memberEntity.getLoginId());
         if(member.isPresent()){
-            throw new IllegalArgumentException("이미 있는 회원입니다.");
+            throw new IllegalArgumentException("동일한 id로 이미 가입되어있습니다.");
         }
         //회원가입할때 기본적으로 일반 사용자로 설정
         memberEntity.setStatus("USER");
