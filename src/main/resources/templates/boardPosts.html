@@ -56,11 +56,12 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="post : ${posts}">
+            <tr th:each="post : ${posts}"
+                class="cursor-pointer hover:bg-gray-100"
+                th:data-url="@{/boards/{regionMajor}/posts/{id}(regionMajor=${regionMajor}, id=${post.postId})}"
+                onclick="location.href = this.getAttribute('data-url')">
                 <td class="border p-2" th:text="${post.postId}"></td>
-                <td class="border p-2"><a
-                        th:href="@{/boards/{regionMajor}/posts/{id}(regionMajor=${regionMajor},id=${post.postId})}"
-                        th:text="${post.title}"></a></td>
+                <td class="border p-2" th:text="${post.title}"></td>
                 <td class="border p-2" th:text="${post.memberName}"></td>
                 <td class="border p-2" th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd')}"></td>
                 <td class="border p-2" th:text="${post.views}"></td>
