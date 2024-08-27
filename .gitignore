@@ -37,6 +37,8 @@ out/
 .vscode/
 
 *MapperImpl.java
-
 uploads
+main.html
+mainboard.html
+
 application.properties

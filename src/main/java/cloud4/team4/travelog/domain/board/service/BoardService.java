@@ -125,8 +125,8 @@ public class BoardService {
     }
 
 
-    public BoardResponseDto findById(Long id){
-        Board board= boardRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시판이 없습니다. id= " + id));
-        return new BoardResponseDto(board);
-    }
+//    public BoardResponseDto findById(Long id){
+//        Board board= boardRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시판이 없습니다. id= " + id));
+//        return new BoardResponseDto(board);
+//    }
 }
