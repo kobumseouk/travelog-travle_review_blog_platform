@@ -35,7 +35,7 @@ public class PostViewController {
   private final CommentService commentService;
   private final PostMapper postMapper;
 
-  @GetMapping("/board/{regionMajor}/posts")
+  @GetMapping("/boards/{regionMajor}")
   public String listPosts(@PathVariable String regionMajor,
                           @RequestParam(defaultValue = "1") int page,
                           @RequestParam(defaultValue = "createdAt") String sortBy,
@@ -68,14 +68,16 @@ public class PostViewController {
 
 
 
-  @GetMapping("/post/{postId}")
-  public String post(@PathVariable("postId") Long postId,
+  @GetMapping("/boards/{regionMajor}/posts/{postId}")
+  public String post(@PathVariable String regionMajor,
+                     @PathVariable("postId") Long postId,
                      @RequestParam(required = false, value = "commentPage", defaultValue = "1") int commentPage,
                      @ModelAttribute("commentPagingInfo") CommentPagingInfo commentPagingInfo,
                      Model model) {
     Post post = postService.getPostById(postId);
     postService.incrementViews(postId);  // 방문마다 조회수 증가
 
+    model.addAttribute("regionMajor", regionMajor);
     model.addAttribute("commentRequestDto", new CommentRequestDto());
     model.addAttribute("post", postService.getPostById(postId));
     model.addAttribute("comments", commentService.findPagedCommentsByPostId(postId, commentPage, commentPagingInfo));
@@ -83,11 +85,12 @@ public class PostViewController {
 
     return "post";
   }
-  
 
 
-  @GetMapping("/{boardId}/new-post")
-  public String newPost(@RequestParam(required = false, name = "postId") Long postId, Model model) {
+  @GetMapping("/boards/{regionMajor}/post-new")
+  public String newPost(@PathVariable String regionMajor,
+                        @RequestParam(required = false, name = "postId") Long postId,
+                        Model model) {
     if (postId == null) {
       model.addAttribute("post", new PostPostDto());
     } else {
@@ -96,6 +99,7 @@ public class PostViewController {
     }
 
     return "newPost";
+    // return "redirect:/boards/" + regionMajor + "/posts/" + postId;  // 기존 게시글 상세 페이지로 리다이렉트
   }
 
 
