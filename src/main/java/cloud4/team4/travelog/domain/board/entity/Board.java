@@ -77,7 +77,7 @@ public class Board {
         this.createdAt = createdAt;
     }
 
-    public void update(String description) {
+    public void updateDescription(String description) {
         this.description = description;
     }
 

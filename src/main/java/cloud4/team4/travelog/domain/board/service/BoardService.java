@@ -1,8 +1,8 @@
 package cloud4.team4.travelog.domain.board.service;
 
+import cloud4.team4.travelog.domain.board.dto.BoardDescRequestDto;
 import cloud4.team4.travelog.domain.board.dto.BoardRequestDto;
-import cloud4.team4.travelog.domain.board.dto.BoardUpdateRequestDto;
-import cloud4.team4.travelog.domain.board.dto.BoardUpdateResponseDto;
+import cloud4.team4.travelog.domain.board.dto.BoardResponseDto;
 import cloud4.team4.travelog.domain.board.dto.BoardViewResponse;
 import cloud4.team4.travelog.domain.board.entity.Board;
 import cloud4.team4.travelog.domain.board.entity.BoardMapper;
@@ -76,7 +76,16 @@ public class BoardService {
 
     /* UPDATE */
 
-    // 업데이트
+    // 게시판 설명 업데이트
+    @Transactional
+    public Long updateDescription(Long id, BoardDescRequestDto requestDto){
+        Board board= boardRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시판이 없습니다. id= " + id));
+        board.updateDescription(requestDto.getDescription());
+        return id;
+    }
+
+
+    // 게시판 사진 업데이트
 //    @Transactional
 //    public void T_updateBoard(Long id, BoardUpdateRequestDto requestDto) {
 //        Board board = boardRepository.findById(id).orElseThrow(RuntimeException::new);
@@ -86,25 +95,6 @@ public class BoardService {
 //        boardImageService.T_updateImage(requestDto.getImage(), board);
 //    }
 
-    // 기존
-    @Transactional
-    public BoardUpdateResponseDto updateBoard(Long id, BoardUpdateRequestDto requestDto) {
-        Board board = boardRepository.findById(id).orElseThrow(RuntimeException::new);
-
-        board.update(requestDto.getDescription());
-        return new BoardUpdateResponseDto(board);
-    }
-
-    /*public BoardUpdateResponseDto update(Long id, BoardUpdateRequestDto requestDto) {
-        Board board = boardRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Board not found with id: " + id));
-
-        // DTO의 필드를 엔티티에 매핑하여 업데이트
-        boardMapper.updateBoardFromDto(requestDto, board);
-        boardRepository.save(board); // 엔티티 저장하여 변경 사항 반영
-
-        return new BoardUpdateResponseDto(board);
-    }*/
 
 
     /* DELETE*/
@@ -116,4 +106,9 @@ public class BoardService {
         boardRepository.delete(board);
     }
 
+
+    public BoardResponseDto findById(Long id){
+        Board board= boardRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시판이 없습니다. id= " + id));
+        return new BoardResponseDto(board);
+    }
 }
