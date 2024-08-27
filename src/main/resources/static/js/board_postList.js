@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // 정렬(최신순, 추천순)
-    function sort(sortType) {
+    function sort() {
         const sortBy = sortSelect.value;
         const urlParams = new URLSearchParams(window.location.search);
         urlParams.set('sortBy', sortBy);
