@@ -1,6 +1,7 @@
 package cloud4.team4.travelog.domain.comment.controller;
 
 
+import cloud4.team4.travelog.domain.comment.dto.CommentPagingInfo;
 import cloud4.team4.travelog.domain.comment.dto.CommentRequestDto;
 import cloud4.team4.travelog.domain.comment.dto.CommentUpdateDto;
 import cloud4.team4.travelog.domain.comment.service.CommentLikeService;
@@ -25,14 +26,14 @@ public class CommentController {
     @GetMapping("/post/{postId}")
     public String post(@PathVariable("postId") Long postId,
                        @RequestParam(required = false, value = "commentPage", defaultValue = "1") int commentPage,
-                       @RequestParam(value = "commentSort", defaultValue = "createdAt") String commentSort,
+                       @ModelAttribute("commentPagingInfo")CommentPagingInfo commentPagingInfo,
                        Model model) {
 
         model.addAttribute("commentRequestDto", new CommentRequestDto());
         model.addAttribute("post", postService.getPostById(postId));
-        model.addAttribute("comments", commentService.findPagedCommentsByPostId(postId, commentPage, commentSort));
+        model.addAttribute("comments", commentService.findPagedCommentsByPostId(postId, commentPage, commentPagingInfo));
         model.addAttribute("averageRating", commentService.getAverageRating(postId));
-        model.addAttribute("commentSort", commentSort);
+
         return "post";
     }
 
