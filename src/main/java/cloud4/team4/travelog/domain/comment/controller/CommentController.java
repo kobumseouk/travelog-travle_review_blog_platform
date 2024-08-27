@@ -23,7 +23,8 @@ public class CommentController {
     private final CommentService commentService;
     private final CommentLikeService commentLikeService;
 
-    @GetMapping("/post/{postId}")
+    // PostViewController로 통합
+    /*@GetMapping("/post/{postId}")
     public String post(@PathVariable("postId") Long postId,
                        @RequestParam(required = false, value = "commentPage", defaultValue = "1") int commentPage,
                        @ModelAttribute("commentPagingInfo")CommentPagingInfo commentPagingInfo,
@@ -35,7 +36,7 @@ public class CommentController {
         model.addAttribute("averageRating", commentService.getAverageRating(postId));
 
         return "post";
-    }
+    }*/
 
     @GetMapping("/post/{postId}/comment/update/{commentId}")
     public String updateCommentForm(@PathVariable("postId") Long postId,

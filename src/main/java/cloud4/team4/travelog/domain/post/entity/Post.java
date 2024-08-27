@@ -70,12 +70,21 @@ public class Post {
   private Integer recommends;
 
 
-  @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  private List<PostPhoto> postPhoto = new ArrayList<>();
+  @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+  private List<PostPhoto> postPhotos = new ArrayList<>();
 
-  // 댓글 추가
   @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Comment> comments = new ArrayList<>();
 
+
+  /*public void addPostPhoto(PostPhoto postPhoto) {
+    postPhotos.add(postPhoto);
+    postPhoto.setPost(this);
+  }
+
+  public void removePostPhoto(PostPhoto postPhoto) {
+    postPhotos.remove(postPhoto);
+    postPhoto.setPost(null);
+  }*/
 
 }
