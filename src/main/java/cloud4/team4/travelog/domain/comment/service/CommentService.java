@@ -1,6 +1,7 @@
 package cloud4.team4.travelog.domain.comment.service;
 
 import cloud4.team4.travelog.domain.comment.dto.CommentMapper;
+import cloud4.team4.travelog.domain.comment.dto.CommentPagingInfo;
 import cloud4.team4.travelog.domain.comment.dto.CommentRequestDto;
 import cloud4.team4.travelog.domain.comment.dto.CommentUpdateDto;
 import cloud4.team4.travelog.domain.comment.entity.Comment;
@@ -45,13 +46,27 @@ public class CommentService {
      * READ
      * findPaging: 해당 게시글의 댓글 반환, 페이징 적용
      */
-    public Page<Comment> findPagedCommentsByPostId(Long postId, int commentPage) {
+    public Page<Comment> findPagedCommentsByPostId(Long postId, int commentPage, CommentPagingInfo commentPagingInfo) {
 
-        // 페이징 -> 댓글 5개씩 출력
-        PageRequest commentPageRequest = PageRequest.of(commentPage - 1, 5, Sort.by("createdAt").descending());
+        if(commentPagingInfo.getCommentPagingSize() == 0) {
+            commentPagingInfo.setCommentPagingSize(5);
+        }
+        if(commentPagingInfo.getCommentSort() == null) {
+            commentPagingInfo.setCommentSort("createdAt");
+        }
 
-        return commentRepository.findCommentsByPost(postService.getPostById(postId), commentPageRequest);
+        // 페이징
+        PageRequest commentPageRequest = PageRequest.of(commentPage - 1, commentPagingInfo.getCommentPagingSize());
 
+        // 추천 수 -> 생성일 기준 정렬
+        if(commentPagingInfo.getCommentSort().equals("commentLikes")) {
+
+            return commentRepository.findCommentsSortedByLikes(postService.getPostById(postId), commentPageRequest);
+        }
+
+        // (기본) 생성일 기준 정렬
+        return commentRepository.findCommentsByPost(postService.getPostById(postId),
+                commentPageRequest.withSort(Sort.by("createdAt").descending()));
     }
 
     /**
