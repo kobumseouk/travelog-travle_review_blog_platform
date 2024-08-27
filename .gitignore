@@ -44,3 +44,4 @@ out/
 application.properties
 build.gradle
 
+/src/main/generated/cloud4/team4/travelog/domain/comment/dto/ReplyMapperImpl.java

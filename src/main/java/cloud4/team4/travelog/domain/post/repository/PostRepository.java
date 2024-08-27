@@ -3,6 +3,7 @@ package cloud4.team4.travelog.domain.post.repository;
 import cloud4.team4.travelog.domain.post.entity.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,7 +16,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
   // 제목에 특정 키워드가 포함된 게시글 검색
   List<Post> findByTitleContaining(String keyword);
 
-  Page<Post> findAll(Pageable pageable);
+  //
+  Page<Post> findAll(Specification<Post> spec, Pageable pageable);
 
 
   // List<Post> findPostByPostId(Long postId); -> findById(Long postId)

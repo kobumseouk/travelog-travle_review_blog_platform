@@ -51,6 +51,7 @@ public class PostPhotoService {
 
   @Transactional
   public void updatePhoto(Long postId, List<MultipartFile> photos, List<String> positions) throws IOException {
+
     Post post = postRepository.findById(postId)
         .orElseThrow(() -> new ResourceNotFoundException(postId + ": 해당 아이디로 게시글을 찾을 수 없습니다."));
 

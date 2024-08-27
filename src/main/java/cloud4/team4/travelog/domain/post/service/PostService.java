@@ -4,6 +4,7 @@ import cloud4.team4.travelog.domain.board.entity.Board;
 import cloud4.team4.travelog.domain.board.repository.BoardRepository;
 import cloud4.team4.travelog.domain.member.entity.Member;
 import cloud4.team4.travelog.domain.member.repository.MemberRepository;
+import cloud4.team4.travelog.domain.post.dto.PostListViewResponse;
 import cloud4.team4.travelog.domain.post.dto.PostMapper;
 import cloud4.team4.travelog.domain.post.dto.PostPostDto;
 import cloud4.team4.travelog.domain.post.dto.PostUpdateDto;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,10 +62,10 @@ public class PostService {
     return createdPost;
   }
 
-//  // 모든 게시글 조회
-//  public List<Post> getAllPosts() {
-//    return postRepository.findAll();
-//  }
+  // 모든 게시글 조회
+  public List<Post> getAllPosts() {
+    return postRepository.findAll();
+  }
 
   // 특정 게시글 조회
   public Post getPostById(Long postId) {
@@ -95,6 +97,28 @@ public class PostService {
     postRepository.delete(post);
   }
 
+  public Page<PostListViewResponse> getPostsByRegionMajor(String regionMajor, String searchType, String keyword, Pageable pageable) {
+    Specification<Post> spec = Specification.where(null);
+
+    if (regionMajor != null && !regionMajor.isEmpty()) {
+      spec = spec.and((root, query, cb) -> cb.equal(root.get("board").get("regionMajor"), regionMajor));
+    }
+
+    // 검색 분류
+    if (searchType != null && keyword != null && !keyword.isEmpty()) {
+      if ("title".equals(searchType)) {
+        spec = spec.and((root, query, cb) -> cb.like(root.get("title"), "%" + keyword + "%"));
+      } else if ("content".equals(searchType)) {
+        spec = spec.and((root, query, cb) -> cb.like(root.get("content"), "%" + keyword + "%"));
+      } else if ("regionMiddle".equals(searchType)) {
+        spec = spec.and((root, query, cb) -> cb.like(root.get("board").get("regionMiddle"), "%" + keyword + "%"));
+      }
+    }
+
+    Page<Post> posts = postRepository.findAll(spec, pageable);
+    return posts.map(PostListViewResponse::new);
+  }
+
   // 정렬 방식 선택
   public Sort createSort(String sortBy) {
     if ("recommends".equals(sortBy)) {  // 추천순 + 최신순 정렬
@@ -122,11 +146,6 @@ public class PostService {
           post.setRecommends(post.getRecommends() + 1);
           postRepository.save(post);
         });
-  }
-
-  // 게시글 페이징 기능
-  public Page<Post> getAllPosts(Pageable pageable) {
-    return postRepository.findAll(pageable);
   }
 
   // 제목으로 게시글 검색

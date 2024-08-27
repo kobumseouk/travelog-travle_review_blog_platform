@@ -50,6 +50,7 @@ public class PostController {
     }
   }
 
+  /*// viewController에서 직접 service 조회
   @GetMapping
   public ResponseEntity<Page<PostResponseDto>> getAllPosts(
       @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
@@ -60,7 +61,7 @@ public class PostController {
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
-  }
+  }*/
 
   @GetMapping("/{postId}")
   public ResponseEntity<PostResponseDto> getPostById(@PathVariable("postId") Long postId) {

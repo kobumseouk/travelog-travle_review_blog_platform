@@ -1,62 +1,45 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const boardSelect = document.getElementById('boardSelect');
-    const regionSelect = document.getElementById('regionSelect');
-    const detailRegionInput = document.getElementById('detailRegion');
+    const regionMajorSelect = document.getElementById('regionMajorSelect');
+    const searchTypeSelect = document.getElementById('searchTypeSelect');
     const searchInput = document.getElementById('searchInput');
     const searchBtn = document.getElementById('searchBtn');
-    const sortLatestBtn = document.getElementById('sortLatest');
-    const sortRecommendsBtn = document.getElementById('sortRecommends');
+    const sortSelect = document.getElementById('sortSelect');
+    const sortButton = document.getElementById('sortButton');
 
-    boardSelect.addEventListener('change', updateRegionOptions);
-    searchBtn.addEventListener('click', searchPosts);
-    sortLatestBtn.addEventListener('click', () => sortPosts('latest'));
-    sortRecommendsBtn.addEventListener('click', () => sortPosts('recommends'));
+    sortButton.addEventListener('click', sort);
 
-    // 게시판에 따라 지역 옵션 선택
-    function updateRegionOptions() {
-        const selectedBoard = boardSelect.value;
-        fetch(`/posts/regions?board=${selectedBoard}`)
-            .then(response => response.json())
-            .then(regions => {
-                regionSelect.innerHTML = '<option value="">지역</option>';
-                regions.forEach(region => {
-                    const option = document.createElement('option');
-                    option.value = region;
-                    option.textContent = region;
-                    regionSelect.appendChild(option);
-                });
-            });
+    // 게시판 이동
+    regionMajorSelect.addEventListener('change', function() {
+        window.location.href = `/board/${this.value}/posts`;
+    });
+
+    searchBtn.addEventListener('click', search);
+    sortLatestBtn.addEventListener('click', () => sort('createdAt'));
+    sortRecommendsBtn.addEventListener('click', () => sort('recommends'));
+
+    // 제목, 내용, 세부 지역으로 분류를 나누고 현재 정렬 방식으로 찾기
+    function search() {
+        const regionMajor = regionMajorSelect.value;
+        const searchType = searchTypeSelect.value;
+        const keyword = searchInput.value;
+        const currentSort = document.querySelector('.bg-blue-500').id === 'sortLatest' ? 'createdAt' : 'recommends';
+
+        let url = `/board/${regionMajor}/posts?sortBy=${currentSort}`;
+
+        if (searchType && keyword) {
+            url += `&searchType=${searchType}&keyword=${keyword}`;
+        }
+
+        window.location.href = url;
     }
 
-    // 내용 일치 일 때 검색 기능
-    function searchPosts() {
-	const searchTerm = searchInput.value;
-        const board = boardSelect.value;
-        const region = regionSelect.value;
-        const detailRegion = detailRegionInput.value;
-
-        const currentSort = document.querySelector('.sort-btn.active').id === 'sortLatest' ? 'latest' : 'recommends';
-
-        window.location.href = `/posts?board=${board}&region=${region}&detailRegion=${detailRegion}&search=${searchTerm}&sort=${currentSort}`;
-    }
-
-    // 정렬 기능
-    function sortPosts(sortType) {
+    // 정렬(최신순, 추천순)
+    function sort(sortType) {
+        const sortBy = sortSelect.value;
         const urlParams = new URLSearchParams(window.location.search);
-        urlParams.set('sort', sortType);
+        urlParams.set('sortBy', sortBy);
         window.location.search = urlParams.toString();
     }
 
-    // 페이징 기능
-    document.querySelectorAll('.pagination a').forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const urlParams = new URLSearchParams(window.location.search);
-            urlParams.set('page', this.getAttribute('data-page'));
-            window.location.search = urlParams.toString();
-        });
-    });
 
-    // 초기 지역 옵션 로드
-    updateRegionOptions();
 });

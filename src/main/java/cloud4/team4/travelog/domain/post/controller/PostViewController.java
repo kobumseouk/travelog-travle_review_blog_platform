@@ -1,5 +1,7 @@
 package cloud4.team4.travelog.domain.post.controller;
 
+import cloud4.team4.travelog.domain.board.dto.BoardViewResponse;
+import cloud4.team4.travelog.domain.board.entity.Board;
 import cloud4.team4.travelog.domain.board.service.BoardService;
 import cloud4.team4.travelog.domain.comment.dto.CommentRequestDto;
 import cloud4.team4.travelog.domain.comment.service.CommentService;
@@ -19,38 +21,47 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 
 @Controller
 @RequiredArgsConstructor
 public class PostViewController {
-  // private final BoardService boardService;
+  private final BoardService boardService;
   private final PostService postService;
   private final CommentService commentService;
   private final PostMapper postMapper;
 
-  @GetMapping("/board/posts") // 상세 게시판
-  public String listPosts(Model model,
-                          @RequestParam(defaultValue = "1") int postPage,
-                          @RequestParam(defaultValue = "createdAt") String sortBy) {
+  @GetMapping("/board/{regionMajor}/posts")
+  public String listPosts(@PathVariable String regionMajor,
+                          @RequestParam(defaultValue = "1") int page,
+                          @RequestParam(defaultValue = "createdAt") String sortBy,
+                          @RequestParam(required = false) String searchType,
+                          @RequestParam(required = false) String keyword,
+                          Model model) {
 
-    Sort sort = postService.createSort(sortBy);  // 최신순/추천순 값에 따라 정렬
+    Pageable pageable = PageRequest.of(page - 1, 10, postService.createSort(sortBy));
+    Page<PostListViewResponse> posts = postService.getPostsByRegionMajor(regionMajor, searchType, keyword, pageable);
 
-    Pageable pageable = PageRequest.of(postPage - 1, 10, sort);  // 페이징 기능
-    Page<Post> currentPostPage = postService.getAllPosts(pageable);
+    List<BoardViewResponse> allBoards = boardService.getAllBoards();
+    List<BoardViewResponse> MiddleBoards = boardService.getMiddleBoards(regionMajor);
 
-    Page<PostListViewResponse> postListViewResponsePage = currentPostPage.map(PostListViewResponse::new);
-
-    model.addAttribute("posts", postListViewResponsePage);
-    model.addAttribute("currentPage", currentPostPage);
-    model.addAttribute("totalPages", currentPostPage.getTotalPages());
+    model.addAttribute("posts", posts);
+    model.addAttribute("currentPage", posts.getNumber() + 1);
+    model.addAttribute("totalPages", posts.getTotalPages());
+    model.addAttribute("regionMajor", regionMajor);
+    model.addAttribute("allBoards", allBoards);
+    model.addAttribute("middleBoards", MiddleBoards);
     model.addAttribute("sortBy", sortBy);
+    model.addAttribute("searchType", searchType);
+    model.addAttribute("keyword", keyword);
 
-    return "boardPost";
+    return "boardPosts";
   }
 
 
 
-  @GetMapping("board/posts/{postId}")
+  @GetMapping("/{boardId}/posts/{postId}")
   public String post(@PathVariable("postId") Long postId,
                      @RequestParam(required = false, value = "commentPage", defaultValue = "1") int commentPage,
                      Model model) {
@@ -60,11 +71,12 @@ public class PostViewController {
     model.addAttribute("commentRequestDto", new CommentRequestDto());
     model.addAttribute("post", postMapper.postToPostResponseDto(post));
     model.addAttribute("comments", commentService.findPagedCommentsByPostId(postId, commentPage));
+    model.addAttribute("averageRating", commentService.getAverageRating(postId));
 
     return "post";
   }
 
-  @GetMapping("board/new-post")
+  @GetMapping("/{boardId}/new-post")
   public String newPost(@RequestParam(required = false, name = "postId") Long postId, Model model) {
     if (postId == null) {
       model.addAttribute("post", new PostPostDto());
