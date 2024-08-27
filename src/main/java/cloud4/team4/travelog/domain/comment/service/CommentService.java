@@ -1,6 +1,7 @@
 package cloud4.team4.travelog.domain.comment.service;
 
 import cloud4.team4.travelog.domain.comment.dto.CommentMapper;
+import cloud4.team4.travelog.domain.comment.dto.CommentPagingInfo;
 import cloud4.team4.travelog.domain.comment.dto.CommentRequestDto;
 import cloud4.team4.travelog.domain.comment.dto.CommentUpdateDto;
 import cloud4.team4.travelog.domain.comment.entity.Comment;
@@ -11,6 +12,9 @@ import cloud4.team4.travelog.domain.post.entity.Post;
 import cloud4.team4.travelog.domain.post.service.PostService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -25,27 +29,53 @@ public class CommentService {
     private final MemberRepository memberRepository;
     private final PostService postService;
 
-    // 테스트 용 코드
-//    private final ExMemberRepository exMemberRepository;
-//    private final ExPostService exPostService;
-
     private final CommentPhotosService commentPhotosService;
 
     /**
      * READ
      * findAll: 해당 게시글의 모든 댓글 반환
-     *
-     *
      */
     public List<Comment> findAllByPostId(Long postId) {
 
         Post post = postService.getPostById(postId);
         return commentRepository.findCommentsByPost(post);
 
-        // 테스트 용 코드
-//        ExPost post = exPostService.getPostById(postId);
-//        return commentRepository.findCommentsByPost(post);
+    }
 
+    /**
+     * READ
+     * findPaging: 해당 게시글의 댓글 반환, 페이징 적용
+     */
+    public Page<Comment> findPagedCommentsByPostId(Long postId, int commentPage, CommentPagingInfo commentPagingInfo) {
+
+        if(commentPagingInfo.getCommentPagingSize() == 0) {
+            commentPagingInfo.setCommentPagingSize(5);
+        }
+        if(commentPagingInfo.getCommentSort() == null) {
+            commentPagingInfo.setCommentSort("createdAt");
+        }
+
+        // 페이징
+        PageRequest commentPageRequest = PageRequest.of(commentPage - 1, commentPagingInfo.getCommentPagingSize());
+
+        // 추천 수 -> 생성일 기준 정렬
+        if(commentPagingInfo.getCommentSort().equals("commentLikes")) {
+
+            return commentRepository.findCommentsSortedByLikes(postService.getPostById(postId), commentPageRequest);
+        }
+
+        // (기본) 생성일 기준 정렬
+        return commentRepository.findCommentsByPost(postService.getPostById(postId),
+                commentPageRequest.withSort(Sort.by("createdAt").descending()));
+    }
+
+    /**
+     * READ
+     * 댓글 단건 조회
+     */
+    public Comment findCommentByCommentId(Long commentId) {
+
+        return commentRepository.findCommentById(commentId);
     }
 
     /**
@@ -69,14 +99,6 @@ public class CommentService {
         comment.setMember(member);
         comment.setPost(post);
 
-        // 테스트 용 코드
-//        ExMember member = exMemberRepository.findById(commentRequestDto.getMemberId())
-//                    .orElseThrow(() -> new IllegalArgumentException("member not found"));
-//        ExPost post = exPostService.getPostById(postId);
-//
-//        comment.setMember(member);
-//        comment.setPost(post);
-
         Comment savedComment = commentRepository.save(comment);
 
         try {
@@ -95,7 +117,7 @@ public class CommentService {
     public void updateComment(Long commentId, CommentUpdateDto commentUpdateDto) {
         Comment findComment = commentRepository.findCommentById(commentId);
 
-        findComment.update(commentUpdateDto.getContent(), LocalDateTime.now());
+        findComment.update(commentUpdateDto.getContent(), LocalDateTime.now(), commentUpdateDto.getRating());
         try {
             commentPhotosService.updatePhotos(commentUpdateDto.getPhotos(), findComment);
         } catch (Exception e) {
@@ -107,7 +129,21 @@ public class CommentService {
      * DELETE
      * deleteComment:
      */
+    @Transactional
     public void deleteComment(Long commentId) {
         commentRepository.deleteById(commentId);
+    }
+
+    // 게시글의 모든 댓글의 평점 평균 (소숫점 첫째자리 까지 출력)
+    public double getAverageRating(Long postId) {
+        Post post = postService.getPostById(postId);
+        List<Comment> comments = commentRepository.findCommentsByPost(post);
+
+
+        // 평균 평점 반환 -> 평점이 없다면 0.0 반환
+        double average = comments.stream()
+                .mapToLong(Comment::getRating)
+                .average().orElse(0.0);
+        return Math.round(average * 10.0) / 10.0;
     }
 }

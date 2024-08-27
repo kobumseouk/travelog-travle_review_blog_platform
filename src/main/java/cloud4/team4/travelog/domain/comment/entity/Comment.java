@@ -22,26 +22,34 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
-//    private ExMember member;      // 테스트 용 코드
 
     // comment와 post는 다대일 관계
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
-//    private ExPost post;          // 테스트 용 코드
 
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
     private List<CommentPhotos> commentPhotos = new ArrayList<>();
 
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
+    private List<Reply> replies = new ArrayList<>();
+
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
+    private List<CommentLike> commentLikes = new ArrayList<>();
+
+    @Column(nullable = false)
     private String content;
 
-    private LocalDateTime created_at;
-    private LocalDateTime edited_at;
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
+    private LocalDateTime editedAt;
 
-    // 테스트 용 주석처리
+    // 평점 (1 ~ 5점 선택 가능)
+    @Column(nullable = false)
+    private Long rating;
+
     public void setMember(Member member) {
         this.member = member;
-        // ArrayList 이름 확인 필수
         member.getComments().add(this);
     }
 
@@ -50,24 +58,15 @@ public class Comment {
         post.getComments().add(this);
     }
 
-    // 테스트 용 코드
-//    public void setMember(ExMember member) {
-//        this.member = member;
-//        member.getComments().add(this);
-//    }
-//    public void setPost(ExPost post) {
-//        this.post = post;
-//        post.getComments().add(this);
-//    }
-
-    public Comment(String content, LocalDateTime created_at) {
+    public Comment(String content, LocalDateTime createdAt) {
         this.content = content;
-        this.created_at = created_at;
+        this.createdAt = createdAt;
     }
 
     // comment update 메서드
-    public void update(String content, LocalDateTime edited_at) {
+    public void update(String content, LocalDateTime editedAt, Long rating) {
         this.content = content;
-        this.edited_at = edited_at;
+        this.editedAt = editedAt;
+        this.rating = rating;
     }
 }
