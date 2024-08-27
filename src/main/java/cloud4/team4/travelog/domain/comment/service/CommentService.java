@@ -45,13 +45,20 @@ public class CommentService {
      * READ
      * findPaging: 해당 게시글의 댓글 반환, 페이징 적용
      */
-    public Page<Comment> findPagedCommentsByPostId(Long postId, int commentPage) {
+    public Page<Comment> findPagedCommentsByPostId(Long postId, int commentPage, String commentSort) {
 
-        // 페이징 -> 댓글 5개씩 출력
-        PageRequest commentPageRequest = PageRequest.of(commentPage - 1, 5, Sort.by("createdAt").descending());
+        // 페이징 -> 한 페이지 기본 5개 씩 출력
+        PageRequest commentPageRequest = PageRequest.of(commentPage - 1, 5);
 
-        return commentRepository.findCommentsByPost(postService.getPostById(postId), commentPageRequest);
+        // 추천 수 -> 생성일 기준 정렬
+        if(commentSort.equals("commentLikes")) {
 
+            return commentRepository.findCommentsSortedByLikes(postService.getPostById(postId), commentPageRequest);
+        }
+
+        // (기본) 생성일 기준 정렬
+        return commentRepository.findCommentsByPost(postService.getPostById(postId),
+                commentPageRequest.withSort(Sort.by("createdAt").descending()));
     }
 
     /**
