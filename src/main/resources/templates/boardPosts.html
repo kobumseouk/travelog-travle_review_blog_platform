@@ -1,7 +1,6 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/header :: header}">
-    <script src="/js/footer.js"></script>
     <script src="/js/board_postList.js"></script>
 </head>
 <body class="h-full flex flex-col">
@@ -13,7 +12,6 @@
         <h1 class="text-3xl font-bold mb-6" th:text="${regionMajor} + ' 게시판'"></h1>
 
         <div class="mb-6 flex justify-between items-center">
-
             <div class="flex items-center space-x-4">
                 <select id="sortSelect" name="sortSelect"
                         class="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -26,7 +24,7 @@
                 </button>
             </div>
 
-            <div class="flex items-center space-x-4">
+            <div class="flex items-center space-x-4 flex-grow mx-4">
                 <select id="regionMajorSelect" class="p-2 border rounded">
                     <option th:each="major : ${allRegionMajors}"
                             th:value="${major}"
@@ -39,29 +37,37 @@
                     <option value="content">내용</option>
                     <option value="regionMiddle">지역</option>
                 </select>
-                <input type="text" id="searchInput" placeholder="검색어 입력" class="p-2 border rounded"
+                <input type="text" id="searchInput" placeholder="검색어 입력" class="p-2 border rounded flex-grow"
                        th:value="${keyword}">
                 <button id="searchBtn" class="bg-blue-500 text-white px-4 py-2 rounded">검색</button>
             </div>
 
+            <div>
+                <a th:href="@{/boards/{regionMajor}/post-new(regionMajor=${regionMajor})}"
+                   class="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 transition duration-200">
+                    작성
+                </a>
+            </div>
         </div>
 
         <!-- 게시글 목록 테이블 -->
         <table class="w-full border-collapse border">
             <thead>
             <tr class="bg-gray-100">
-                <th class="border p-2">번호</th>
-                <th class="border p-2">제목</th>
-                <th class="border p-2">작성자</th>
-                <th class="border p-2">작성일</th>
-                <th class="border p-2">조회</th>
-                <th class="border p-2">추천</th>
+                <th class="border p-2 w-1/14">번호</th>
+                <th class="border p-2 w-5/14">제목</th>
+                <th class="border p-2 w-3/14">작성자</th>
+                <th class="border p-2 w-3/14">작성일</th>
+                <th class="border p-2 w-1/14">조회</th>
+                <th class="border p-2 w-1/14">추천</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="post : ${posts}">
                 <td class="border p-2" th:text="${post.postId}"></td>
-                <td class="border p-2"><a th:href="@{/board/posts/{id}(id=${post.postId})}" th:text="${post.title}"></a></td>
+                <td class="border p-2"><a
+                        th:href="@{/boards/{regionMajor}/posts/{id}(regionMajor=${regionMajor},id=${post.postId})}"
+                        th:text="${post.title}"></a></td>
                 <td class="border p-2" th:text="${post.memberName}"></td>
                 <td class="border p-2" th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd')}"></td>
                 <td class="border p-2" th:text="${post.views}"></td>
@@ -74,13 +80,13 @@
             <nav class="inline-flex">
                 <!-- 첫 페이지로 이동 -->
                 <a th:if="${currentPage > 1}"
-                   th:href="@{/board/{regionMajor}/posts(regionMajor=${regionMajor},page=1,sortBy=${sortBy},searchType=${searchType},keyword=${keyword})}"
+                   th:href="@{/boards/{regionMajor}(regionMajor=${regionMajor},page=1,sortBy=${sortBy},searchType=${searchType},keyword=${keyword})}"
                    class="px-3 py-2 border border-gray-300 bg-white text-gray-500 hover:bg-gray-50">
                     &lt;&lt;
                 </a>
                 <!-- 이전 페이지로 이동 -->
                 <a th:if="${currentPage > 1}"
-                   th:href="@{/board/{regionMajor}/posts(regionMajor=${regionMajor},page=${currentPage - 1},sortBy=${sortBy},searchType=${searchType},keyword=${keyword})}"
+                   th:href="@{/boards/{regionMajor}(regionMajor=${regionMajor},page=${currentPage - 1},sortBy=${sortBy},searchType=${searchType},keyword=${keyword})}"
                    class="px-3 py-2 border border-gray-300 bg-white text-gray-500 hover:bg-gray-50">
                     &lt;
                 </a>
@@ -88,20 +94,20 @@
                 <!-- 페이지 번호 표시 -->
                 <a th:each="pageNum : ${#numbers.sequence(1, totalPages > 0 ? totalPages : 1)}"
                    th:if="${pageNum >= currentPage - 2 and pageNum <= currentPage + 2 and pageNum <= (totalPages > 0 ? totalPages : 1)}"
-                   th:href="@{/board/{regionMajor}/posts(regionMajor=${regionMajor},page=${pageNum},sortBy=${sortBy},searchType=${searchType},keyword=${keyword})}"
+                   th:href="@{/boards/{regionMajor}(regionMajor=${regionMajor},page=${pageNum},sortBy=${sortBy},searchType=${searchType},keyword=${keyword})}"
                    th:text="${pageNum}"
                    th:class="${pageNum == currentPage} ? 'px-3 py-2 bg-blue-500 text-white' : 'px-3 py-2 border border-gray-300 bg-white text-gray-500 hover:bg-gray-50'">
                 </a>
 
                 <!-- 다음 페이지로 이동 -->
                 <a th:if="${currentPage < (totalPages > 0 ? totalPages : 1)}"
-                   th:href="@{/board/{regionMajor}/posts(regionMajor=${regionMajor},page=${currentPage + 1},sortBy=${sortBy},searchType=${searchType},keyword=${keyword})}"
+                   th:href="@{/boards/{regionMajor}(regionMajor=${regionMajor},page=${currentPage + 1},sortBy=${sortBy},searchType=${searchType},keyword=${keyword})}"
                    class="px-3 py-2 border border-gray-300 bg-white text-gray-500 hover:bg-gray-50">
                     &gt;
                 </a>
                 <!-- 마지막 페이지로 이동 -->
                 <a th:if="${currentPage < (totalPages > 0 ? totalPages : 1)}"
-                   th:href="@{/board/{regionMajor}/posts(regionMajor=${regionMajor},page=${totalPages > 0 ? totalPages : 1},sortBy=${sortBy},searchType=${searchType},keyword=${keyword})}"
+                   th:href="@{/boards/{regionMajor}(regionMajor=${regionMajor},page=${totalPages > 0 ? totalPages : 1},sortBy=${sortBy},searchType=${searchType},keyword=${keyword})}"
                    class="px-3 py-2 border border-gray-300 bg-white text-gray-500 hover:bg-gray-50">
                     &gt;&gt;
                 </a>
@@ -111,6 +117,6 @@
 </div>
 <div th:replace="~{fragments/footer :: footer}"></div>
 </body>
-
+<script src="/js/footer.js"></script>
 </html>
 
