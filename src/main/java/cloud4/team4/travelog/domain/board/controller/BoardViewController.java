@@ -25,17 +25,7 @@ public class BoardViewController {
 //        return "subboard";
 //    }
 
-    // Todo: 여행 후기 화면 임시 뷰
-    @GetMapping("/test")
-    public String getSubBoards(Model model) {
-        List<BoardViewResponse> seoulBoards = boardService.getMiddleBoards("서울");
-        List<BoardViewResponse> busanBoards = boardService.getMiddleBoards("부산");
 
-        model.addAttribute("seoulBoards", seoulBoards);
-        model.addAttribute("busanBoards", busanBoards);
-
-        return "subboard";
-    }
 
     // Todo: 이게 기본화면입니다.
     @GetMapping
@@ -46,6 +36,7 @@ public class BoardViewController {
 
         return "testboard";
     }
+
 
 
     // 게시판 생성 화면

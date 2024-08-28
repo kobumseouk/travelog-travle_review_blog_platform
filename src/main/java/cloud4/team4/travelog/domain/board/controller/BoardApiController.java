@@ -60,7 +60,6 @@ public class BoardApiController {
 
 
 
-
     /* UPDATE */
 
     // 게시판 설명 수정
