@@ -17,7 +17,7 @@ public class PostListViewResponse {
 
 
   public PostListViewResponse(Post post){
-    this.postId = post.getPostId();
+    this.postId = post.getId();
     this.title = post.getTitle();
     // this.content = post.getContent();
     this.memberName = post.getMember().getName();

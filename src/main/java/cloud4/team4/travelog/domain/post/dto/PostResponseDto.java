@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class PostResponseDto {
   @NotNull
-  private Long postId;
+  private Long id;
   @NotBlank
   private String title;
   @NotBlank
@@ -27,6 +27,8 @@ public class PostResponseDto {
 
   private Long boardId;
   private Long memberId;
+  private String memberName;
+
   private String periodStart;
   private String periodEnd;
   private LocalDateTime createdAt;

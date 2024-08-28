@@ -2,6 +2,7 @@ package cloud4.team4.travelog.domain.post.entity;
 
 import cloud4.team4.travelog.domain.board.entity.Board;
 import cloud4.team4.travelog.domain.comment.entity.Comment;
+import cloud4.team4.travelog.domain.comment.entity.CommentLike;
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.*;
 import cloud4.team4.travelog.domain.member.entity.Member;
@@ -26,7 +27,7 @@ public class Post {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "post_id")
-  private Long postId;
+  private Long id;
 
   @NotBlank
   @Size(max = 50)
@@ -76,6 +77,8 @@ public class Post {
   @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Comment> comments = new ArrayList<>();
 
+  @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+  private List<PostLike> postLikes = new ArrayList<>();
 
   /*public void addPostPhoto(PostPhoto postPhoto) {
     postPhotos.add(postPhoto);
@@ -86,5 +89,14 @@ public class Post {
     postPhotos.remove(postPhoto);
     postPhoto.setPost(null);
   }*/
+  public void incrementRecommends() {
+    this.recommends++;
+  }
+
+  public void decrementRecommends() {
+    if (this.recommends > 0) {
+      this.recommends--;
+    }
+  }
 
 }

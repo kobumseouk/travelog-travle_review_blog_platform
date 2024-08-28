@@ -68,7 +68,7 @@ public class PostPhotoService {
   }
 
   public List<PostPhoto> findPhotosByPostId(Long postId) {
-    return postPhotoRepository.findAllPhotosByPost_PostId(postId);
+    return postPhotoRepository.findAllPhotosByPost_Id(postId);
   }
 
 }

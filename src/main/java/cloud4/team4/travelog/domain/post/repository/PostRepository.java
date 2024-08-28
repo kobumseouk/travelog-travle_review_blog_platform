@@ -13,10 +13,6 @@ import java.util.Optional;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-  // 제목에 특정 키워드가 포함된 게시글 검색
-  List<Post> findByTitleContaining(String keyword);
-
-  //
   Page<Post> findAll(Specification<Post> spec, Pageable pageable);
 
 
