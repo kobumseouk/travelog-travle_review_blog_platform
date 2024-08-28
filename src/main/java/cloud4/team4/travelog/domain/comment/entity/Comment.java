@@ -45,7 +45,7 @@ public class Comment {
     private LocalDateTime editedAt;
 
     // 평점 (1 ~ 5점 선택 가능)
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private Long rating;
 
     public void setMember(Member member) {
