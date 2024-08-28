@@ -1,3 +1,272 @@
+bumstone
+bumstone.
+온라인
+
+안창민 — 2024.08.26. 오후 1:29
+아 넵 감사합니다!!
+bumstone — 2024.08.26. 오후 1:29
+아닙니다!
+안창민 — 2024.08.26. 오후 6:40
+범석님 혹시 post.html 수정 하셨나요??
+bumstone — 2024.08.26. 오후 6:59
+html은 아직 수정 못했습니다..
+안창민 — 2024.08.26. 오후 7:00
+엇!! 다행이네요 ㅋㅋㅋㅋㅋ
+저 수정을 많이해서..
+오히려 다행인것같습니다! ㅎㅎㅋㅋㅋㅋ
+bumstone — 2024.08.26. 오후 7:00
+앗 그게 다행이됬네요 ㅋㅋ
+안창민 — 2024.08.26. 오후 7:03
+ㅋㅋㅋㅋ 그르게요
+그 수정된 파일 조금있다가 푸시하겠습니다! ㅎㅎ
+bumstone — 2024.08.26. 오후 7:04
+알겠습니다!!
+안창민 — 2024.08.27. 오전 10:35
+범석님 저희 조금만 있다가 좋아요 구현 방식 말씀 나눠볼까요~?
+bumstone — 2024.08.27. 오전 10:35
+넵 알겠습니다
+안창민 — 2024.08.27. 오전 10:40
+혹시 지금 괜찮으실까요??
+bumstone — 2024.08.27. 오전 10:40
+네 가능합니다!!
+안창민 — 2024.08.27. 오전 10:41
+넵 그럼 음성채팅으로 넘어가겠습니다!
+안창민 — 2024.08.27. 오후 4:48
+범석님 그 좋아요 부분은 저희가 의논한대로 테이블 만들어서 구현했습니다!
+bumstone — 2024.08.27. 오후 4:49
+와 벌써 구현까지 되었나요?
+안창민 — 2024.08.27. 오후 4:49
+엇 아까 보내드린대로.. ㅎㅎ
+그 아까 보낸 화면에서
+페이징 사이즈도 추가했어요
+이미지
+bumstone — 2024.08.27. 오후 4:49
+와 알겠습니다!!
+저는 정렬 버튼 두개로 놨는데 참고 해야겠네요
+안창민 — 2024.08.27. 오후 4:50
+어 혹시 어떻게 구현하셨나요??
+bumstone — 2024.08.27. 오후 4:50
+최신순 버튼 따로, 추천순 따로 구현했는데
+안창민 — 2024.08.27. 오후 4:51
+아하
+bumstone — 2024.08.27. 오후 4:51
+select로 선택하는게 더 깔끔한거 같습니다
+안창민 — 2024.08.27. 오후 4:51
+감사합니다..
+통일성 있는게 좋을것같아서 추가 되는대로 보내드리고 있었습니다..ㅋㅋㅋㅋ
+혹시 제꺼 맘에 안드시면 언제든지 말씀해주세요! 수정하겠습니다 ㅎㅎ
+bumstone — 2024.08.27. 오후 4:53
+알겠습니다
+맘에 안드는 부분이 있다면! 말씀드리겠습니다 ㅎㅎ
+안창민 — 2024.08.27. 오후 4:53
+넵넵 ㅎㅎ 화이팅!!
+안창민 — 2024.08.27. 오후 6:32
+범석님 그 post.html은 아직 수정안하신게 맞을까요?? dev에서 pull 했는데 혹시 충돌이 일어난건가 싶어서요..!
+bumstone — 2024.08.27. 오후 6:47
+지금 건들이고 있는데 dev에는 문제 없을 겁니다!
+안창민 — 2024.08.27. 오후 6:49
+엇 제가 말씀을 잘못드렸네요.. 죄송합니다
+충돌이 생겼다는게 아니라 변경이 없어보인다는거였는데 정신이 없어서 완전 반대로 말씀을 드렸네요..ㅠㅠ
+죄송합니다
+넵 문제없는것도 확인했습니다 감사합니다!!
+bumstone — 2024.08.27. 오후 6:49
+아 넵!!
+안창민 — 2024.08.27. 오후 6:50
+넵 이따 뵙겠습니다~~
+bumstone — 2024.08.27. 오후 6:51
+이따 뵐게요
+안창민 — 어제 오전 10:49
+범석님 그 regionMajor는 서울, 경기 이런식인건가요??
+bumstone — 어제 오전 10:49
+네 맞습니다
+안창민 — 어제 오전 10:50
+넵 감사합니다~
+@GetMapping("/post/{postId}")
+public String post(@PathVariable("postId") Long postId,
+@RequestParam(required = false, value = "commentPage", defaultValue = "1") int commentPage,
+@ModelAttribute("commentPagingInfo") CommentPagingInfo commentPagingInfo,
+Model model) {
+Post post = postService.getPostById(postId);
+postService.incrementViews(postId);  // 방문마다 조회수 증가
+
+model.addAttribute("commentRequestDto", new CommentRequestDto());
+model.addAttribute("post", post);
+model.addAttribute("comments", commentService.findPagedCommentsByPostId(postId, commentPage, commentPagingInfo));
+model.addAttribute("averageRating", commentService.getAverageRating(postId));
+
+return "post";
+}
+
+
+이 부분 url은 제가 고칠게요!
+bumstone — 어제 오전 10:56
+넵 감사합니다
+안창민 — 어제 오후 3:26
+범석님 postviewcontroller 수정사항이 있나요~~?
+bumstone — 어제 오후 3:27
+네 아직 올리진 않았지만
+modifyPost와 likePost 추가했습니다
+안창민 — 어제 오후 3:37
+오홍 저도 수정이 있어서 충돌안나게 잘해야될것같습니다..
+제가 MR 날리면 말씀드릴게요 혹시 먼저 날리시게 되면 저한테 말씀주세요!
+bumstone — 어제 오후 3:37
+넵
+먼저 하시면 풀하겠습니다
+안창민 — 어제 오후 3:37
+넵 감사합니다!! 화이팅!
+지금 푸시하고 mr 날릴게요! 혹시 아직 안날리셨죠??
+bumstone — 어제 오후 3:44
+네 아직입니다
+안창민 — 어제 오후 3:45
+넵 풀 부탁드릴게요 ㅎㅎ
+bumstone — 어제 오후 3:45
+넵 알겠습니다!
+안창민 — 어제 오후 5:06
+범석님 이번 mr에서 그 postphotoservice 인가? 거기서 안쓰는 Import 문이 있더라구요
+그게 commentPhotosSizeException인가 그랬는데
+제가 예외 이름을 바꿔버려서 그 import문도 지우고 푸시했습니다..!
+pull 땡겨서 확인해주시면 감사하겠습니다!
+bumstone — 어제 오후 5:07
+아 감사합니다
+확인하겠습니다🫡
+안창민 — 어제 오후 5:08
+엇 아닙니다..ㅎㅎ 안지우면 에러가 떠버려서 말씀  안드리고 지워버려서 죄송합니다..
+bumstone — 어제 오후 5:18
+괜찮습니다!
+안창민 — 어제 오후 10:40
+범석님 저 화장실만 다녀오고 같이 수정해볼까요??
+bumstone — 어제 오후 10:40
+그래주시면 감사할 것 같습니다
+안창민 — 어제 오후 10:41
+넵
+지금 바로 괜찮으세요??
+bumstone — 어제 오후 10:41
+넵
+안창민 — 어제 오후 10:42
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head th:replace="~{fragments/header :: header}">
+    <meta charset="UTF-8">
+</head>
+<body class="h-full flex flex-col">
+확장
+message.txt
+20KB
+bumstone — 어제 오후 10:56
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head th:replace="~{fragments/header :: header}">
+    <meta charset="UTF-8">
+</head>
+<body class="h-full flex flex-col">
+확장
+message.txt
+21KB
+안창민 — 어제 오후 11:36
+범석님........
+ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ
+bumstone — 어제 오후 11:36
+어..
+왜 그러시죠?
+안창민 — 어제 오후 11:36
+안되네요.........
+ㅋㅋㅋㅋㅋㅋㅋ
+bumstone — 어제 오후 11:36
+다시 한번 모일까요?
+안창민 — 어제 오후 11:36
+ㅋㅋㅋㅋㅋㅋㅋㅋㅋ
+넵
+얼른 끝내버리죠..!
+bumstone — 어제 오후 11:37
+예얍
+bumstone — 어제 오후 11:44
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header}"></head>
+<body class="h-full flex flex-col">
+<div th:replace="~{fragments/bodyHeader :: bodyHeader}"></div>
+<br>
+확장
+message.txt
+7KB
+&lt;
+<
+bumstone — 오늘 오전 12:01
+package cloud4.team4.travelog.domain.post.controller;
+
+import cloud4.team4.travelog.domain.board.dto.BoardViewResponse;
+import cloud4.team4.travelog.domain.board.entity.Board;
+import cloud4.team4.travelog.domain.board.service.BoardService;
+import cloud4.team4.travelog.domain.comment.dto.CommentPagingInfo;
+확장
+message.txt
+6KB
+안창민 — 오늘 오전 12:06
+Whitelabel Error Page
+This application has no explicit mapping for /error, so you are seeing this as a fallback.
+
+Thu Aug 29 00:05:06 KST 2024
+There was an unexpected error (type=Internal Server Error, status=500).
+Name for argument of type [java.lang.String] not specified, and parameter name information not available via reflection. Ensure that the compiler uses the '-parameters' flag.
+java.lang.IllegalArgumentException: Name for argument of type [java.lang.String] not specified, and parameter name information not available via reflection. Ensure that the compiler uses the '-parameters' flag.
+at org.springframework.web.method.annotation.AbstractNamedValueMeth
+Whitelabel Error Page
+This application has no explicit mapping for /error, so you are seeing this as a fallback.
+
+Thu Aug 29 00:05:06 KST 2024
+There was an unexpected error (type=Internal Server Error, status=500).
+Name for argument of type [java.lang.String] not specified, and parameter name information not available via reflection. Ensure that the compiler uses the '-parameters' flag.
+확장
+message.txt
+3KB
+Whitelabel Error Page
+This application has no explicit mapping for /error, so you are seeing this as a fallback.
+
+Thu Aug 29 00:05:06 KST 2024
+There was an unexpected error (type=Internal Server Error, status=500).
+Name for argument of type [java.lang.String] not specified, and parameter name information not available via reflection. Ensure that the compiler uses the '-parameters' flag.
+확장
+message.txt
+3KB
+안창민 — 오늘 오전 12:18
+package cloud4.team4.travelog.domain.post.controller;
+
+import cloud4.team4.travelog.domain.board.dto.BoardViewResponse;
+import cloud4.team4.travelog.domain.board.entity.Board;
+import cloud4.team4.travelog.domain.board.service.BoardService;
+import cloud4.team4.travelog.domain.comment.dto.CommentPagingInfo;
+확장
+message.txt
+6KB
+안창민 — 오늘 오전 12:24
+얘 복붙해서 머지 해주세요!
+bumstone — 오늘 오전 12:24
+넵
+안창민 — 오늘 오전 12:26
+아
+범석님
+찾았습니다..
+bumstone — 오늘 오전 12:27
+어떤건가요!!
+안창민 — 오늘 오전 12:27
+post.html을 아래로 복붙해주세요오..
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head th:replace="~{fragments/header :: header}">
+    <meta charset="UTF-8">
+</head>
+<body class="h-full flex flex-col">
+확장
+message.txt
+21KB
+그 postResponseDto 관련해서
+postId가 아니라 그냥 id 로 필드명이
+바꼈더라구요..
+ㅋㅋㅋㅋㅋㅋ
+수정했습니다!
+﻿
+안창민
+anchangmin9999
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org" >
 <head th:replace="~{fragments/header :: header}">
@@ -210,7 +479,7 @@
                                     ${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')} : ${'(수정) ' + #temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
                     </div>
 
-                    <div th:id="'replyContainer-' + ${comment.id}" th:data-login-member-id="${loginMember}" th:data-region-major="${regionMajor}" th:data-post-id="${post.postId}"
+                    <div th:id="'replyContainer-' + ${comment.id}" th:data-login-member-id="${loginMember}" th:data-region-major="${regionMajor}" th:data-post-id="${post.id}"
                          class="mt-10 border border-gray-300 rounded-lg p-4" style="display: none;"></div> <!-- 기본적으로 숨김 -->
 
                 </div>
