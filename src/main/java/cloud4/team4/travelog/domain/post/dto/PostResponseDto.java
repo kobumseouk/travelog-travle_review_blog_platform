@@ -26,6 +26,8 @@ public class PostResponseDto {
   private String content;
 
   private Long boardId;
+  private String boardCategory;
+
   private Long memberId;
   private String memberName;
 
