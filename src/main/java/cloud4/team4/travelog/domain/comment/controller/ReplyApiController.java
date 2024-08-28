@@ -33,8 +33,9 @@ public class ReplyApiController {
     public ResponseEntity<String> addReply(@PathVariable("commentId") Long commentId,
                                              @RequestBody ReplyRequestDto replyRequestDto) {
 
-        System.out.println("replyRequestDto = " + replyRequestDto.getContent());
-        System.out.println("replyRequestDto.getMemberId() = " + replyRequestDto.getMemberId());
+        // 로그인된 멤버의 아이디 저장 => 세션 방식으로 변경해야함!
+        replyRequestDto.setMemberId(loginMember());
+
         // 저장
         try {
             replyService.saveReply(commentId, replyRequestDto);
@@ -47,7 +48,7 @@ public class ReplyApiController {
     }
 
     // UPDATE
-    @PutMapping("/reply/{replyId}/update")
+    @PutMapping("/reply/{replyId}")
     public ResponseEntity<String> updateReply(@PathVariable("replyId") Long replyId,
                                                 @ModelAttribute ReplyUpdateDto replyUpdateDto) {
         try {
@@ -61,13 +62,17 @@ public class ReplyApiController {
     }
 
     // DELETE
-    @DeleteMapping("/reply/{replyId}/delete")
+    @DeleteMapping("/reply/{replyId}")
     public ResponseEntity<Void> deleteReply(@PathVariable("replyId") Long replyId) {
 
-        System.out.println("replyId = " + replyId);
-        System.out.println("replyId.toString() = " + replyId.toString());
         replyService.deleteReply(replyId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    // 테스트 코드 -> 세션등에 로그인 멤버 정보 담기는 것으로 바뀌면 코드 지울것!
+    @ModelAttribute("loginMember")
+    public Long loginMember() {
+        return 1L;
     }
 }

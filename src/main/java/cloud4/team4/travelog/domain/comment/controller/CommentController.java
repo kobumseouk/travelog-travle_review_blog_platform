@@ -46,6 +46,7 @@ public class CommentController {
         CommentUpdateDto commentUpdateDto = new CommentUpdateDto(commentService.findCommentByCommentId(commentId).getContent(),
                 commentService.findCommentByCommentId(commentId).getRating());
 
+        model.addAttribute("boardCategory", postService.getPostById(postId).getBoard().getBoardCategory());
         model.addAttribute("commentUpdateDto", commentUpdateDto);
 
         return "comment_update";

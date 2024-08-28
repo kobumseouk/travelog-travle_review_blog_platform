@@ -74,12 +74,14 @@ public class PostViewController {
                      @RequestParam(required = false, value = "commentPage", defaultValue = "1") int commentPage,
                      @ModelAttribute("commentPagingInfo") CommentPagingInfo commentPagingInfo,
                      Model model) {
+    Post post = postService.getPostById(postId);
     postService.incrementViews(postId);  // 방문마다 조회수 증가
 
     model.addAttribute("commentRequestDto", new CommentRequestDto());
-    model.addAttribute("post", postService.getPostById(postId));
+    model.addAttribute("post", post);
     model.addAttribute("comments", commentService.findPagedCommentsByPostId(postId, commentPage, commentPagingInfo));
-    model.addAttribute("averageRating", commentService.getAverageRating(postId));
+
+    if(post.getBoard().getBoardCategory().equals("여행후기")) model.addAttribute("averageRating", commentService.getAverageRating(postId));
 
     return "post";
   }
