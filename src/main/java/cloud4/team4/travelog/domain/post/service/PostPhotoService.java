@@ -1,6 +1,5 @@
 package cloud4.team4.travelog.domain.post.service;
 
-import cloud4.team4.travelog.domain.comment.exception.CommentPhotosSizeException;
 import cloud4.team4.travelog.domain.post.entity.Post;
 import cloud4.team4.travelog.domain.post.entity.PostPhoto;
 import cloud4.team4.travelog.domain.post.exception.ResourceNotFoundException;
