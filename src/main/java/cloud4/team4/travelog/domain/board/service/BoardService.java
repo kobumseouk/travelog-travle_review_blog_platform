@@ -23,7 +23,7 @@ public class BoardService {
     /* CREATE */
 
     @Transactional
-    public void saveBoard(Long id, BoardRequestDto requestDto) {
+    public void saveBoard(BoardRequestDto requestDto) {
 
         Board board = BoardMapper.INSTANCE.toEntity(requestDto);
 
@@ -31,6 +31,9 @@ public class BoardService {
             String imagePath = boardImageService.saveImage(requestDto.getImage());
 
             /* 사진을 같이 저장하기 때문에, 사진은 필수로 업로드해야 함 */
+            if (imagePath == null || imagePath.isEmpty()) {
+                throw new IllegalArgumentException("이미지를 업로드해야 합니다.");
+            }
 
             // board에 imagePath 저장
             board.setImagePath(imagePath);
@@ -40,7 +43,7 @@ public class BoardService {
 
         } catch (Exception e) {
             // 예외 처리 결과 보류
-            e.getMessage();
+            throw new RuntimeException("게시판 생성 중 오류가 발생했습니다: " + e.getMessage());
         }
     }
 
@@ -121,7 +124,11 @@ public class BoardService {
         Board board = boardRepository.findById(id)
                 .orElseThrow(RuntimeException::new);
 
+        // DB에 저장된 게시판 삭제
         boardRepository.delete(board);
+
+        // static에 저장된 사진 삭제
+        boardImageService.deleteImage(board.getImagePath());
     }
 
 
