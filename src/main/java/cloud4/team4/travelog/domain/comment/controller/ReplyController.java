@@ -25,7 +25,7 @@ public class ReplyController {
 
         ReplyUpdateDto replyUpdateDto = new ReplyUpdateDto(replyService.findReplyByReplyId(replyId).getContent());
 
-        model.addAttribute("postId", commentService.findCommentByCommentId(commentId).getPost().getPostId());
+        model.addAttribute("postId", commentService.findCommentByCommentId(commentId).getPost().getId());
         model.addAttribute("replyUpdateDto", replyUpdateDto);
 
         return "reply_update";

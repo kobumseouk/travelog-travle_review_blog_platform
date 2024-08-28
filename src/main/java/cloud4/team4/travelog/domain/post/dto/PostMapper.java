@@ -21,6 +21,7 @@ public interface PostMapper {
 
   @Mapping(source = "board", target="boardId")
   @Mapping(source = "member", target="memberId")
+  @Mapping(source = "member.name", target = "memberName")
   @Mapping(source = "postPhotos", target = "photos")
   PostResponseDto postToPostResponseDto(Post post);
 
