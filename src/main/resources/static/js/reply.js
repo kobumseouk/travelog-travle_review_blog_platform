@@ -51,7 +51,7 @@ function displayReplies(replies, commentId) {
         noRepliesMessage.textContent = '대댓글이 없습니다.';
         repliesWrapper.appendChild(noRepliesMessage);
     } else {
-        replies.forEach(reply => repliesWrapper.appendChild(createReplyElement(reply, replyContainer.dataset.loginMemberId, commentId)));
+        replies.forEach(reply => repliesWrapper.appendChild(createReplyElement(reply, replyContainer.dataset.loginMemberId, replyContainer.dataset.regionMajor, replyContainer.dataset.postId, commentId)));
     }
 
     replyContainer.appendChild(replyForm);
@@ -112,7 +112,7 @@ function createReplyForm(loginMemberId, commentId) {
     return replyForm;
 }
 
-function createReplyElement(reply, loginMemberId, commentId) {
+function createReplyElement(reply, loginMemberId, regionMajor, postId, commentId) {
 
     const replyElement = document.createElement('div');
     replyElement.classList.add('reply');
@@ -142,7 +142,7 @@ function createReplyElement(reply, loginMemberId, commentId) {
         actionsWrapper.classList.add('actions');
 
         const editLink = document.createElement('a');
-        editLink.href = '/comment/' + commentId + '/reply/'+ reply.id + '/update';
+        editLink.href = '/boards/' + regionMajor + '/posts/' + postId + '/comments/' + commentId + '/replies/'+ reply.id;
         const editIcon = document.createElement('span');
         editIcon.classList.add('material-symbols-outlined');
         editIcon.style.color = 'blue';
@@ -183,7 +183,7 @@ function deleteReply(button) {
     const replyId = button.id;
 
     if (confirm('대댓글을 삭제하시겠습니까?')) {
-        fetch(`/api/reply/${replyId}/delete`, {
+        fetch(`/api/reply/${replyId}`, {
             method: 'DELETE'
         })
             .then(response => {

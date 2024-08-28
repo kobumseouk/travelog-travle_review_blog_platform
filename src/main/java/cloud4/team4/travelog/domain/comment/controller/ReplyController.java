@@ -16,8 +16,11 @@ public class ReplyController {
     private final ReplyService replyService;
     private final CommentService commentService;
 
-    @GetMapping("/comment/{commentId}/reply/{replyId}/update")
-    public String updateReplyForm(@PathVariable("commentId") Long commentId,
+    // 대댓글 수정
+    @GetMapping("/boards/{regionMajor}/posts/{postId}/comments/{commentId}/replies/{replyId}")
+    public String updateReplyForm(@PathVariable("regionMajor") String regionMajor,
+                                  @PathVariable("postId") Long postId,
+                                  @PathVariable("commentId") Long commentId,
                                   @PathVariable("replyId") Long replyId, Model model) {
 
         ReplyUpdateDto replyUpdateDto = new ReplyUpdateDto(replyService.findReplyByReplyId(replyId).getContent());

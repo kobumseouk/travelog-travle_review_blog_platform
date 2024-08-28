@@ -68,8 +68,9 @@ public class PostViewController {
 
 
 
-  @GetMapping("/post/{postId}")
-  public String post(@PathVariable("postId") Long postId,
+  @GetMapping("/boards/{regionMajor}/posts/{postId}")
+  public String post(@PathVariable("regionMajor") String regionMajor,
+                     @PathVariable("postId") Long postId,
                      @RequestParam(required = false, value = "commentPage", defaultValue = "1") int commentPage,
                      @ModelAttribute("commentPagingInfo") CommentPagingInfo commentPagingInfo,
                      Model model) {
@@ -77,9 +78,10 @@ public class PostViewController {
     postService.incrementViews(postId);  // 방문마다 조회수 증가
 
     model.addAttribute("commentRequestDto", new CommentRequestDto());
-    model.addAttribute("post", postService.getPostById(postId));
+    model.addAttribute("post", post);
     model.addAttribute("comments", commentService.findPagedCommentsByPostId(postId, commentPage, commentPagingInfo));
-    model.addAttribute("averageRating", commentService.getAverageRating(postId));
+
+    if(post.getBoard().getBoardCategory().equals("여행후기")) model.addAttribute("averageRating", commentService.getAverageRating(postId));
 
     return "post";
   }
@@ -98,5 +100,8 @@ public class PostViewController {
     return "newPost";
   }
 
-
+  @ModelAttribute("loginMember")
+  public Long loginMember() {
+    return 1L;
+  }
 }
