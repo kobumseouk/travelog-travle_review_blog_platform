@@ -22,26 +22,34 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
-//    private ExMember member;      // 테스트 용 코드
 
     // comment와 post는 다대일 관계
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
-//    private ExPost post;          // 테스트 용 코드
 
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
     private List<CommentPhotos> commentPhotos = new ArrayList<>();
 
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
+    private List<Reply> replies = new ArrayList<>();
+
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
+    private List<CommentLike> commentLikes = new ArrayList<>();
+
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
+    @Column(nullable = false)
     private LocalDateTime createdAt;
     private LocalDateTime editedAt;
 
-    // 테스트 용 주석처리
+    // 평점 (1 ~ 5점 선택 가능)
+//    @Column(nullable = false)
+    private Long rating;
+
     public void setMember(Member member) {
         this.member = member;
-        // ArrayList 이름 확인 필수
         member.getComments().add(this);
     }
 
@@ -56,8 +64,9 @@ public class Comment {
     }
 
     // comment update 메서드
-    public void update(String content, LocalDateTime editedAt) {
+    public void update(String content, LocalDateTime editedAt, Long rating) {
         this.content = content;
         this.editedAt = editedAt;
+        this.rating = rating;
     }
 }

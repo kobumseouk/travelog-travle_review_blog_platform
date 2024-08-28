@@ -5,7 +5,7 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-08-24T15:43:01+0900",
+    date = "2024-08-28T21:07:20+0900",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 22.0.2 (Oracle Corporation)"
 )
 public class CommentMapperImpl implements CommentMapper {
@@ -35,6 +35,7 @@ public class CommentMapperImpl implements CommentMapper {
         Comment.CommentBuilder comment = Comment.builder();
 
         comment.content( commentRequestDto.getContent() );
+        comment.rating( commentRequestDto.getRating() );
 
         comment.createdAt( java.time.LocalDateTime.now() );
 

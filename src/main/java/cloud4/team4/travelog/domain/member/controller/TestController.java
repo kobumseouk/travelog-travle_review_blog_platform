@@ -49,7 +49,7 @@ public class TestController {
         try {
             MemberDto memberDto = memberService.login(loginId, password, session);
             model.addAttribute("member", memberDto);
-            return "redirect:/home"; // 로그인 성공시 홈페이지 리다이렉트
+            return "redirect:/"; // 로그인 성공시 홈페이지 리다이렉트
         } catch (IllegalArgumentException e) {
             model.addAttribute("로그인실패", e.getMessage());
             return "login"; //

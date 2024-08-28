@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-08-24T23:10:54+0900",
+    date = "2024-08-28T21:07:20+0900",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 22.0.2 (Oracle Corporation)"
 )
 @Component
@@ -40,8 +40,12 @@ public class PostMapperImpl implements PostMapper {
 
         PostResponseDto postResponseDto = new PostResponseDto();
 
+        postResponseDto.setBoardId( mapBoardToLong( post.getBoard() ) );
         postResponseDto.setMemberId( mapMemberToLong( post.getMember() ) );
-        postResponseDto.setPhotos( postPhotoListToStringList( post.getPostPhoto() ) );
+        List<PostPhoto> list = post.getPostPhotos();
+        if ( list != null ) {
+            postResponseDto.setPhotos( new ArrayList<PostPhoto>( list ) );
+        }
         postResponseDto.setPostId( post.getPostId() );
         postResponseDto.setTitle( post.getTitle() );
         postResponseDto.setContent( post.getContent() );
@@ -57,18 +61,5 @@ public class PostMapperImpl implements PostMapper {
         }
 
         return postResponseDto;
-    }
-
-    protected List<String> postPhotoListToStringList(List<PostPhoto> list) {
-        if ( list == null ) {
-            return null;
-        }
-
-        List<String> list1 = new ArrayList<String>( list.size() );
-        for ( PostPhoto postPhoto : list ) {
-            list1.add( mapPostPhotoToString( postPhoto ) );
-        }
-
-        return list1;
     }
 }

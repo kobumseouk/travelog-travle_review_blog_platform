@@ -1,20 +1,20 @@
 package cloud4.team4.travelog.domain.board.entity;
 
-import cloud4.team4.travelog.domain.board.dto.BoardCreateRequestDto;
-import cloud4.team4.travelog.domain.board.dto.BoardUpdateRequestDto;
+import cloud4.team4.travelog.domain.board.dto.BoardDescRequestDto;
+import cloud4.team4.travelog.domain.board.dto.BoardRequestDto;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-08-24T15:43:01+0900",
+    date = "2024-08-28T21:07:20+0900",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 22.0.2 (Oracle Corporation)"
 )
 @Component
 public class BoardMapperImpl implements BoardMapper {
 
     @Override
-    public Board toEntity(BoardCreateRequestDto dto) {
+    public Board toEntity(BoardRequestDto dto) {
         if ( dto == null ) {
             return null;
         }
@@ -22,29 +22,27 @@ public class BoardMapperImpl implements BoardMapper {
         Board.BoardBuilder board = Board.builder();
 
         board.regionMajor( dto.getRegionMajor() );
-        board.regionMiddle( dto.getRegionMiddle() );
         board.description( dto.getDescription() );
+        board.boardCategory( dto.getBoardCategory() );
 
         return board.build();
     }
 
     @Override
-    public BoardUpdateRequestDto toUpdateRequestDto(Board board) {
+    public BoardDescRequestDto toUpdateRequestDto(Board board) {
         if ( board == null ) {
             return null;
         }
 
-        Board board1 = null;
+        BoardDescRequestDto.BoardDescRequestDtoBuilder boardDescRequestDto = BoardDescRequestDto.builder();
 
-        board1 = board;
+        boardDescRequestDto.description( board.getDescription() );
 
-        BoardUpdateRequestDto boardUpdateRequestDto = new BoardUpdateRequestDto( board1 );
-
-        return boardUpdateRequestDto;
+        return boardDescRequestDto.build();
     }
 
     @Override
-    public void toUpdateEntity(BoardUpdateRequestDto dto, Board entity) {
+    public void toUpdateEntity(BoardDescRequestDto dto, Board entity) {
         if ( dto == null ) {
             return;
         }

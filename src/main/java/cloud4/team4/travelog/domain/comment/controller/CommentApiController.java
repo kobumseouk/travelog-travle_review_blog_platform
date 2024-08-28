@@ -38,6 +38,10 @@ public class CommentApiController {
     @PostMapping(value = "/{postId}", consumes = "multipart/form-data")
     public ResponseEntity<String> addComment(@PathVariable("postId") Long postId,
                                              @ModelAttribute CommentRequestDto commentRequestDto) {
+
+        // 로그인된 멤버의 아이디 저장 => 세션 방식으로 변경해야함!
+        commentRequestDto.setMemberId(loginMember());
+
         // 저장
         try {
             commentService.saveComment(postId, commentRequestDto);
@@ -50,12 +54,10 @@ public class CommentApiController {
     }
 
     // UPDATE
-    @PutMapping("/update/{commentId}")
+    @PutMapping("/{commentId}")
     public ResponseEntity<String> updateComment(@PathVariable("commentId") Long commentId,
                                                 @ModelAttribute CommentUpdateDto commentUpdateDto) {
         try {
-            System.out.println("commentId.getClass() = " + commentId.getClass());
-            System.out.println("commentId = " + commentId);
             commentService.updateComment(commentId, commentUpdateDto);
             return ResponseEntity.status(HttpStatus.OK)
                     .body("comment updated");
@@ -66,11 +68,17 @@ public class CommentApiController {
     }
 
     // DELETE
-    @DeleteMapping("/delete/{commentId}")
+    @DeleteMapping("/{commentId}")
     public ResponseEntity<Void> deleteComment(@PathVariable("commentId") Long commentId) {
 
         commentService.deleteComment(commentId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    // 테스트 코드 -> 세션등에 로그인 멤버 정보 담기는 것으로 바뀌면 코드 지울것!
+    @ModelAttribute("loginMember")
+    public Long loginMember() {
+        return 1L;
     }
 }

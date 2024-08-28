@@ -15,4 +15,5 @@ public class CommentRequestDto {
 
     private List<MultipartFile> photos;
 
+    private Long rating;
 }
