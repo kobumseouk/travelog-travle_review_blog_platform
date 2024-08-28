@@ -37,7 +37,7 @@ public class Comment {
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
     private List<CommentLike> commentLikes = new ArrayList<>();
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
     @Column(nullable = false)
