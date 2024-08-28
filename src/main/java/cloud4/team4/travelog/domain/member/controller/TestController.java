@@ -91,9 +91,31 @@ public class TestController {
         return "findPasswordResult";
     }
 
+    //마이페이지
+    @GetMapping("/mypage")
+    public String myPage(HttpSession session, Model model) {
+        MemberDto memberDto = (MemberDto) session.getAttribute("member");
+        model.addAttribute("member", memberDto);
+        return "mypage";
+    }
+
+    //마이페이지 수정
+    @GetMapping("/mypage/edit")
+    public String editMyPage(HttpSession session, Model model) {
+        MemberDto memberDto = (MemberDto) session.getAttribute("member");
+        model.addAttribute("member", memberDto);
+        return "mypageEdit";
+    }
 
 
-
+//    @PostMapping("/mypage/update")
+//
+//    }
+//
+//    @GetMapping("/mypage/delete")
+//
+//
+//    }
 
 
 }
