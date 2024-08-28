@@ -75,7 +75,7 @@ public class PostController {
     }
   }
 
-  @PutMapping(value = "update/{postId}", consumes = "multipart/form-data")
+  @PutMapping(value = "/update/{postId}", consumes = "multipart/form-data")
   public ResponseEntity<?> updatePost(@PathVariable("postId") Long postId,
                                       @Valid @ModelAttribute PostUpdateDto postUpdateDto,
                                       BindingResult bindingResult) {
@@ -95,7 +95,7 @@ public class PostController {
     }
   }
 
-  @DeleteMapping("delete/{postId}")
+  @DeleteMapping("/delete/{postId}")
   public ResponseEntity<Void> deletePost(@PathVariable("postId") Long postId) {
     try {
       postService.deletePost(postId);
