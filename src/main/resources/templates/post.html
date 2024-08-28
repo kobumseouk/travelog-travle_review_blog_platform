@@ -33,12 +33,12 @@
             </div>
             <div class="bg-gray-200 mt-4 mb-4 p-6 rounded-lg">
                 <p class="text-gray-700" style="white-space: pre-line; word-break: break-all" th:text="${post.content}">게시글 내용</p>
-                <div th:if="${post.getPostPhotos().size() > 0}">
+                <div th:if="${post.photos != null and not #lists.isEmpty(post.photos)}">
                     <p class="text-sm mt-6">첨부한 이미지</p>
                     <div class="img-container grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                        <div class="mt-1" th:each="photo : ${post.getPhotos()}">
-                            <a href="#" class="image-link" th:data-base64="${photo.base64Image}" onclick="openImage(this.dataset.base64)">
-                                <img th:src="'data:image/jpeg;base64,' + ${photo.base64Image}"/>
+                        <div class="mt-1" th:each="photo : ${post.photos}">
+                            <a href="#" class="image-link" th:data-base64="${photo}" onclick="openImage(this.dataset.base64)">
+                                <img th:src="'data:image/jpeg;base64,' + ${photo}"/>
                             </a>
                         </div>
                     </div>

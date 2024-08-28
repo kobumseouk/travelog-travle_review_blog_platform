@@ -92,7 +92,7 @@ public class PostViewController {
 
 
   @GetMapping("/boards/{regionMajor}/posts/{postId}/like")
-  public String likePost(@PathVariable String regionMajor,
+  public String likePost(@PathVariable("regionMajor") String regionMajor,
                          @PathVariable("postId") Long postId,
                          Model model) {
 
@@ -105,7 +105,7 @@ public class PostViewController {
 
 
   @GetMapping("/boards/{regionMajor}/posts/post-new")
-  public String newPost(@PathVariable String regionMajor,
+  public String newPost(@PathVariable("regionMajor") String regionMajor,
                         @RequestParam(required = false, name = "postId") Long postId,
                         Model model) {
 
@@ -117,7 +117,7 @@ public class PostViewController {
   }
 
   @GetMapping("/boards/{regionMajor}/posts/post-modify/{postId}")
-  public String modifyPost(@PathVariable String regionMajor,
+  public String modifyPost(@PathVariable("regionMajor") String regionMajor,
                            @PathVariable("postId") Long postId,
                            Model model) {
 
