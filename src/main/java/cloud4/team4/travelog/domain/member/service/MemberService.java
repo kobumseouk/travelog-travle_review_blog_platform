@@ -38,7 +38,7 @@ public class MemberService {
         //중복처리
         Optional<Member> member = memberRepository.findByLoginId(memberEntity.getLoginId());
         if(member.isPresent()){
-            throw new IllegalArgumentException("이미 있는 회원입니다.");
+            throw new IllegalArgumentException("동일한 id로 이미 가입되어있습니다.");
         }
         //회원가입할때 기본적으로 일반 사용자로 설정
         memberEntity.setStatus("USER");
@@ -55,12 +55,11 @@ public class MemberService {
 
         //회원 정보 존재 & 저장된 해쉬비밀번호와 일치하는지 확인
         if(memberentity.isPresent() && passwordEncoder.matches(password, memberentity.get().getPassword())) {
-            //세선에 회원 정보와 상태 저장
-            session.setAttribute("member", memberentity.get());
-            session.setAttribute("status", memberentity.get().getStatus());
+            MemberDto memberDto = MemberMapper.INSTANCE.toMemberDto(memberentity.get());
+            session.setAttribute("member", memberDto); // MemberDto 객체를 세션에 저장
+            session.setAttribute("status", memberDto.getStatus());
+            return memberDto;
 
-            //회원 정보 DTO로 변환하여 반환
-            return MemberMapper.INSTANCE.toMemberDto(memberentity.get());
         } else {
             throw new IllegalArgumentException("아이디 또는 비밀번호가 잘못되었습니다.");
         }
@@ -107,17 +106,6 @@ public class MemberService {
         }
     }
 
-//    //아이디찾기 (이름&전화번호 방식)
-//    public String findMemberIdByNum(String name, String phoneNumber){
-//        Optional<Member> memberEntity = memberRepository.findByNameAndPhoneNumber(name, phoneNumber);
-//        if(memberEntity.isPresent()) {
-//            return memberEntity.get().getLoginId();
-//        }
-//        else{
-//            return ("존재하지 않는 아이디입니다..");
-//        }
-//    }
-
     //비밀번호 찾기
 
     public String findPassword(String loginId, String name, String email, String phoneNumber) {
@@ -130,14 +118,6 @@ public class MemberService {
         }
     }
 
-    // 비밀번호 변경
-
-//
-//        }
-//
-//
-//        //
-//    }
 
 
 }
