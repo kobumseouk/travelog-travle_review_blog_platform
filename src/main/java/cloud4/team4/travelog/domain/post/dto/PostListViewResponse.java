@@ -9,18 +9,20 @@ import java.time.LocalDateTime;
 public class PostListViewResponse {
   private final Long postId;
   private final String title;
+  // private final String content;
   private final String memberName;
   private final LocalDateTime createdAt;
-  private final Integer view;
+  private final Integer views;
   private final Integer recommends;
 
 
   public PostListViewResponse(Post post){
-    this.postId = post.getPostId();
+    this.postId = post.getId();
     this.title = post.getTitle();
+    // this.content = post.getContent();
     this.memberName = post.getMember().getName();
     this.createdAt = post.getCreatedAt();
-    this.view = post.getViews();
+    this.views = post.getViews();
     this.recommends = post.getRecommends();
   }
 

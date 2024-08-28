@@ -11,6 +11,6 @@ import java.util.Optional;
 @Repository
 public interface PostPhotoRepository extends JpaRepository<PostPhoto, Long> {
   void deleteByPost(Post post);
-  List<PostPhoto> findAllPhotosByPost_PostId(Long postId);
+  List<PostPhoto> findAllPhotosByPost_Id(Long postId);
 }
 

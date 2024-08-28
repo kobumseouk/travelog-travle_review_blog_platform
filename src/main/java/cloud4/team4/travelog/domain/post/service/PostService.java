@@ -148,9 +148,4 @@ public class PostService {
         });
   }
 
-  // 제목으로 게시글 검색
-  public List<Post> searchPostsByTitle(String keyword) {
-    return postRepository.findByTitleContaining(keyword);
-  }
-
 }

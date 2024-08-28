@@ -10,6 +10,7 @@ import cloud4.team4.travelog.domain.post.dto.PostListViewResponse;
 import cloud4.team4.travelog.domain.post.dto.PostMapper;
 import cloud4.team4.travelog.domain.post.dto.PostPostDto;
 import cloud4.team4.travelog.domain.post.entity.Post;
+import cloud4.team4.travelog.domain.post.service.PostLikeService;
 import cloud4.team4.travelog.domain.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -33,9 +34,10 @@ public class PostViewController {
   private final BoardService boardService;
   private final PostService postService;
   private final CommentService commentService;
+  private final PostLikeService postLikeService;
   private final PostMapper postMapper;
 
-  @GetMapping("/board/{regionMajor}/posts")
+  @GetMapping("/boards/{regionMajor}")
   public String listPosts(@PathVariable String regionMajor,
                           @RequestParam(defaultValue = "1") int page,
                           @RequestParam(defaultValue = "createdAt") String sortBy,
@@ -67,7 +69,6 @@ public class PostViewController {
   }
 
 
-
   @GetMapping("/boards/{regionMajor}/posts/{postId}")
   public String post(@PathVariable("regionMajor") String regionMajor,
                      @PathVariable("postId") Long postId,
@@ -75,27 +76,55 @@ public class PostViewController {
                      @ModelAttribute("commentPagingInfo") CommentPagingInfo commentPagingInfo,
                      Model model) {
     Post post = postService.getPostById(postId);
+
     postService.incrementViews(postId);  // 방문마다 조회수 증가
 
+
+    model.addAttribute("regionMajor", regionMajor);
     model.addAttribute("commentRequestDto", new CommentRequestDto());
-    model.addAttribute("post", post);
+    model.addAttribute("post", postMapper.postToPostResponseDto(post));
     model.addAttribute("comments", commentService.findPagedCommentsByPostId(postId, commentPage, commentPagingInfo));
 
     if(post.getBoard().getBoardCategory().equals("여행후기")) model.addAttribute("averageRating", commentService.getAverageRating(postId));
 
     return "post";
   }
-  
 
 
-  @GetMapping("/{boardId}/new-post")
-  public String newPost(@RequestParam(required = false, name = "postId") Long postId, Model model) {
-    if (postId == null) {
-      model.addAttribute("post", new PostPostDto());
-    } else {
-      Post post = postService.getPostById(postId);
-      model.addAttribute("post", postMapper.postToPostResponseDto(post));
-    }
+  @GetMapping("/boards/{regionMajor}/posts/{postId}/like")
+  public String likePost(@PathVariable("regionMajor") String regionMajor,
+                         @PathVariable("postId") Long postId,
+                         Model model) {
+
+    // 로그인 한 멤버의 id
+    Long memberId = (Long) model.getAttribute("loginMember");
+    postLikeService.likePost(memberId, postId);
+
+    return "redirect:/boards/" + regionMajor + "/posts/" + postId;
+  }
+
+
+  @GetMapping("/boards/{regionMajor}/posts/post-new")
+  public String newPost(@PathVariable("regionMajor") String regionMajor,
+                        @RequestParam(required = false, name = "postId") Long postId,
+                        Model model) {
+
+    model.addAttribute("regionMajor", regionMajor);
+    model.addAttribute("post", new PostPostDto());
+
+    return "newPost";
+
+  }
+
+  @GetMapping("/boards/{regionMajor}/posts/post-modify/{postId}")
+  public String modifyPost(@PathVariable("regionMajor") String regionMajor,
+                           @PathVariable("postId") Long postId,
+                           Model model) {
+
+    Post post = postService.getPostById(postId);
+
+    model.addAttribute("regionMajor", regionMajor);
+    model.addAttribute("post", postMapper.postToPostResponseDto(post));
 
     return "newPost";
   }

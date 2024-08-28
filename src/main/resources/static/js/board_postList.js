@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
     regionMajorSelect.addEventListener('change', function() {
         const currentRegionMajor = new URL(window.location.href).pathname.split('/')[2]; // 값 받기
         if (this.value !== currentRegionMajor) {        // 값이 변경되면 페이지 이동
-            window.location.href = `/board/${this.value}/posts`;
+            window.location.href = `/boards/${this.value}`;
         }
     });
 
@@ -23,9 +23,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const regionMajor = regionMajorSelect.value;
         const searchType = searchTypeSelect.value;
         const keyword = searchInput.value;
-        const currentSort = document.querySelector('.bg-blue-500').id === 'sortLatest' ? 'createdAt' : 'recommends';
+        const currentSort = sortSelect.value;
 
-        let url = `/board/${regionMajor}/posts?sortBy=${currentSort}`;
+        let url = `/boards/${regionMajor}?sortBy=${currentSort}`;
 
         if (searchType && keyword) {
             url += `&searchType=${searchType}&keyword=${keyword}`;
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // 정렬(최신순, 추천순)
-    function sort(sortType) {
+    function sort() {
         const sortBy = sortSelect.value;
         const urlParams = new URLSearchParams(window.location.search);
         urlParams.set('sortBy', sortBy);
