@@ -38,8 +38,10 @@ public class CommentController {
         return "post";
     }*/
 
-    @GetMapping("/post/{postId}/comment/update/{commentId}")
-    public String updateCommentForm(@PathVariable("postId") Long postId,
+    // 댓글 수정
+    @GetMapping("/boards/{regionMajor}/posts/{postId}/comments/{commentId}")
+    public String updateCommentForm(@PathVariable("regionMajor") String regionMajor,
+                                    @PathVariable("postId") Long postId,
                                     @PathVariable("commentId") Long commentId, Model model) {
         CommentUpdateDto commentUpdateDto = new CommentUpdateDto(commentService.findCommentByCommentId(commentId).getContent(),
                 commentService.findCommentByCommentId(commentId).getRating());
@@ -49,15 +51,17 @@ public class CommentController {
         return "comment_update";
     }
 
-    @GetMapping("/post/{postId}/comment/{commentId}/like")
-    public String likeComment(@PathVariable("postId") Long postId,
-                                    @PathVariable("commentId") Long commentId, Model model) {
+    // 댓글 좋아요
+    @GetMapping("/boards/{regionMajor}/posts/{postId}/comments/{commentId}/like")
+    public String likeComment(@PathVariable("regionMajor") String regionMajor,
+                              @PathVariable("postId") Long postId,
+                              @PathVariable("commentId") Long commentId, Model model) {
 
         // 로그인 한 멤버의 id
         Long memberId = (Long) model.getAttribute("loginMember");
         commentLikeService.likeComment(memberId, commentId);
 
-        return "redirect:/post/" + postId;
+        return "redirect:/boards/" + regionMajor + "/posts/" + postId;
     }
 
     // 테스트 코드 -> 세션등에 로그인 멤버 정보 담기는 것으로 바뀌면 코드 지울것!
