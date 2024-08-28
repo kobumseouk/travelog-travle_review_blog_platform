@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header}"></head>
+<body class="h-full flex flex-col">
+<div th:replace="~{fragments/bodyHeader :: bodyHeader}"></div><br>
+
+<div class="h-full flex justify-center items-center">
+    <!-- 게시판 생성 폼 시작 -->
+    <div class="container mx-auto max-w-lg px-4 py-8 bg-white shadow-md rounded-lg">
+        <h2 class="text-2xl font-bold mb-6 text-center">새로운 여행지 추가하기</h2>
+        <form action="/api/board/board-new" method="POST" enctype="multipart/form-data" class="space-y-4">
+            <!-- Image Upload -->
+            <div class="flex justify-center">
+                <label for="image" class="mt-1 flex justify-center items-center border border-gray-300 rounded-md shadow-sm focus-within:ring-blue-500 focus-within:border-blue-500 h-48 w-48 cursor-pointer">
+                    <span class="text-gray-500">이미지 선택</span>
+                </label>
+                <input type="file" id="image" name="image" class="hidden">
+            </div>
+
+            <!-- Major Region -->
+            <div>
+                <label for="regionMajor" class="block text-sm font-medium text-gray-700">주요 지역</label>
+                <input type="text" id="regionMajor" name="regionMajor" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="주요 지역 입력 (예: 서울)" required>
+            </div>
+
+            <!-- Description -->
+            <div>
+                <label for="description" class="block text-sm font-medium text-gray-700">설명</label>
+                <textarea id="description" name="description" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" rows="3" placeholder="게시판 설명 입력" required></textarea>
+            </div>
+
+            <!-- Category (드롭다운 메뉴) -->
+            <div>
+                <label for="boardCategory" class="block text-sm font-medium text-gray-700">카테고리</label>
+                <select id="boardCategory" name="boardCategory" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                    <option value="여행후기">여행후기</option>
+                    <option value="질의응답">질의응답</option>
+                </select>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="text-center">
+                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">생성하기</button>
+            </div>
+        </form>
+    </div>
+    <!-- 게시판 생성 폼 끝 -->
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+<script src="/js/footer.js"></script>
+</html>

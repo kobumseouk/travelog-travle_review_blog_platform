@@ -9,6 +9,7 @@ import cloud4.team4.travelog.domain.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -16,39 +17,38 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/main")
+@RequestMapping("/api")
 public class BoardApiController {
     private final BoardService boardService;
     private final BoardImageService boardImageService;
 
 
-    /* READ */
-
-    // 모든 대분류(regionMajor) 게시판 조회
-    @GetMapping
-    public List<BoardViewResponse> getAllBoards() {
-        return boardService.getAllBoards();
-    }
-
-
-
-    // 사진과 함께 대분류(regionMajor)에 따른 게시판 조회
-    @GetMapping("/boardlist-{regionMajor}")
-    public List<BoardViewResponse> getMiddleBoards(@PathVariable("regionMajor") String regionMajor) {
-        return boardService.getMiddleBoards(regionMajor);
-    }
-
+//    /* READ */
+//
+//    // 모든 대분류(regionMajor) 게시판 조회
+//    @GetMapping
+//    public List<BoardViewResponse> getAllBoards() {
+//        return boardService.getAllBoards();
+//    }
+//
+//
+//
+//    // 사진과 함께 대분류(regionMajor)에 따른 게시판 조회
+//    @GetMapping("/boardlist-{regionMajor}")
+//    public List<BoardViewResponse> getMiddleBoards(@PathVariable("regionMajor") String regionMajor) {
+//        return boardService.getMiddleBoards(regionMajor);
+//    }
+//
 
 
     /* CREATE */
 
     // 사진과 함께 게시판을 추가
     // boards/board-new로 api 수정할 것
-    @PostMapping(value = "/board-create/{id}", consumes = "multipart/form-data")
-    public ResponseEntity<String> createBoard(@PathVariable("id") Long id,
-                                              @ModelAttribute BoardRequestDto boardRequestDto) {
+    @PostMapping(value = "/board/board-new", consumes = "multipart/form-data")
+    public ResponseEntity<String> createBoard(@ModelAttribute BoardRequestDto boardRequestDto) {
         try {
-            boardService.saveBoard(id, boardRequestDto);
+            boardService.saveBoard(boardRequestDto);
             return ResponseEntity.status(HttpStatus.FOUND)
                     .location(URI.create("/"))
                     .build();
@@ -71,7 +71,7 @@ public class BoardApiController {
 
 
     // 게시판 사진 수정
-    @PutMapping(value = "/update/{id}", consumes = "multipart/form-data")
+    @PutMapping(value = "/update-image/{id}", consumes = "multipart/form-data")
     public ResponseEntity<String> updateImage(@PathVariable("id") Long id,
                                               @ModelAttribute BoardImageRequestDto requestDto) {
         try {
