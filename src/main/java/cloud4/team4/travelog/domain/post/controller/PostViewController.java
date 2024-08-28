@@ -38,11 +38,11 @@ public class PostViewController {
   private final PostMapper postMapper;
 
   @GetMapping("/boards/{regionMajor}")
-  public String listPosts(@PathVariable String regionMajor,
-                          @RequestParam(defaultValue = "1") int page,
-                          @RequestParam(defaultValue = "createdAt") String sortBy,
-                          @RequestParam(required = false) String searchType,
-                          @RequestParam(required = false) String keyword,
+  public String listPosts(@PathVariable(name = "regionMajor") String regionMajor,
+                          @RequestParam(name = "page", defaultValue = "1") int page,
+                          @RequestParam(name = "sortBy", defaultValue = "createdAt") String sortBy,
+                          @RequestParam(name = "searchType", required = false) String searchType,
+                          @RequestParam(name = "keyword", required = false) String keyword,
                           Model model) {
 
     Pageable pageable = PageRequest.of(page - 1, 10, postService.createSort(sortBy));
