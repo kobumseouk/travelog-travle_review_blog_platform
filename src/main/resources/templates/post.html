@@ -53,7 +53,7 @@
 
             <h2 th:text="'로그인 멤버 id = ' + ${loginMember}"></h2>
             <form class="mt-5 mb-5" th:action="@{/api/comment/{postId}(postId=${postId})}" th:object="${commentRequestDto}" method="post" enctype="multipart/form-data" onsubmit="return validateForm()"
-                  th:data-post-id="${postId}">
+                  th:data-post-id="${postId}" th:data-region-major="${regionMajor}">
                 <label th:for="content" class="block text-lg font-semibold mb-2"><strong>댓글 작성</strong></label>
 
                 <div class="flex flex-col">
@@ -88,7 +88,7 @@
             </form>
 
             <!-- 정렬 조건 입력 -->
-            <form id="sortForm" th:action="@{/post/{postId}(postId=${postId})}" method="get" th:object="${commentPagingInfo}"
+            <form id="sortForm" th:action="@{/boards/{regionMajor}/posts/{postId}(regionMajor=${regionMajor}, postId=${postId})}" method="get" th:object="${commentPagingInfo}"
                   class="flex flex-col space-y-4 p-4 mb-4">
                 <label class="font-semibold text-lg">댓글 정렬 기준 선택</label>
                 <div class="flex justify-start">
@@ -127,7 +127,7 @@
 
                         <!-- 로그인 한 회원만 가능 -> 수정 필요 -->
                         <a th:if="${loginMember != null}"
-                           th:href="@{/post/{postId}/comment/{commentId}/like(postId=${postId}, commentId=${comment.id})}"
+                           th:href="@{/boards/{regionMajor}/posts/{postId}/comments/{commentId}/like(regionMajor=${regionMajor}, postId=${postId}, commentId=${comment.id})}"
                            class="bg-purple-500 text-white font-semibold py-1 px-2 rounded hover:bg-purple-700 items-center rounded-lg mb-2">
 
                             <span class="material-symbols-outlined" style="font-size: 16px">thumb_up</span>
@@ -178,19 +178,19 @@
 
             <div class="pagination">
                 <button class="pagination-button" th:disabled="${comments.getNumber()}==0"
-                        th:onclick="|location.href='@{/post/{postId}(postId=${postId}, commentPage=${1}, commentPagingSize=${commentPagingInfo.commentPagingSize}, commentSort=${commentPagingInfo.commentSort} ) }'|">
+                        th:onclick="|location.href='@{/boards/{regionMajor}/posts/{postId}(regionMajor=${regionMajor}, postId=${postId}, commentPage=${1}, commentPagingSize=${commentPagingInfo.commentPagingSize}, commentSort=${commentPagingInfo.commentSort} ) }'|">
                     <<</button>
                 <button class="pagination-button" th:disabled="${!comments.hasPrevious()}"
-                        th:onclick="|location.href='@{/post/{postId}(postId=${postId}, commentPage=${comments.getNumber()}, commentPagingSize=${commentPagingInfo.commentPagingSize}, commentSort=${commentPagingInfo.commentSort} ) }'|">
+                        th:onclick="|location.href='@{/boards/{regionMajor}/posts/{postId}(regionMajor=${regionMajor}, postId=${postId}, commentPage=${comments.getNumber()}, commentPagingSize=${commentPagingInfo.commentPagingSize}, commentSort=${commentPagingInfo.commentSort} ) }'|">
                     <</button>
                 &nbsp; &nbsp;
                 <span class="pagination-info">[[${comments.getNumber()+1}]] / [[${comments.getTotalElements() == 0 ? 1 : comments.getTotalPages()}]]</span>
                 &nbsp; &nbsp;
                 <button class="pagination-button" th:disabled="${!comments.hasNext()}"
-                        th:onclick="|location.href='@{/post/{postId}(postId=${postId}, commentPage=${comments.getNumber()+2}, commentPagingSize=${commentPagingInfo.commentPagingSize}, commentSort=${commentPagingInfo.commentSort} ) }'|">
+                        th:onclick="|location.href='@{/boards/{regionMajor}/posts/{postId}(regionMajor=${regionMajor}, postId=${postId}, commentPage=${comments.getNumber()+2}, commentPagingSize=${commentPagingInfo.commentPagingSize}, commentSort=${commentPagingInfo.commentSort} ) }'|">
                     ></button>
                 <button class="pagination-button" th:disabled="${!comments.hasNext()}"
-                        th:onclick="|location.href='@{/post/{postId}(postId=${postId}, commentPage=${comments.getTotalPages()}, commentPagingSize=${commentPagingInfo.commentPagingSize}, commentSort=${commentPagingInfo.commentSort} ) }'|">
+                        th:onclick="|location.href='@{/boards/{regionMajor}/posts/{postId}(regionMajor=${regionMajor}, postId=${postId}, commentPage=${comments.getTotalPages()}, commentPagingSize=${commentPagingInfo.commentPagingSize}, commentSort=${commentPagingInfo.commentSort} ) }'|">
                     >></button>
             </div>
         </div>
