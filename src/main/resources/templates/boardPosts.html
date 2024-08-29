@@ -87,6 +87,7 @@
                    class="px-3 py-2 border border-gray-300 bg-white text-gray-500 hover:bg-gray-50">
                     &lt;&lt;
                 </a>
+
                 <!-- 이전 페이지로 이동 -->
                 <a th:if="${currentPage > 1}"
                    th:href="@{/board/{regionMajor}/{boardId}/posts(regionMajor=${regionMajor},boardId=${boardId},page=${currentPage - 1},sortBy=${sortBy},searchType=${searchType},keyword=${keyword})}"
@@ -108,6 +109,7 @@
                    class="px-3 py-2 border border-gray-300 bg-white text-gray-500 hover:bg-gray-50">
                     &gt;
                 </a>
+
                 <!-- 마지막 페이지로 이동 -->
                 <a th:if="${currentPage < (totalPages > 0 ? totalPages : 1)}"
                    th:href="@{/board/{regionMajor}/{boardId}/posts(regionMajor=${regionMajor},boardId=${boardId},page=${totalPages > 0 ? totalPages : 1},sortBy=${sortBy},searchType=${searchType},keyword=${keyword})}"
