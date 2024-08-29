@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -15,34 +16,50 @@ public class BoardViewController {
 
     private final BoardService boardService;
 
-    // 사진과 함께 대분류(regionMajor)에 따른 게시판 조회
-//    @GetMapping("/{regionMajor}")
-//    public String getSubBoards(@PathVariable("regionMajor") String regionMajor, Model model) {
-//        List<BoardViewResponse> subboard = boardService.getMiddleBoards(regionMajor);
-//
-//        model.addAttribute("subboard", subboard);
-//
-//        return "subboard";
-//    }
 
 
-
-    // Todo: 이게 기본화면입니다.
+    // 기본화면. 대분류 게시판 조회
     @GetMapping
-    public String getAllBoards(Model model) {
-        List<BoardViewResponse> board = boardService.getAllBoards();
+    public String getMainBoards() {
+        return "mainboard";
+    }
 
-        model.addAttribute("board", board);
 
-        return "testboard";
+
+    // 중분류 게시판 조회
+    @GetMapping("/board/{regionMajor}")
+    public String getSubBoards(@PathVariable("regionMajor") String regionMajor, Model model) {
+        List<BoardViewResponse> middleboard = boardService.getMiddleBoards(regionMajor);
+
+        // regionMajor를 한글로 변환
+        String regionMiddleKorean = boardService.convertToKorean(regionMajor);
+
+        // 모델에 middleboard와 regionMiddleKorean 값을 추가
+        model.addAttribute("middleboard", middleboard);
+        model.addAttribute("regionMajorKorean", regionMiddleKorean);
+
+        return "middleboard";
     }
 
 
 
     // 게시판 생성 화면
-    @GetMapping("/board/board-new")
-    public String getCreateBoard() {
+    // 기존
+//    @GetMapping("/{regionMajor}/add-board")
+//    public String getCreateBoard() {
+//        return "createboard";
+//    }
+
+    @GetMapping("/{regionMajor}/add-board")
+    public String getCreateBoard(@PathVariable("regionMajor") String regionMajor, Model model) {
+
+        // regionMajor를 한글로 변환
+        String regionMajorKorean = boardService.convertToKorean(regionMajor);
+        model.addAttribute("regionMajorKorean", regionMajorKorean);
         return "createboard";
     }
+
+
+
 
 }
