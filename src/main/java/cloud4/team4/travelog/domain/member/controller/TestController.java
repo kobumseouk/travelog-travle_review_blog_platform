@@ -65,7 +65,7 @@ public class TestController {
     @PostMapping("/logout")
     public String logout(HttpSession session) {
         memberService.logout(session);
-        return "redirect:/login";
+        return "redirect:/";
     }
 
     //아이디 찾기
@@ -160,5 +160,13 @@ public class TestController {
             model.addAttribute("error", e.getMessage());
             return "mypageEdit";
         }
+    }
+
+    @ModelAttribute("loginMember")
+    public Long loginMemberId(HttpSession session) {
+        // 세션에서 로그인한 멤버의 id 값 가져옴
+        MemberDto memberDto = (MemberDto) session.getAttribute("member");
+        if(memberDto == null) return null;
+        return memberDto.getId();
     }
 }

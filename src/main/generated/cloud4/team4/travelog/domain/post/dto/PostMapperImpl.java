@@ -4,7 +4,6 @@ import cloud4.team4.travelog.domain.board.entity.Board;
 import cloud4.team4.travelog.domain.comment.entity.Comment;
 import cloud4.team4.travelog.domain.member.entity.Member;
 import cloud4.team4.travelog.domain.post.entity.Post;
-import cloud4.team4.travelog.domain.post.entity.PostPhoto;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.processing.Generated;
@@ -12,8 +11,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-08-29T16:37:02+0900",
-    comments = "version: 1.5.3.Final, compiler: javac, environment: Java 22.0.1 (Oracle Corporation)"
+    date = "2024-08-29T22:07:52+0900",
+    comments = "version: 1.5.3.Final, compiler: javac, environment: Java 22.0.2 (Oracle Corporation)"
 )
 @Component
 public class PostMapperImpl implements PostMapper {
@@ -26,6 +25,7 @@ public class PostMapperImpl implements PostMapper {
 
         Post post = new Post();
 
+        post.setId( postPostDto.getId() );
         post.setTitle( postPostDto.getTitle() );
         post.setContent( postPostDto.getContent() );
         post.setPeriodStart( postPostDto.getPeriodStart() );
@@ -72,6 +72,7 @@ public class PostMapperImpl implements PostMapper {
 
         PostUpdateDto postUpdateDto = new PostUpdateDto();
 
+        postUpdateDto.setId( post.getId() );
         postUpdateDto.setTitle( post.getTitle() );
         postUpdateDto.setContent( post.getContent() );
         postUpdateDto.setPeriodStart( post.getPeriodStart() );
