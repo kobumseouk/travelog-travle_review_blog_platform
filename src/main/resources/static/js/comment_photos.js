@@ -25,7 +25,6 @@ $(document).ready(function() {
         // postId를 URL에서 가져오기
         var postId = $(this).data('post-id'); // HTML 요소에 data-post-id 속성 추가
         var regionMajor = $(this).data('region-major');
-        console.log(postId);
         // AJAX 요청 보내기
         $.ajax({
             url: '/api/comment/' + postId, // postId를 포함한 URL
