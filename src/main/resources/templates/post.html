@@ -109,7 +109,11 @@
                     <div class="mb-2">
                         <input type="file" th:field="*{photos}" multiple id="file-input" class="hidden" />
                         <span class="text-sm text-gray-500 mt-2 block">최대 5개 사진 업로드 가능, 각 사진은 16MB 이하만 가능</span>
+
+                        <!-- 업로드 된 사진 이름 -->
                         <div id="file-info" class="mt-2 text-gray-500"></div>
+                        <!-- 업로드 된 사진 미리보기 -->
+                        <div id="image-preview" class="mt-2 mb-6 image-preview-container"></div>
 
                         <div class="flex flex-row justify-between">
                             <label for="file-input" class="flex items-center justify-center px-4 py-2 bg-blue-500 text-white rounded-lg cursor-pointer hover:bg-blue-600 transition duration-300">
@@ -247,5 +251,19 @@
 <script src="/js/comment_sort.js"></script>
 <script src="/js/comment_like.js"></script>
 <script src="/js/reply.js"></script>
+
 </body>
+<script>
+    function previewImage(event) {
+        var reader = new FileReader();
+        reader.onload = function () {
+            var output = document.getElementById('imagePreview');
+            var placeholder = document.getElementById('imagePlaceholder');
+            output.src = reader.result;
+            output.style.display = 'block';
+            placeholder.style.display = 'none'; // 이미지가 업로드되면 플레이스홀더 텍스트 숨기기
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+</script>
 </html>
