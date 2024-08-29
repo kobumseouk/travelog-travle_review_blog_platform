@@ -1,20 +1,41 @@
 document.addEventListener('DOMContentLoaded', function() {
     const fileInput = document.getElementById('file-input');
     const fileInfo = document.getElementById('file-info');
+    const imagePreview = document.getElementById('image-preview');
 
     fileInput.addEventListener('change', function() {
         const files = fileInput.files;
         fileInfo.innerHTML = ''; // 기존 내용을 지웁니다.
+        imagePreview.innerHTML = ''; // 미리보기를 초기화합니다.
 
         if (files.length > 0) {
             const fileNames = Array.from(files).map(file => file.name).join(', ');
             fileInfo.innerHTML = `선택한 파일: ${fileNames}`;
+
+            Array.from(files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const previewItem = document.createElement('div');
+                    previewItem.className = 'image-preview-item';
+
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+
+                    const fileName = document.createElement('div');
+                    fileName.textContent = file.name;
+                    fileName.className = 'file-name'; // 클래스 추가
+
+                    previewItem.appendChild(img);
+                    previewItem.appendChild(fileName);
+                    imagePreview.appendChild(previewItem);
+                }
+                reader.readAsDataURL(file);
+            });
         } else {
             fileInfo.innerHTML = '선택한 파일이 없습니다.';
         }
     });
 });
-
 $(document).ready(function() {
     $('form').on('submit', function(event) {
         event.preventDefault(); // 폼 기본 동작 방지
