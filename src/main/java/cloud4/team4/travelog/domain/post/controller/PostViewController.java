@@ -136,7 +136,7 @@ public class PostViewController {
 
   }
 
-  @GetMapping("/boards/{regionMajor}/posts/post-modify/{postId}")
+  /*@GetMapping("/boards/{regionMajor}/posts/post-modify/{postId}")
   public String modifyPost(@PathVariable("regionMajor") String regionMajor,
                            @PathVariable("postId") Long postId,
                            Model model) {
@@ -147,7 +147,8 @@ public class PostViewController {
     model.addAttribute("post", postMapper.postToPostResponseDto(post));
 
     return "newPost";
-  }
+  }*/
+
   @ModelAttribute("loginMember")
   public Long loginMemberId(HttpSession session) {
     // 세션에서 로그인한 멤버의 id 값 가져옴
