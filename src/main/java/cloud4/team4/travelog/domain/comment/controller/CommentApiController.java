@@ -2,7 +2,7 @@ package cloud4.team4.travelog.domain.comment.controller;
 
 import cloud4.team4.travelog.domain.comment.dto.CommentRequestDto;
 import cloud4.team4.travelog.domain.comment.dto.CommentUpdateDto;
-import cloud4.team4.travelog.domain.comment.service.CommentPhotosService;
+import cloud4.team4.travelog.domain.comment.service.CommentLikeService;
 import cloud4.team4.travelog.domain.comment.service.CommentService;
 import cloud4.team4.travelog.domain.member.dto.MemberDto;
 import jakarta.servlet.http.HttpSession;
@@ -10,7 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public class CommentApiController {
 
     private final CommentService commentService;
-    private final CommentPhotosService commentPhotosService;
+    private final CommentLikeService commentLikeService;
 
     // READ -> 사용 x (Controller에서 조회)
 //    @GetMapping("/{postId}")
@@ -84,6 +84,24 @@ public class CommentApiController {
         commentService.deleteComment(commentId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    // 댓글 좋아요
+    @GetMapping("/{commentId}/like")
+    public ResponseEntity<String> likeComment(@PathVariable("commentId") Long commentId, Model model) {
+
+        // 로그인 한 멤버의 id
+        Long memberId = (Long) model.getAttribute("loginMember");
+        boolean likeBoolean = commentLikeService.likeComment(memberId, commentId);
+
+        if(likeBoolean) {
+            return ResponseEntity.status(HttpStatus.OK).body("해당 댓글에 좋아요를 눌렀습니다!");
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body("좋아요를 취소했습니다!");
+        }
+
+
+//        return "redirect:/board/" + regionMajor + "/" + boardId + "/posts/" + postId;
     }
 
     @ModelAttribute("loginMember")
