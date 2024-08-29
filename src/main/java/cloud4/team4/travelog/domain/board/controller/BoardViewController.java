@@ -1,6 +1,7 @@
 package cloud4.team4.travelog.domain.board.controller;
 
 import cloud4.team4.travelog.domain.board.dto.BoardViewResponse;
+import cloud4.team4.travelog.domain.board.entity.Board;
 import cloud4.team4.travelog.domain.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -28,7 +29,7 @@ public class BoardViewController {
 
     // 중분류 게시판 조회
     @GetMapping("/board/{regionMajor}")
-    public String getSubBoards(@PathVariable("regionMajor") String regionMajor, Model model) {
+    public String getMiddleBoards(@PathVariable("regionMajor") String regionMajor, Model model) {
         List<BoardViewResponse> middleboard = boardService.getMiddleBoards(regionMajor);
 
         // regionMajor를 한글로 변환
@@ -50,7 +51,7 @@ public class BoardViewController {
 //        return "createboard";
 //    }
 
-    @GetMapping("/{regionMajor}/add-board")
+    @GetMapping("/board-new/{regionMajor}")
     public String getCreateBoard(@PathVariable("regionMajor") String regionMajor, Model model) {
 
         // regionMajor를 한글로 변환
@@ -58,6 +59,21 @@ public class BoardViewController {
         model.addAttribute("regionMajorKorean", regionMajorKorean);
         return "createboard";
     }
+
+    @GetMapping("/board-update/{id}")
+    public String getUpdateBoard(@PathVariable("id") Long id, Model model) {
+        // 가정: BoardService에서 board 정보를 가져올 수 있다고 가정함
+        Board board = boardService.getBoardById(id);
+
+        // convertKorean 메서드를 사용하여 변환된 값을 모델에 추가
+        String regionMajorKorean = boardService.convertToKorean(board.getRegionMajor());
+
+        model.addAttribute("board", board);
+        model.addAttribute("id", id);
+        model.addAttribute("regionMajorKorean", regionMajorKorean);
+        return "updateboard"; // 수정 화면의 템플릿 이름
+    }
+
 
 
 

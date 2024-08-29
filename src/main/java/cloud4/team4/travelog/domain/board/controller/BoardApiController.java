@@ -86,6 +86,16 @@ public class BoardApiController {
     }
 
 
+    // update
+//    @PostMapping("/api/board/{id}/update")
+//    public String updateBoard(@PathVariable("id") Long id, @RequestParam("description") String description, @RequestParam("image") MultipartFile image) {
+//        // 이미지와 설명 업데이트 로직
+//        boardService.updateBoard(id, description, image);
+//        return "redirect:/board/" + id; // 업데이트 후 리다이렉트
+//    }
+
+
+
 
     /* DELETE */
 
