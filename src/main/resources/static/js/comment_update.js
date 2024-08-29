@@ -24,6 +24,7 @@ $(document).ready(function() {
 
         // postId와 commentId를 HTML 요소에서 가져오기
         var postId = $(this).data('post-id');
+        var boardId = $(this).data('board-id');
         var commentId = $(this).data('comment-id');
         var regionMajor = $(this).data('region-major');
         // AJAX 요청 보내기
@@ -35,7 +36,7 @@ $(document).ready(function() {
             contentType: false, // 콘텐츠 타입을 자동으로 설정
             success: function() {
                 // 성공적으로 처리된 경우의 로직 (리다이렉트)
-                window.location.href = "/boards/" + regionMajor + "/posts/" + postId; // 리다이렉션
+                window.location.href = "/board/" + regionMajor + "/" + boardId + "/posts/" + postId; // 리다이렉션
             },
             error: function(xhr) {
                 // 에러 발생 시

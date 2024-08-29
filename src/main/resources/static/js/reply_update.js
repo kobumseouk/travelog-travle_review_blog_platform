@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // 폼 데이터를 FormData 객체로 생성
         var formData = new FormData(this);
 
-        // postId와 replyId를 HTML 요소에서 가져오기
+        var boardId = $(this).data('board-id');
         var postId = $(this).data('post-id');
         var replyId = $(this).data('reply-id');
         var regionMajor = $(this).data('region-major');
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
             contentType: false, // 콘텐츠 타입을 자동으로 설정
             success: function() {
                 // 성공적으로 처리된 경우의 로직 (리다이렉트)
-                window.location.href = "/boards/" + regionMajor + "/posts/" + postId; // 리다이렉션
+                window.location.href = "/board/" + regionMajor + "/" + boardId + "/posts/" + postId; // 리다이렉션
             },
             error: function(xhr) {
                 // 에러 발생 시
