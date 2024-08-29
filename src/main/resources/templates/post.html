@@ -88,7 +88,6 @@
                 </div>
             </div>
 
-            <h2 th:text="'로그인 멤버 id = ' + ${loginMember}"></h2>
             <form class="mt-5 mb-5" th:action="@{/api/comment/{postId}(postId=${postId})}" th:object="${commentRequestDto}" method="post" enctype="multipart/form-data" onsubmit="return validateForm()"
                   th:data-post-id="${postId}" th:data-region-major="${regionMajor}">
                 <label th:for="content" class="block text-lg font-semibold mb-2"><strong>댓글 작성</strong></label>
