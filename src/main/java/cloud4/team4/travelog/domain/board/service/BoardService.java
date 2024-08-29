@@ -133,6 +133,15 @@ public class BoardService {
 
 
 
+    /* 기타 메서드 */
+
+    public Board getBoardById(Long id) {
+        return boardRepository.findById(id).orElseThrow(() -> new RuntimeException("해당 게시판을 찾을 수 없습니다."));
+
+    }
+
+
+
     // 대분류 게시판의 regionMajor를 한국어로 변환하는 메서드
     public String convertToKorean(String regionMajor) {
         return switch (regionMajor.toLowerCase()) {
