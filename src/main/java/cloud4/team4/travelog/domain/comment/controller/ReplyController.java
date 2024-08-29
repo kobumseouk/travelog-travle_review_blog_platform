@@ -17,8 +17,9 @@ public class ReplyController {
     private final CommentService commentService;
 
     // 대댓글 수정
-    @GetMapping("/boards/{regionMajor}/posts/{postId}/comments/{commentId}/replies/{replyId}")
+    @GetMapping("/board/{regionMajor}/{boardId}/posts/{postId}/comments/{commentId}/replies/{replyId}")
     public String updateReplyForm(@PathVariable("regionMajor") String regionMajor,
+                                  @PathVariable("boardId") Long boardId,
                                   @PathVariable("postId") Long postId,
                                   @PathVariable("commentId") Long commentId,
                                   @PathVariable("replyId") Long replyId, Model model) {

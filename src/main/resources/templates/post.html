@@ -88,9 +88,8 @@
                 </div>
             </div>
 
-            <h2 th:text="'로그인 멤버 id = ' + ${loginMember}"></h2>
             <form class="mt-5 mb-5" th:action="@{/api/comment/{postId}(postId=${postId})}" th:object="${commentRequestDto}" method="post" enctype="multipart/form-data" onsubmit="return validateForm()"
-                  th:data-post-id="${postId}" th:data-region-major="${regionMajor}">
+                  th:data-post-id="${postId}" th:data-board-id="${boardId}" th:data-region-major="${regionMajor}">
                 <label th:for="content" class="block text-lg font-semibold mb-2"><strong>댓글 작성</strong></label>
 
                 <div class="flex flex-col">
@@ -122,11 +121,10 @@
                     </div>
                 </div>
 
-                <div class="error-class mt-2 text-red-600" th:errors="*{content}"></div>
             </form>
 
             <!-- 정렬 조건 입력 -->
-            <form id="sortForm" th:action="@{/boards/{regionMajor}/posts/{postId}(regionMajor=${regionMajor}, postId=${postId})}" method="get" th:object="${commentPagingInfo}"
+            <form id="sortForm" th:action="@{/board/{regionMajor}/{boardId}/posts/{postId}(regionMajor=${regionMajor}, boardId=${boardId}, postId=${postId})}" method="get" th:object="${commentPagingInfo}"
                   class="flex flex-col space-y-4 p-4 mb-4">
                 <label class="font-semibold text-lg">댓글 정렬 기준 선택</label>
                 <div class="flex justify-start">
@@ -165,13 +163,14 @@
                             </div>
                         </div>
 
-                        <!-- 로그인 한 회원만 가능 -> 수정 필요 -->
-                        <a th:if="${loginMember != null}"
-                           th:href="@{/boards/{regionMajor}/posts/{postId}/comments/{commentId}/like(regionMajor=${regionMajor}, postId=${postId}, commentId=${comment.id})}"
-                           class="bg-purple-500 text-white font-semibold py-1 px-2 rounded hover:bg-purple-700 items-center rounded-lg mb-2">
+                        <!-- 로그인 한 회원만 좋아요 가능! -->
+                        <button th:if="${loginMember != null}" id="like-btn"
+                                th:data-comment-id="${comment.id}" th:data-region-major="${regionMajor}" th:data-post-id="${post.id}" th:data-board-id="${boardId}"
+                                class="bg-purple-500 text-white font-semibold py-1 px-2 rounded hover:bg-purple-700 items-center rounded-lg mb-2"
+                                onclick="likeComment(this)">
                             <span class="material-symbols-outlined" style="font-size: 16px">thumb_up</span>
                             <span th:text="${comment.getCommentLikes().size()}" style="font-size: 12px"></span>
-                        </a>
+                        </button>
                     </div>
 
                     <div class="relative mb-1">
@@ -191,7 +190,7 @@
                             <!-- 로그인 정보 일치하는 회원만 수정, 삭제 가능함-->
                             <div class="flex justify-end mt-2 mb-1">
                                 <p th:if="${loginMember != null and loginMember == comment.member.id}">
-                                    <a th:href="@{/boards/{regionMajor}/posts/{postId}/comments/{commentId}(regionMajor=${regionMajor}, postId=${postId}, commentId=${comment.id})}">
+                                    <a th:href="@{/board/{regionMajor}/{boardId}/posts/{postId}/comments/{commentId}(regionMajor=${regionMajor}, boardId=${boardId}, postId=${postId}, commentId=${comment.id})}">
                                         <span class="material-symbols-outlined" style="color: blue">edit_note</span>
                                     </a>
                                     <button type="button" onclick="deleteComment(this)" th:data-id="${comment.id}">
@@ -210,7 +209,8 @@
                                     ${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')} : ${'(수정) ' + #temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
                     </div>
 
-                    <div th:id="'replyContainer-' + ${comment.id}" th:data-login-member-id="${loginMember}" th:data-region-major="${regionMajor}" th:data-post-id="${post.id}"
+                    <div th:id="'replyContainer-' + ${comment.id}" th:data-login-member-id="${loginMember != null ? loginMember : 'null'}"
+                         th:data-region-major="${regionMajor}" th:data-board-id="${boardId}" th:data-post-id="${post.id}"
                          class="mt-10 border border-gray-300 rounded-lg p-4" style="display: none;"></div> <!-- 기본적으로 숨김 -->
 
                 </div>
@@ -218,19 +218,19 @@
 
             <div class="pagination">
                 <button class="pagination-button" th:disabled="${comments.getNumber()}==0"
-                        th:onclick="|location.href='@{/boards/{regionMajor}/posts/{postId}(regionMajor=${regionMajor}, postId=${postId}, commentPage=${1}, commentPagingSize=${commentPagingInfo.commentPagingSize}, commentSort=${commentPagingInfo.commentSort} ) }'|">
+                        th:onclick="|location.href='@{/board/{regionMajor}/{boardId}/posts/{postId}(regionMajor=${regionMajor}, boardId=${boardId}, postId=${postId}, commentPage=${1}, commentPagingSize=${commentPagingInfo.commentPagingSize}, commentSort=${commentPagingInfo.commentSort} ) }'|">
                     <<</button>
                 <button class="pagination-button" th:disabled="${!comments.hasPrevious()}"
-                        th:onclick="|location.href='@{/boards/{regionMajor}/posts/{postId}(regionMajor=${regionMajor}, postId=${postId}, commentPage=${comments.getNumber()}, commentPagingSize=${commentPagingInfo.commentPagingSize}, commentSort=${commentPagingInfo.commentSort} ) }'|">
+                        th:onclick="|location.href='@{/board/{regionMajor}/{boardId}/posts/{postId}(regionMajor=${regionMajor}, boardId=${boardId}, postId=${postId}, commentPage=${comments.getNumber()}, commentPagingSize=${commentPagingInfo.commentPagingSize}, commentSort=${commentPagingInfo.commentSort} ) }'|">
                     <</button>
                 &nbsp; &nbsp;
                 <span class="pagination-info">[[${comments.getNumber()+1}]] / [[${comments.getTotalElements() == 0 ? 1 : comments.getTotalPages()}]]</span>
                 &nbsp; &nbsp;
                 <button class="pagination-button" th:disabled="${!comments.hasNext()}"
-                        th:onclick="|location.href='@{/boards/{regionMajor}/posts/{postId}(regionMajor=${regionMajor}, postId=${postId}, commentPage=${comments.getNumber()+2}, commentPagingSize=${commentPagingInfo.commentPagingSize}, commentSort=${commentPagingInfo.commentSort} ) }'|">
+                        th:onclick="|location.href='@{/board/{regionMajor}/{boardId}/posts/{postId}(regionMajor=${regionMajor}, boardId=${boardId}, postId=${postId}, commentPage=${comments.getNumber()+2}, commentPagingSize=${commentPagingInfo.commentPagingSize}, commentSort=${commentPagingInfo.commentSort} ) }'|">
                     ></button>
                 <button class="pagination-button" th:disabled="${!comments.hasNext()}"
-                        th:onclick="|location.href='@{/boards/{regionMajor}/posts/{postId}(regionMajor=${regionMajor}, postId=${postId}, commentPage=${comments.getTotalPages()}, commentPagingSize=${commentPagingInfo.commentPagingSize}, commentSort=${commentPagingInfo.commentSort} ) }'|">
+                        th:onclick="|location.href='@{/board/{regionMajor}/{boardId}/posts/{postId}(regionMajor=${regionMajor}, boardId=${boardId}, postId=${postId}, commentPage=${comments.getTotalPages()}, commentPagingSize=${commentPagingInfo.commentPagingSize}, commentSort=${commentPagingInfo.commentSort} ) }'|">
                     >></button>
             </div>
         </div>
@@ -239,7 +239,6 @@
 </div>
 
 <div th:replace="~{fragments/footer :: footer}"></div>
-</body>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="/js/footer.js"></script>
 <script src="/js/post_delete.js"></script>
@@ -247,5 +246,7 @@
 <script src="/js/comment_photos.js"></script>
 <script src="/js/comment_delete.js"></script>
 <script src="/js/comment_sort.js"></script>
+<script src="/js/comment_like.js"></script>
 <script src="/js/reply.js"></script>
+</body>
 </html>

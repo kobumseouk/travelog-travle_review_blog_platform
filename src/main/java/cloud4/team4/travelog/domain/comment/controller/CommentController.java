@@ -6,7 +6,9 @@ import cloud4.team4.travelog.domain.comment.dto.CommentRequestDto;
 import cloud4.team4.travelog.domain.comment.dto.CommentUpdateDto;
 import cloud4.team4.travelog.domain.comment.service.CommentLikeService;
 import cloud4.team4.travelog.domain.comment.service.CommentService;
+import cloud4.team4.travelog.domain.member.dto.MemberDto;
 import cloud4.team4.travelog.domain.post.service.PostService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,8 +41,9 @@ public class CommentController {
     }*/
 
     // 댓글 수정
-    @GetMapping("/boards/{regionMajor}/posts/{postId}/comments/{commentId}")
+    @GetMapping("/board/{regionMajor}/{boardId}/posts/{postId}/comments/{commentId}")
     public String updateCommentForm(@PathVariable("regionMajor") String regionMajor,
+                                    @PathVariable("boardId") Long boardId,
                                     @PathVariable("postId") Long postId,
                                     @PathVariable("commentId") Long commentId, Model model) {
         CommentUpdateDto commentUpdateDto = new CommentUpdateDto(commentService.findCommentByCommentId(commentId).getContent(),
@@ -52,23 +55,26 @@ public class CommentController {
         return "comment_update";
     }
 
-    // 댓글 좋아요
-    @GetMapping("/boards/{regionMajor}/posts/{postId}/comments/{commentId}/like")
-    public String likeComment(@PathVariable("regionMajor") String regionMajor,
-                              @PathVariable("postId") Long postId,
-                              @PathVariable("commentId") Long commentId, Model model) {
+    // 댓글 좋아요 -> api 컨트롤러로 이동!
+//    @GetMapping("/board/{regionMajor}/{boardId}/posts/{postId}/comments/{commentId}/like")
+//    public String likeComment(@PathVariable("regionMajor") String regionMajor,
+//                              @PathVariable("boardId") Long boardId,
+//                              @PathVariable("postId") Long postId,
+//                              @PathVariable("commentId") Long commentId, Model model) {
+//
+//        // 로그인 한 멤버의 id
+//        Long memberId = (Long) model.getAttribute("loginMember");
+//        commentLikeService.likeComment(memberId, commentId);
+//
+//        return "redirect:/board/" + regionMajor + "/" + boardId + "/posts/" + postId;
+//    }
 
-        // 로그인 한 멤버의 id
-        Long memberId = (Long) model.getAttribute("loginMember");
-        commentLikeService.likeComment(memberId, commentId);
-
-        return "redirect:/boards/" + regionMajor + "/posts/" + postId;
-    }
-
-    // 테스트 코드 -> 세션등에 로그인 멤버 정보 담기는 것으로 바뀌면 코드 지울것!
     @ModelAttribute("loginMember")
-    public Long loginMember() {
-        return 1L;
+    public Long loginMemberId(HttpSession session) {
+        // 세션에서 로그인한 멤버의 id 값 가져옴
+        MemberDto memberDto = (MemberDto) session.getAttribute("member");
+        if(memberDto == null) return null;
+        return memberDto.getId();
     }
 
 }

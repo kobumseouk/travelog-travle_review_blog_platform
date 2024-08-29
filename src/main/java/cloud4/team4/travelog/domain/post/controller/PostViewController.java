@@ -6,12 +6,14 @@ import cloud4.team4.travelog.domain.board.service.BoardService;
 import cloud4.team4.travelog.domain.comment.dto.CommentPagingInfo;
 import cloud4.team4.travelog.domain.comment.dto.CommentRequestDto;
 import cloud4.team4.travelog.domain.comment.service.CommentService;
+import cloud4.team4.travelog.domain.member.dto.MemberDto;
 import cloud4.team4.travelog.domain.post.dto.PostListViewResponse;
 import cloud4.team4.travelog.domain.post.dto.PostMapper;
 import cloud4.team4.travelog.domain.post.dto.PostPostDto;
 import cloud4.team4.travelog.domain.post.entity.Post;
 import cloud4.team4.travelog.domain.post.service.PostLikeService;
 import cloud4.team4.travelog.domain.post.service.PostService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -128,9 +130,11 @@ public class PostViewController {
 
     return "newPost";
   }
-
   @ModelAttribute("loginMember")
-  public Long loginMember() {
-    return 1L;
+  public Long loginMemberId(HttpSession session) {
+    // 세션에서 로그인한 멤버의 id 값 가져옴
+    MemberDto memberDto = (MemberDto) session.getAttribute("member");
+    if(memberDto == null) return null;
+    return memberDto.getId();
   }
 }

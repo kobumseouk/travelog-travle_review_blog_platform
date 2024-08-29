@@ -51,7 +51,7 @@ function displayReplies(replies, commentId) {
         noRepliesMessage.textContent = '대댓글이 없습니다.';
         repliesWrapper.appendChild(noRepliesMessage);
     } else {
-        replies.forEach(reply => repliesWrapper.appendChild(createReplyElement(reply, replyContainer.dataset.loginMemberId, replyContainer.dataset.regionMajor, replyContainer.dataset.postId, commentId)));
+        replies.forEach(reply => repliesWrapper.appendChild(createReplyElement(reply, replyContainer.dataset.loginMemberId, replyContainer.dataset.regionMajor, replyContainer.dataset.boardId, replyContainer.dataset.postId, commentId)));
     }
 
     replyContainer.appendChild(replyForm);
@@ -73,16 +73,14 @@ function displayReplies(replies, commentId) {
                 if (response.status === 201) {
                     return fetch(`/api/comment/${commentId}/reply`); // 대댓글 목록 재조회
                 }
-                return response.text().then(errorMessage => { throw new Error('대댓글 추가 실패: ' + errorMessage); });
+                return response.text().then(text => {
+                    // 서버에서 반환한 메시지를 alert로 표시
+                    alert(text); // 서버에서 반환한 텍스트 메시지
+                });
             })
             .then(response => response.json())
             .then(replies => {
-                console.log("대댓글을 성공적으로 입력했습니다.");
                 displayReplies(replies, commentId); // 새로 가져온 대댓글 목록으로 업데이트
-            })
-            .catch(error => {
-                console.error('에러:', error);
-                alert('대댓글 추가 중 오류가 발생했습니다.');
             });
 
         replyForm.querySelector('textarea').value = '';
@@ -112,7 +110,7 @@ function createReplyForm(loginMemberId, commentId) {
     return replyForm;
 }
 
-function createReplyElement(reply, loginMemberId, regionMajor, postId, commentId) {
+function createReplyElement(reply, loginMemberId, regionMajor, boardId, postId, commentId) {
 
     const replyElement = document.createElement('div');
     replyElement.classList.add('reply');
@@ -142,7 +140,7 @@ function createReplyElement(reply, loginMemberId, regionMajor, postId, commentId
         actionsWrapper.classList.add('actions');
 
         const editLink = document.createElement('a');
-        editLink.href = '/boards/' + regionMajor + '/posts/' + postId + '/comments/' + commentId + '/replies/'+ reply.id;
+        editLink.href = '/board/' + regionMajor + '/' + boardId + '/posts/' + postId + '/comments/' + commentId + '/replies/' + reply.id;
         const editIcon = document.createElement('span');
         editIcon.classList.add('material-symbols-outlined');
         editIcon.style.color = 'blue';

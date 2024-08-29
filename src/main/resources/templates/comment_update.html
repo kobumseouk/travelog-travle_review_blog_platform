@@ -11,7 +11,8 @@
 <div class="h-full flex justify-center">
 
     <main class="flex justify-center items-center w-[90%] bg-gray-100 rounded-md">
-        <form class="m-5 p-6 w-full" th:object="${commentUpdateDto}" enctype="multipart/form-data" th:data-comment-id="${commentId}" th:data-post-id="${postId}" th:data-region-major="${regionMajor}"
+        <form class="m-5 p-6 w-full" th:object="${commentUpdateDto}" enctype="multipart/form-data"
+              th:data-comment-id="${commentId}" th:data-post-id="${postId}" th:data-board-id="${boardId}" th:data-region-major="${regionMajor}"
               onsubmit="return validateForm()">
             <div class="flex flex-col">
                 <div th:if="${boardCategory == '여행후기'}">

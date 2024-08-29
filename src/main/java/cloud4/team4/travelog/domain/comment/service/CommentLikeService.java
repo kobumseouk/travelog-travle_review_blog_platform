@@ -18,8 +18,9 @@ public class CommentLikeService {
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
 
+    // 좋아요 누르면 true, 좋아요 취소하면 false 반환
     @Transactional
-    public void likeComment(Long memberId, Long commentId) {
+    public boolean likeComment(Long memberId, Long commentId) {
         CommentLike commentLike = commentLikeRepository.findCommentLikeByMember_IdAndComment_Id(memberId, commentId);
 
         // 좋아요 엔티티 생성
@@ -36,8 +37,12 @@ public class CommentLikeService {
             createdCommentLike.setComment(comment);
 
             commentLikeRepository.save(createdCommentLike);
+
+            return true;
         } else { // 좋아요 엔티티 삭제
             commentLikeRepository.delete(commentLike);
+
+            return false;
         }
     }
 }
