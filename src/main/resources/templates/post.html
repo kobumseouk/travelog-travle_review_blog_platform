@@ -88,7 +88,6 @@
                 </div>
             </div>
 
-            <h2 th:text="'로그인 멤버 id = ' + ${loginMember}"></h2>
             <form class="mt-5 mb-5" th:action="@{/api/comment/{postId}(postId=${postId})}" th:object="${commentRequestDto}" method="post" enctype="multipart/form-data" onsubmit="return validateForm()"
                   th:data-post-id="${postId}" th:data-region-major="${regionMajor}">
                 <label th:for="content" class="block text-lg font-semibold mb-2"><strong>댓글 작성</strong></label>
@@ -210,7 +209,8 @@
                                     ${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')} : ${'(수정) ' + #temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
                     </div>
 
-                    <div th:id="'replyContainer-' + ${comment.id}" th:data-login-member-id="${loginMember}" th:data-region-major="${regionMajor}" th:data-post-id="${post.id}"
+                    <div th:id="'replyContainer-' + ${comment.id}" th:data-login-member-id="${loginMember != null ? loginMember : 'null'}"
+                         th:data-region-major="${regionMajor}" th:data-post-id="${post.id}"
                          class="mt-10 border border-gray-300 rounded-lg p-4" style="display: none;"></div> <!-- 기본적으로 숨김 -->
 
                 </div>
