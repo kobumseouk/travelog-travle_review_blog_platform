@@ -41,8 +41,9 @@ public class CommentController {
     }*/
 
     // 댓글 수정
-    @GetMapping("/boards/{regionMajor}/posts/{postId}/comments/{commentId}")
+    @GetMapping("/board/{regionMajor}/{boardId}/posts/{postId}/comments/{commentId}")
     public String updateCommentForm(@PathVariable("regionMajor") String regionMajor,
+                                    @PathVariable("boardId") Long boardId,
                                     @PathVariable("postId") Long postId,
                                     @PathVariable("commentId") Long commentId, Model model) {
         CommentUpdateDto commentUpdateDto = new CommentUpdateDto(commentService.findCommentByCommentId(commentId).getContent(),
@@ -54,18 +55,19 @@ public class CommentController {
         return "comment_update";
     }
 
-    // 댓글 좋아요
-    @GetMapping("/boards/{regionMajor}/posts/{postId}/comments/{commentId}/like")
-    public String likeComment(@PathVariable("regionMajor") String regionMajor,
-                              @PathVariable("postId") Long postId,
-                              @PathVariable("commentId") Long commentId, Model model) {
-
-        // 로그인 한 멤버의 id
-        Long memberId = (Long) model.getAttribute("loginMember");
-        commentLikeService.likeComment(memberId, commentId);
-
-        return "redirect:/boards/" + regionMajor + "/posts/" + postId;
-    }
+    // 댓글 좋아요 -> api 컨트롤러로 이동!
+//    @GetMapping("/board/{regionMajor}/{boardId}/posts/{postId}/comments/{commentId}/like")
+//    public String likeComment(@PathVariable("regionMajor") String regionMajor,
+//                              @PathVariable("boardId") Long boardId,
+//                              @PathVariable("postId") Long postId,
+//                              @PathVariable("commentId") Long commentId, Model model) {
+//
+//        // 로그인 한 멤버의 id
+//        Long memberId = (Long) model.getAttribute("loginMember");
+//        commentLikeService.likeComment(memberId, commentId);
+//
+//        return "redirect:/board/" + regionMajor + "/" + boardId + "/posts/" + postId;
+//    }
 
     @ModelAttribute("loginMember")
     public Long loginMemberId(HttpSession session) {

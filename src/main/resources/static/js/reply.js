@@ -51,7 +51,7 @@ function displayReplies(replies, commentId) {
         noRepliesMessage.textContent = '대댓글이 없습니다.';
         repliesWrapper.appendChild(noRepliesMessage);
     } else {
-        replies.forEach(reply => repliesWrapper.appendChild(createReplyElement(reply, replyContainer.dataset.loginMemberId, replyContainer.dataset.regionMajor, replyContainer.dataset.postId, commentId)));
+        replies.forEach(reply => repliesWrapper.appendChild(createReplyElement(reply, replyContainer.dataset.loginMemberId, replyContainer.dataset.regionMajor, replyContainer.dataset.boardId, replyContainer.dataset.postId, commentId)));
     }
 
     replyContainer.appendChild(replyForm);
@@ -110,7 +110,7 @@ function createReplyForm(loginMemberId, commentId) {
     return replyForm;
 }
 
-function createReplyElement(reply, loginMemberId, regionMajor, postId, commentId) {
+function createReplyElement(reply, loginMemberId, regionMajor, boardId, postId, commentId) {
 
     const replyElement = document.createElement('div');
     replyElement.classList.add('reply');
@@ -140,7 +140,7 @@ function createReplyElement(reply, loginMemberId, regionMajor, postId, commentId
         actionsWrapper.classList.add('actions');
 
         const editLink = document.createElement('a');
-        editLink.href = '/boards/' + regionMajor + '/posts/' + postId + '/comments/' + commentId + '/replies/'+ reply.id;
+        editLink.href = '/board/' + regionMajor + '/' + boardId + '/posts/' + postId + '/comments/' + commentId + '/replies/' + reply.id;
         const editIcon = document.createElement('span');
         editIcon.classList.add('material-symbols-outlined');
         editIcon.style.color = 'blue';
