@@ -1,8 +1,9 @@
 package cloud4.team4.travelog.domain.post.dto;
 
+import cloud4.team4.travelog.domain.board.entity.Board;
 import cloud4.team4.travelog.domain.comment.entity.Comment;
+import cloud4.team4.travelog.domain.member.entity.Member;
 import cloud4.team4.travelog.domain.post.entity.Post;
-import cloud4.team4.travelog.domain.post.entity.PostPhoto;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.processing.Generated;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-08-28T21:07:20+0900",
+    date = "2024-08-29T11:51:05+0900",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 22.0.2 (Oracle Corporation)"
 )
 @Component
@@ -42,11 +43,10 @@ public class PostMapperImpl implements PostMapper {
 
         postResponseDto.setBoardId( mapBoardToLong( post.getBoard() ) );
         postResponseDto.setMemberId( mapMemberToLong( post.getMember() ) );
-        List<PostPhoto> list = post.getPostPhotos();
-        if ( list != null ) {
-            postResponseDto.setPhotos( new ArrayList<PostPhoto>( list ) );
-        }
-        postResponseDto.setPostId( post.getPostId() );
+        postResponseDto.setMemberName( postMemberName( post ) );
+        postResponseDto.setBoardCategory( postBoardBoardCategory( post ) );
+        postResponseDto.setPhotos( mapPostPhotos( post.getPostPhotos() ) );
+        postResponseDto.setId( post.getId() );
         postResponseDto.setTitle( post.getTitle() );
         postResponseDto.setContent( post.getContent() );
         postResponseDto.setPeriodStart( post.getPeriodStart() );
@@ -61,5 +61,35 @@ public class PostMapperImpl implements PostMapper {
         }
 
         return postResponseDto;
+    }
+
+    private String postMemberName(Post post) {
+        if ( post == null ) {
+            return null;
+        }
+        Member member = post.getMember();
+        if ( member == null ) {
+            return null;
+        }
+        String name = member.getName();
+        if ( name == null ) {
+            return null;
+        }
+        return name;
+    }
+
+    private String postBoardBoardCategory(Post post) {
+        if ( post == null ) {
+            return null;
+        }
+        Board board = post.getBoard();
+        if ( board == null ) {
+            return null;
+        }
+        String boardCategory = board.getBoardCategory();
+        if ( boardCategory == null ) {
+            return null;
+        }
+        return boardCategory;
     }
 }

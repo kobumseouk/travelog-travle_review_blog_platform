@@ -85,13 +85,6 @@ public class MemberController {
 
     }
 
-    //비밀번호 찾기
-    @PostMapping("/find-password")
-    public ResponseEntity<String> findPassword(@RequestParam String loginId, @RequestParam String name, @RequestParam String email, @RequestParam String phoneNumber, @RequestParam String newPassword) {
-        memberService.findPassword(loginId, name, email, phoneNumber);
-        return ResponseEntity.ok(memberService.findPassword(loginId, name, email, phoneNumber));
-    }
-
 
 
 }
