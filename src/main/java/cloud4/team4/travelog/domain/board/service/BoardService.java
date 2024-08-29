@@ -132,8 +132,19 @@ public class BoardService {
     }
 
 
-//    public BoardResponseDto findById(Long id){
-//        Board board= boardRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시판이 없습니다. id= " + id));
-//        return new BoardResponseDto(board);
-//    }
+
+    // 대분류 게시판의 regionMajor를 한국어로 변환하는 메서드
+    public String convertToKorean(String regionMajor) {
+        return switch (regionMajor.toLowerCase()) {
+            case "seoul" -> "서울";
+            case "busan" -> "부산";
+            case "incheon" -> "인천";
+            case "daegu" -> "대구";
+            case "daejeon" -> "대전";
+            case "gwangju" -> "광주";
+            case "ulsan" -> "울산";
+            case "jaeju" -> "제주";
+            default -> regionMajor;
+        };
+    }
 }
