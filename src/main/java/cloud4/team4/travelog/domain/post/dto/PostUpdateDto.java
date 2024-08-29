@@ -4,12 +4,9 @@ import jakarta.validation.constraints.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-
+import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -18,7 +15,9 @@ import java.util.List;
 @AllArgsConstructor
 public class PostUpdateDto {
 
-  private Long postId;
+  private Long id;
+  private Long boardId;  // 게시판 변경
+  private Long memberId;
 
   @Size(min = 1, max = 50, message = "제목은 1자 이상 50자 이하여야 합니다.")
   private String title;
@@ -32,8 +31,5 @@ public class PostUpdateDto {
   private String periodEnd;
 
   private List<MultipartFile> photos;
-  private List<String> photoPositions;
 
-  // private Long memberId;
-  // private Long boardId;  // 게시판 변경
 }

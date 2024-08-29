@@ -10,15 +10,18 @@
         <h1 class="text-3xl font-bold tracking-tight text-gray-900" th:text="${post.id == null ? '게시글 작성' : '게시글 수정'}">게시글</h1>
     </div>
 </header>
-<div class="h-full">
-    <main class="flex flex-col md:flex-row md:w-[90%]">
-        <div class="md:w-3/5 w-[90%] m-10 bg-gray-50 p-6 shadow-xl rounded-lg flex-shrink-0" style="align-self: flex-start;">
+<div class="flex justify-center items-center flex-grow">
+    <main class="flex flex-col w-full max-w-4xl"> <!-- 크기를 키우기 위해 max-w-4xl로 변경 -->
+        <div class="w-full m-10 bg-gray-50 p-10 shadow-xl rounded-lg">
             <form th:action="@{/board/{regionMajor}/{boardId}/posts/post-new(regionMajor=${regionMajor},boardId=${boardId})}"
                   th:object="${post}" method="post" enctype="multipart/form-data"
                   th:data-post-id="${post.id}" th:data-region-major="${regionMajor}" th:data-board-id="${boardId}">
 
-                <input type="hidden" name="postId" th:if="${post.id != null}" th:value="${post.id}">
-                <input type="hidden" th:field="*{boardId}" />
+                <input type="hidden" th:field="*{id}" />
+                <input type="hidden" name="regionMajor" th:value="${regionMajor}">
+                <input type="hidden" name="boardId" th:value="${boardId}">
+                <input type="hidden" th:if="${post.memberId != null}" th:field="*{memberId}" />
+
 
                 <!-- 제목 입력 -->
                 <div class="mb-4">
@@ -32,15 +35,21 @@
                 <div class="mb-4 flex space-x-4">
                     <div class="w-1/2">
                         <label for="periodStart" class="block text-sm font-medium text-gray-700">여행 시작일</label>
-                        <input type="date" id="periodStart" th:field="*{periodStart}"
+                        <input type="text" id="periodStart" th:field="*{periodStart}"
                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                               pattern="\d{4}-\d{2}-\d{2}"
+                               placeholder="YYYY-MM-DD"
                                required />
+                        <span class="text-red-500" id="periodStartError" style="display: none;">날짜 형식에 맞게 입력해주세요 (YYYY-MM-DD)</span>
                     </div>
                     <div class="w-1/2">
                         <label for="periodEnd" class="block text-sm font-medium text-gray-700">여행 종료일</label>
-                        <input type="date" id="periodEnd" th:field="*{periodEnd}"
+                        <input type="text" id="periodEnd" th:field="*{periodEnd}"
                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                               pattern="\d{4}-\d{2}-\d{2}"
+                               placeholder="YYYY-MM-DD"
                                required />
+                        <span class="text-red-500" id="periodEndError" style="display: none;">날짜 형식에 맞게 입력해주세요 (YYYY-MM-DD)</span>
                     </div>
                 </div>
 
@@ -73,7 +82,7 @@
 
                 <!-- 제출 버튼 -->
                 <div class="flex justify-between mt-4">
-                    <button type="submit"
+                    <button type="submit" id="submit-btn"
                             th:text="${post.id == null ? '작성' : '수정'}"
                             class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200">
                     </button>
@@ -82,6 +91,8 @@
                         취소
                     </a>
                 </div>
+
+                <div id="error-message" class="text-red-500 hidden"></div>
             </form>
         </div>
     </main>

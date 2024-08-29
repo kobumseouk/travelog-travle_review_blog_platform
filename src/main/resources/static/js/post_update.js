@@ -30,8 +30,8 @@ $(document).ready(function() {
         var postId = $(this).data('post-id');
         var regionMajor = $(this).data('region-major');
         var boardId = $(this).data('board-id');
-        var url = postId ? `/api/posts/update/${postId}` : `/api/posts/update`;
-        var method = postId ? 'PUT' : 'POST';
+        var url = postId ? `/api/posts/update/${postId}` : `/api/posts`;
+        var method = postId ? 'PUT' : 'POST';  // postId 유무로 url과 수정, 작성 변경
 
         $.ajax({
             url: url,
@@ -40,14 +40,11 @@ $(document).ready(function() {
             processData: false,
             contentType: false,
             success: function(response) {
-                window.location.href = `/board/${regionMajor}/${boardId}/posts/${response.id}`;
-            },
+                        window.location.href = `/board/${regionMajor}/${boardId}/posts/${response.id}`;
+                    },
             error: function(xhr) {
-                if (xhr.status === 400) {
-                    alert(xhr.responseText);
-                } else {
-                    alert('게시글 저장 중 오류가 발생했습니다. 다시 시도해 주세요.');
-                }
+                console.log(xhr);
+                alert(xhr.responseText || '게시글 저장 중 오류가 발생했습니다. 다시 시도해 주세요.');
             }
         });
     });

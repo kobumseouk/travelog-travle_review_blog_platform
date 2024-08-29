@@ -3,6 +3,7 @@ function deletePost(button) {
     console.log("del-post");
     const postId = button.getAttribute('data-postId');
     const regionMajor = button.getAttribute('data-region');
+    const boardId = button.getAttribute('data-board');
 
     if (confirm('게시글을 삭제하시겠습니까?')) {
         fetch(`/api/posts/delete/${postId}`, {

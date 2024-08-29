@@ -40,7 +40,7 @@ public class PostViewController {
 
   @GetMapping("/board/{regionMajor}/{boardId}/posts")
   public String listPosts(@PathVariable(name = "regionMajor") String regionMajor,
-                          @PathVariable("boardId") Long boardId,
+                          @PathVariable(name = "boardId") Long boardId,
                           @RequestParam(name = "page", defaultValue = "1") int page,
                           @RequestParam(name = "sortBy", defaultValue = "createdAt") String sortBy,
                           @RequestParam(name = "searchType", required = false) String searchType,
@@ -108,7 +108,7 @@ public class PostViewController {
 
     postLikeService.likePost(memberId, postId);
 
-    return "redirect:/board/" + regionMajor + boardId + "/posts/" + postId;
+    return "redirect:/board/" + regionMajor + "/" + boardId + "/posts/" + postId;
   }
 
   // 게시글 작성/수정
@@ -118,36 +118,29 @@ public class PostViewController {
                         @RequestParam(required = false, name = "postId") Long postId,
                         Model model) {
 
+    // 로그인 한 멤버의 id
+    Long memberId = (Long) model.getAttribute("loginMember");
+
     model.addAttribute("regionMajor", regionMajor);
     model.addAttribute("boardId", boardId);
 
     if (postId == null) { // 게시글 작성
       PostPostDto postDto = new PostPostDto();
       postDto.setBoardId(boardId);  // boardId 설정
+      postDto.setMemberId(memberId);
       model.addAttribute("post", postDto);
     } else {  // 게시글 수정
       Post post = postService.getPostById(postId);
       PostUpdateDto updateDto = postMapper.postToPostUpdateDto(post);
-      updateDto.setPostId(postId);  // postId 설정
+      updateDto.setId(postId);  // postId 설정
+      updateDto.setBoardId(boardId);  // boardId 설정
+      updateDto.setMemberId(memberId);
       model.addAttribute("post", updateDto);
     }
 
     return "newPost";
 
   }
-
-  /*@GetMapping("/boards/{regionMajor}/posts/post-modify/{postId}")
-  public String modifyPost(@PathVariable("regionMajor") String regionMajor,
-                           @PathVariable("postId") Long postId,
-                           Model model) {
-
-    Post post = postService.getPostById(postId);
-
-    model.addAttribute("regionMajor", regionMajor);
-    model.addAttribute("post", postMapper.postToPostResponseDto(post));
-
-    return "newPost";
-  }*/
 
   @ModelAttribute("loginMember")
   public Long loginMemberId(HttpSession session) {
