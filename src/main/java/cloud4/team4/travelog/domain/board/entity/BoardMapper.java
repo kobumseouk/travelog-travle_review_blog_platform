@@ -19,7 +19,7 @@ public interface BoardMapper {
     // CreateRequestDto -> Board 매핑
     @Mapping(target = "id", ignore = true) // ID는 자동 생성되므로 무시
     @Mapping(target = "regionMajor", source = "regionMajor")
-    // @Mapping(target = "regionMiddle", source = "regionMiddle")
+    @Mapping(target = "regionMiddle", source = "regionMiddle")
     @Mapping(target = "description", source = "description")
     @Mapping(target = "boardCategory", source = "boardCategory")
     Board toEntity(BoardRequestDto dto);

@@ -36,8 +36,8 @@ public class Board {
 
 
     // 여행지 소분류 - 강남, 강북 등.
-    // @Column(name = "region_middle")
-    // private String regionMiddle;            // 사용자 입력으로 받을 필드
+     @Column(name = "region_middle")
+     private String regionMiddle;            // 사용자 입력으로 받을 필드
 
 
     // 게시판에 대한 설명
@@ -73,11 +73,11 @@ public class Board {
 
 
     //@Builder
-    public Board(String description, String regionMajor,
+    public Board(String description, String regionMajor, String regionMiddle,
                  String boardCategory, LocalDateTime createdAt) {
         this.description = description;
         this.regionMajor = regionMajor;
-        // this.regionMiddle = regionMiddle;
+        this.regionMiddle = regionMiddle;
         this.boardCategory = boardCategory;
         this.createdAt = createdAt;
     }
