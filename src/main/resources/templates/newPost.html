@@ -16,54 +16,63 @@
             <form th:action="@{/board/{regionMajor}/{boardId}/posts/post-new(regionMajor=${regionMajor},boardId=${boardId})}"
                   th:object="${post}" method="post" enctype="multipart/form-data"
                   th:data-post-id="${post.id}" th:data-region-major="${regionMajor}" th:data-board-id="${boardId}">
-                <!--게시글 제목 입력-->
+
+                <!-- 제목 입력 -->
                 <div class="mb-4">
                     <label for="title" class="block text-sm font-medium text-gray-700">제목</label>
-                    <input type="text" id="title" th:field="*{title}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="제목을 입력하세요" required>
+                    <input type="text" id="title" th:field="*{title}"
+                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                           required>
                 </div>
 
-                <!--여행 일정 입력-->
+                <!-- 여행 일정 입력 -->
                 <div class="mb-4 flex space-x-4">
                     <div class="w-1/2">
                         <label for="periodStart" class="block text-sm font-medium text-gray-700">여행 시작일</label>
-                        <input type="date" id="periodStart" th:field="*{periodStart}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                        <input type="date" id="periodStart" th:field="*{periodStart}"
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                               required>
                     </div>
                     <div class="w-1/2">
                         <label for="periodEnd" class="block text-sm font-medium text-gray-700">여행 종료일</label>
-                        <input type="date" id="periodEnd" th:field="*{periodEnd}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                        <input type="date" id="periodEnd" th:field="*{periodEnd}"
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                               required>
                     </div>
                 </div>
 
-                <!--내용 입력 -->
+                <!-- 내용 입력 -->
                 <div class="mb-4">
                     <label for="content" class="block text-sm font-medium text-gray-700">내용</label>
-                    <textarea id="content" th:field="*{content}" rows="10" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="내용을 입력하세요" required></textarea>
+                    <textarea id="content" th:field="*{content}" rows="10"
+                              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                              required></textarea>
                 </div>
 
-                <!--사진 첨부 버튼-->
+                <!-- 사진 첨부 -->
                 <div class="mb-4">
                     <label for="file-input" class="block text-sm font-medium text-gray-700">사진 첨부</label>
-                    <input type="file" id="file-input" name="photos" multiple class="mt-1 block w-full" accept="image/*">
+                    <input type="file" id="file-input" name="photos" multiple
+                           class="mt-1 block w-full" accept="image/*">
                     <p class="mt-2 text-sm text-gray-500">최대 3개 사진 업로드 가능, 각 사진은 16MB 이하만 가능</p>
                     <div id="file-info" class="mt-2 text-gray-500"></div>
                 </div>
 
-                <!--새 글 작성에서 미입력 필드가 있을 경우에만 적용-->
-                <div id="error-message" class="mt-4 text-red-500 hidden"></div>
+                <!-- 숨겨진 필드들 -->
+                <input type="hidden" th:field="*{memberId}" th:if="${post.id == null}">
+                <input type="hidden" name="boardId" th:value="${boardId}">
 
-                <!--member, board 숨김 처리-->
-                <input type="hidden" th:field="*{memberId}" th:value="${#authentication.principal.id}">
-                <input type="hidden" th:field="*{boardId}" th:value="${boardId}">
-
-                <!--입력, 취소 버튼-->
+                <!-- 제출 버튼 -->
                 <div class="flex justify-between mt-4">
-                    <button th:if="${post.id} == null" type="submit" id="create-btn" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200 opacity-50 cursor-not-allowed" disabled>입력</button>
-                    <button th:if="${post.id} != null" type="submit" id="modify-btn" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200">수정</button>
-                    <button th:onclick="|location.href='@{/board/{regionMajor}/{boardId}/posts(regionMajor=${regionMajor},boardId=${boardId})}'|"
-                            class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition duration-200">취소</button>
+                    <button type="submit"
+                            th:text="${post.id == null ? '작성' : '수정'}"
+                            class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200">
+                    </button>
+                    <a th:href="@{/board/{regionMajor}/{boardId}/posts(regionMajor=${regionMajor},boardId=${boardId})}"
+                       class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-200">
+                        취소
+                    </a>
                 </div>
-
-
             </form>
         </div>
     </main>
