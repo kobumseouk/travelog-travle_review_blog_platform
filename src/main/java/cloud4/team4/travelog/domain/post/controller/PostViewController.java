@@ -1,11 +1,11 @@
 package cloud4.team4.travelog.domain.post.controller;
 
 import cloud4.team4.travelog.domain.board.dto.BoardViewResponse;
-import cloud4.team4.travelog.domain.board.entity.Board;
 import cloud4.team4.travelog.domain.board.service.BoardService;
 import cloud4.team4.travelog.domain.comment.dto.CommentPagingInfo;
 import cloud4.team4.travelog.domain.comment.dto.CommentRequestDto;
 import cloud4.team4.travelog.domain.comment.service.CommentService;
+import cloud4.team4.travelog.domain.post.dto.*;
 import cloud4.team4.travelog.domain.member.dto.MemberDto;
 import cloud4.team4.travelog.domain.post.dto.PostListViewResponse;
 import cloud4.team4.travelog.domain.post.dto.PostMapper;
@@ -18,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.ui.Model;
@@ -39,8 +38,9 @@ public class PostViewController {
   private final PostLikeService postLikeService;
   private final PostMapper postMapper;
 
-  @GetMapping("/boards/{regionMajor}")
+  @GetMapping("/board/{regionMajor}/{boardId}/posts")
   public String listPosts(@PathVariable(name = "regionMajor") String regionMajor,
+                          @PathVariable("boardId") Long boardId,
                           @RequestParam(name = "page", defaultValue = "1") int page,
                           @RequestParam(name = "sortBy", defaultValue = "createdAt") String sortBy,
                           @RequestParam(name = "searchType", required = false) String searchType,
@@ -61,6 +61,7 @@ public class PostViewController {
     model.addAttribute("currentPage", posts.getNumber() + 1);
     model.addAttribute("totalPages", posts.getTotalPages());
     model.addAttribute("regionMajor", regionMajor);
+    model.addAttribute("boardId", boardId);
     model.addAttribute("allRegionMajors", uniqueRegionMajors);
     model.addAttribute("middleBoards", MiddleBoards);
     model.addAttribute("sortBy", sortBy);
@@ -71,18 +72,21 @@ public class PostViewController {
   }
 
 
-  @GetMapping("/boards/{regionMajor}/posts/{postId}")
+  @GetMapping("/board/{regionMajor}/{boardId}/posts/{postId}")
   public String post(@PathVariable("regionMajor") String regionMajor,
+                     @PathVariable("boardId") Long boardId,
                      @PathVariable("postId") Long postId,
                      @RequestParam(required = false, value = "commentPage", defaultValue = "1") int commentPage,
                      @ModelAttribute("commentPagingInfo") CommentPagingInfo commentPagingInfo,
                      Model model) {
+
     Post post = postService.getPostById(postId);
 
     postService.incrementViews(postId);  // 방문마다 조회수 증가
 
 
     model.addAttribute("regionMajor", regionMajor);
+    model.addAttribute("boardId", boardId);
     model.addAttribute("commentRequestDto", new CommentRequestDto());
     model.addAttribute("post", postMapper.postToPostResponseDto(post));
     model.addAttribute("comments", commentService.findPagedCommentsByPostId(postId, commentPage, commentPagingInfo));
@@ -93,26 +97,37 @@ public class PostViewController {
   }
 
 
-  @GetMapping("/boards/{regionMajor}/posts/{postId}/like")
+  @GetMapping("/board/{regionMajor}/{boardId}/posts/{postId}/like")
   public String likePost(@PathVariable("regionMajor") String regionMajor,
+                         @PathVariable("boardId") Long boardId,
                          @PathVariable("postId") Long postId,
                          Model model) {
 
     // 로그인 한 멤버의 id
     Long memberId = (Long) model.getAttribute("loginMember");
+
     postLikeService.likePost(memberId, postId);
 
-    return "redirect:/boards/" + regionMajor + "/posts/" + postId;
+    return "redirect:/board/" + regionMajor + boardId + "/posts/" + postId;
   }
 
-
-  @GetMapping("/boards/{regionMajor}/posts/post-new")
+  // 게시글 작성/수정
+  @GetMapping("/board/{regionMajor}/{boardId}/posts/post-new")
   public String newPost(@PathVariable("regionMajor") String regionMajor,
+                        @PathVariable("boardId") Long boardId,
                         @RequestParam(required = false, name = "postId") Long postId,
                         Model model) {
 
     model.addAttribute("regionMajor", regionMajor);
-    model.addAttribute("post", new PostPostDto());
+    model.addAttribute("boardId", boardId);
+
+    if (postId == null) { // 게시글 작성
+      model.addAttribute("post", new PostPostDto());
+    } else {  // 게시글 수정
+      Post post = postService.getPostById(postId);
+      PostUpdateDto updateDto = postMapper.postToPostUpdateDto(post);
+      model.addAttribute("post", updateDto);
+    }
 
     return "newPost";
 
