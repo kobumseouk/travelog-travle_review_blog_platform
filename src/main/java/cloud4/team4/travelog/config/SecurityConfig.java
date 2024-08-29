@@ -29,10 +29,13 @@ public class SecurityConfig {
                         .requestMatchers("/**").permitAll()
                                 .anyRequest()
                                 .authenticated()
-                        );
-                return http.build();
+                        )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/") // 로그아웃 성공 후 리다이렉트할 경로
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                );
+        return http.build();
     }
-
-
-
 }
