@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // 이미지 컨테이너에 대한 참조
     const imgContainer = document.querySelector('.img-container');
 
+    // 이미지 확대 이벤트
     if (imgContainer) {
         // 이미지 컨테이너 내의 모든 이미지 링크에 대해 이벤트 리스너 추가
         imgContainer.querySelectorAll('.image-link').forEach(link => {
@@ -13,8 +14,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+/*
 function openImage(base64) {
     const newWindow = window.open();
     newWindow.document.write('<img src="data:image/jpeg;base64,' + base64 + '" style="max-width:100%;"/>');
     newWindow.document.close();
-}
+}*/

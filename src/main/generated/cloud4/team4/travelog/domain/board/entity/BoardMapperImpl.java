@@ -22,6 +22,7 @@ public class BoardMapperImpl implements BoardMapper {
         Board.BoardBuilder board = Board.builder();
 
         board.regionMajor( dto.getRegionMajor() );
+        board.regionMiddle( dto.getRegionMiddle() );
         board.description( dto.getDescription() );
         board.boardCategory( dto.getBoardCategory() );
 

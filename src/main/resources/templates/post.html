@@ -32,7 +32,6 @@
                 </div>
             </div>
             <div class="bg-gray-200 mt-4 mb-4 p-6 rounded-lg">
-                <p class="text-gray-700" style="white-space: pre-line; word-break: break-all" th:text="${post.content}">게시글 내용</p>
                 <div th:if="${post.photos != null and not #lists.isEmpty(post.photos)}">
                     <p class="text-sm mt-6">첨부한 이미지</p>
                     <div class="img-container grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -43,26 +42,26 @@
                         </div>
                     </div>
                 </div>
+                <p class="text-gray-700" style="white-space: pre-line; word-break: break-all" th:text="${post.content}">게시글 내용</p>
             </div>
             <div class="flex justify-between mt-4">
                 <!--목록 버튼-->
-                <a th:href="@{/boards/{regionMajor}(regionMajor=${regionMajor})}"
-                   class="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 transition duration-200">목록</a>
+                <a th:href="@{/board/{regionMajor}/{boardId}/posts(regionMajor=${regionMajor},boardId=${boardId})}"
+                    class="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 transition duration-200">목록</a>
                 <!--추천 버튼-->
                 <button th:if="${loginMember != null}"
-                        type="button"
-                        th:onclick="|location.href='@{/boards/{regionMajor}/posts/{postId}/like(regionMajor=${regionMajor},postId=${post.id})}'|"
+                        th:onclick="|location.href='@{/board/{regionMajor}/{boardId}/posts/{postId}/like(regionMajor=${regionMajor},boardId=${boardId},postId=${post.id})}'|"
                         class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-700 transition duration-200">
                     <span class="material-symbols-outlined" style="font-size: 20px; vertical-align: middle;">thumb_up</span>
                     추천
                 </button>
 
-                <div>
+                <div th:if="${loginMember != null and loginMember == post.memberId}">
                     <!--수정 버튼-->
-                    <button th:onclick="|location.href='@{/boards/{regionMajor}/posts/post-modify/{postId}(regionMajor=${regionMajor},postId=${post.id})}'|"
+                    <button th:onclick="|location.href='@{/board/{regionMajor}/{boardId}/posts/post-new(regionMajor=${regionMajor},boardId=${boardId},postId=${post.id})}'|"
                             class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200 mr-2">수정</button>
                     <!--삭제 버튼-->
-                    <button type="button" onclick="deletePost(this)" th:data-postId="${post.id}" th:data-region="${regionMajor}" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition duration-200">삭제</button>
+                    <button type="button" onclick="deletePost(this)" th:data-postId="${post.id}" th:data-region="${regionMajor}" th:data-board="${boardId}" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition duration-200">삭제</button>
                 </div>
             </div>
         </div>

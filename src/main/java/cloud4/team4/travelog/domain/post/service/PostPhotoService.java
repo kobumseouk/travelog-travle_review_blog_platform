@@ -1,5 +1,6 @@
 package cloud4.team4.travelog.domain.post.service;
 
+import cloud4.team4.travelog.domain.comment.exception.CommentPhotosTypeException;
 import cloud4.team4.travelog.domain.post.entity.Post;
 import cloud4.team4.travelog.domain.post.entity.PostPhoto;
 import cloud4.team4.travelog.domain.post.exception.ResourceNotFoundException;
@@ -12,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -21,25 +23,28 @@ public class PostPhotoService {
   private final PostRepository postRepository;
 
   @Transactional
-  public void uploadPhoto(Post post, List<MultipartFile> photos, List<String> positions) throws IOException {
-    if (photos == null || photos.isEmpty()) {
-      return;
-    }
-    if(photos.size() > 1) {   // 업로드 사진 개수 제한
-      throw new IllegalArgumentException("최대 사진 업로드 개수는 1개 입니다!");
-    }
-
-    for (int i = 0; i < photos.size(); i++) {
-      MultipartFile photo = photos.get(i);
-      String position = positions.get(i);
-
-      if (!isImageFile(photo)) {
-        throw new IllegalArgumentException("사진 이외의 파일은 업로드 불가능합니다!");
+  public void uploadPhoto(Post post, List<MultipartFile> photos) throws IOException {
+    try {
+      if (photos == null || photos.isEmpty()) {
+        return;
+      }
+      if (photos.size() > 3) {   // 업로드 사진 개수 제한
+        throw new IllegalArgumentException("최대 사진 업로드 개수는 3개입니다!");
       }
 
-      String imageName = UUID.randomUUID().toString().replace("-", "") + "_" + photo.getOriginalFilename();
-      PostPhoto postPhoto = new PostPhoto(imageName, photo.getBytes(), post, position);
-      postPhotoRepository.save(postPhoto);
+      for (MultipartFile photo : photos) {
+        if (photo.isEmpty()) continue;
+
+        if (!isImageFile(photo)) {
+          throw new IllegalArgumentException("사진 이외의 파일은 업로드 불가능합니다!");
+        }
+
+        String imageName = UUID.randomUUID().toString().replace("-", "") + "_" + photo.getOriginalFilename();
+        PostPhoto postPhoto = new PostPhoto(imageName, photo.getBytes(), post);
+        postPhotoRepository.save(postPhoto);
+      }
+    } catch (IOException e) {
+      throw new RuntimeException("파일 업로드 중 오류가 발생했습니다.", e);
     }
   }
 
@@ -49,7 +54,7 @@ public class PostPhotoService {
   }
 
   @Transactional
-  public void updatePhoto(Long postId, List<MultipartFile> photos, List<String> positions) throws IOException {
+  public void updatePhoto(Long postId, List<MultipartFile> photos) throws IOException {
 
     Post post = postRepository.findById(postId)
         .orElseThrow(() -> new ResourceNotFoundException(postId + ": 해당 아이디로 게시글을 찾을 수 없습니다."));
@@ -62,7 +67,7 @@ public class PostPhotoService {
 
     // 새 이미지 업로드
     if (photos != null && !photos.isEmpty()) {
-      uploadPhoto(post, photos, positions);
+      uploadPhoto(post, photos);
     }
 
   }
