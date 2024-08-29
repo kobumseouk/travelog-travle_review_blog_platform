@@ -9,7 +9,8 @@
     <div class="container mx-auto max-w-4xl px-4 pb-20">
         <!-- 상단의 버튼 영역 -->
         <div class="flex justify-end mb-4">
-            <a th:href="@{'/' + ${regionMajor} + '/add-board'}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            <!-- 게시판 추가 링크 수정 -->
+            <a th:href="@{|/board-new/${regionMajor}|}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                 게시판 추가
             </a>
         </div>
@@ -30,10 +31,10 @@
                 </a>
                 <!-- 수정하기 및 삭제하기 버튼 -->
                 <div class="flex justify-between p-4">
-                    <a th:href="@{'/' + ${board.regionMajor} + '/' + ${board.id} + '/updateboard'}" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded">
+                    <a th:href="@{'/board-update/' + ${board.id}}" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded">
                         수정하기
                     </a>
-                    <button onclick="confirmDelete([[${board.id}]])" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded">
+                    <button th:onclick="|confirmDelete('${board.id}')|" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded">
                         삭제하기
                     </button>
                 </div>
@@ -45,7 +46,7 @@
 <div th:replace="~{fragments/footer :: footer}"></div>
 
 <script src="/js/footer.js"></script>
-<script>
+<script th:inline="javascript">
     function confirmDelete(boardId) {
         if (confirm('정말 삭제하시겠습니까?')) {
             deleteBoard(boardId);
