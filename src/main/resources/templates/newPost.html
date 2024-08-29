@@ -17,12 +17,15 @@
                   th:object="${post}" method="post" enctype="multipart/form-data"
                   th:data-post-id="${post.id}" th:data-region-major="${regionMajor}" th:data-board-id="${boardId}">
 
+                <input type="hidden" name="postId" th:if="${post.id != null}" th:value="${post.id}">
+                <input type="hidden" th:field="*{boardId}" />
+
                 <!-- 제목 입력 -->
                 <div class="mb-4">
                     <label for="title" class="block text-sm font-medium text-gray-700">제목</label>
                     <input type="text" id="title" th:field="*{title}"
                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                           required>
+                           required />
                 </div>
 
                 <!-- 여행 일정 입력 -->
@@ -31,13 +34,13 @@
                         <label for="periodStart" class="block text-sm font-medium text-gray-700">여행 시작일</label>
                         <input type="date" id="periodStart" th:field="*{periodStart}"
                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                               required>
+                               required />
                     </div>
                     <div class="w-1/2">
                         <label for="periodEnd" class="block text-sm font-medium text-gray-700">여행 종료일</label>
                         <input type="date" id="periodEnd" th:field="*{periodEnd}"
                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                               required>
+                               required />
                     </div>
                 </div>
 
@@ -56,11 +59,17 @@
                            class="mt-1 block w-full" accept="image/*">
                     <p class="mt-2 text-sm text-gray-500">최대 3개 사진 업로드 가능, 각 사진은 16MB 이하만 가능</p>
                     <div id="file-info" class="mt-2 text-gray-500"></div>
-                </div>
 
-                <!-- 숨겨진 필드들 -->
-                <input type="hidden" th:field="*{memberId}" th:if="${post.id == null}">
-                <input type="hidden" name="boardId" th:value="${boardId}">
+                    <!-- 기존 사진 표시 (수정 시) -->
+                    <div th:if="${post.id != null && post.photos != null && !post.photos.isEmpty()}" class="mt-4">
+                        <p class="font-medium">기존 사진:</p>
+                        <div th:each="photo, iterStat : ${post.photos}" class="mt-2">
+                            <img th:src="@{'/images/' + ${photo}}" alt="기존 사진" class="w-32 h-32 object-cover">
+                            <input type="checkbox" th:id="'delete-photo-' + ${iterStat.index}" th:name="'deletePhotos'" th:value="${iterStat.index}">
+                            <label th:for="'delete-photo-' + ${iterStat.index}">삭제</label>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- 제출 버튼 -->
                 <div class="flex justify-between mt-4">

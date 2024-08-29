@@ -122,10 +122,13 @@ public class PostViewController {
     model.addAttribute("boardId", boardId);
 
     if (postId == null) { // 게시글 작성
-      model.addAttribute("post", new PostPostDto());
+      PostPostDto postDto = new PostPostDto();
+      postDto.setBoardId(boardId);  // boardId 설정
+      model.addAttribute("post", postDto);
     } else {  // 게시글 수정
       Post post = postService.getPostById(postId);
       PostUpdateDto updateDto = postMapper.postToPostUpdateDto(post);
+      updateDto.setPostId(postId);  // postId 설정
       model.addAttribute("post", updateDto);
     }
 

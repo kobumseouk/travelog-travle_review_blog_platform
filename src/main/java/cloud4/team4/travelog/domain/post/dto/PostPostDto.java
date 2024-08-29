@@ -18,6 +18,8 @@ import java.util.List;
 @AllArgsConstructor
 public class PostPostDto {
 
+  private Long postId; // null 값
+
   @NotBlank(message = "필수 입력 항목: 제목")
   @Size(min = 1, max = 50, message = "제목은 1자 이상 50자 이하여야 합니다.")
   private String title;
