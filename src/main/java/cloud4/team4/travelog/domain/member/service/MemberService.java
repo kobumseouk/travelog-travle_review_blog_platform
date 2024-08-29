@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import java.util.Optional;
 
@@ -84,6 +85,7 @@ public class MemberService {
         member.setName(memberDto.getName());
         member.setEmail(memberDto.getEmail());
         member.setPhoneNumber(memberDto.getPhoneNumber());
+        member.setPassword(memberDto.getPassword());
         memberRepository.save(member);
     }
 
@@ -108,13 +110,26 @@ public class MemberService {
 
     //비밀번호 찾기
 
-    public String findPassword(String loginId, String name, String email, String phoneNumber) {
-        // 로그인  id로 회원정보 조회
+    public String findPassword(String loginId, String name, String email, String phoneNumber, Model model) {
         Optional<Member> memberEntity = memberRepository.findByLoginIdAndNameAndEmailAndPhoneNumber(loginId, name, email, phoneNumber);
         if (memberEntity.isPresent()) {
-            return memberEntity.get().getPassword();
+            model.addAttribute("loginId", loginId);
+            return "redirect:/resetPassword?loginId=" + loginId; // 비밀번호 재설정 페이지로 리다이렉트
         } else {
-            return ("다시 확인해주세요.");
+            model.addAttribute("error", "입력한 정보가 일치하지 않습니다.");
+            return "findPassword";
+        }
+    }
+
+    // 새로운 비밀번호로 업데이트
+    public void resetPassword(String loginId, String newPassword) {
+        Optional<Member> memberEntity = memberRepository.findByLoginId(loginId);
+        if (memberEntity.isPresent()) {
+            Member member = memberEntity.get();
+            member.setPassword(passwordEncoder.encode(newPassword));
+            memberRepository.save(member);
+        } else {
+            throw new IllegalArgumentException("회원 정보가 존재하지 않습니다.");
         }
     }
 

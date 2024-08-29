@@ -16,7 +16,7 @@
 
     <h2 class="text-center text-3xl font-bold text-gray-900 mb-8">로그인</h2>
 
-    <!-- 로그인 폼 -->
+
     <form th:action="@{/login}" method="post" class="space-y-6">
         <!-- 아이디 입력  -->
         <div>
@@ -50,6 +50,10 @@
                class="w-full sm:w-auto bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium text-center hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                 회원가입
             </a>
+        </div>
+        <!-- 오류 메시지 표시 -->
+        <div th:if="${error}" class="text-red-500 text-center mt-4">
+            <p th:text="${error}"></p>
         </div>
     </form>
 </div>

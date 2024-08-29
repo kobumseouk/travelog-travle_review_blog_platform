@@ -5,6 +5,8 @@ import cloud4.team4.travelog.domain.member.service.MemberService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +19,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequiredArgsConstructor
 public class TestController {
     private final MemberService memberService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     // 회원가입 페이지
     @GetMapping("/signup")
@@ -51,7 +56,7 @@ public class TestController {
             model.addAttribute("member", memberDto);
             return "redirect:/"; // 로그인 성공시 홈페이지 리다이렉트
         } catch (IllegalArgumentException e) {
-            model.addAttribute("로그인실패", e.getMessage());
+            model.addAttribute("error", "아이디 또는 비밀번호가 잘못되었습니다.");
             return "login"; //
         }
     }
@@ -85,10 +90,20 @@ public class TestController {
 
     //비밀번호 찾기 결과
     @PostMapping("/findPassword")
-    public String findPassword(@RequestParam("loginId") String loginId, @RequestParam("name") String name, @RequestParam("email") String email, @RequestParam("phoneNumber") String phoneNumber, Model model) {
-        String password = memberService.findPassword(loginId, name, email, phoneNumber);
-        model.addAttribute("password", password);
-        return "findPasswordResult";
+    public String findPassword(@RequestParam("loginId") String loginId, @RequestParam("name") String name,
+                               @RequestParam("email") String email, @RequestParam("phoneNumber") String phoneNumber, Model model) {
+        return memberService.findPassword(loginId, name, email, phoneNumber, model);
+    }
+    @GetMapping("/resetPassword")
+    public String resetPasswordForm(@RequestParam("loginId") String loginId, Model model) {
+        model.addAttribute("loginId", loginId);
+        return "resetPassword";
+    }
+
+    @PostMapping("/resetPassword")
+    public String resetPassword(@RequestParam("loginId") String loginId, @RequestParam("newPassword") String newPassword) {
+        memberService.resetPassword(loginId, newPassword);
+        return "redirect:/login"; // 비밀번호 재설정 후 로그인 페이지로 리다이렉트
     }
 
     //마이페이지
@@ -107,15 +122,43 @@ public class TestController {
         return "mypageEdit";
     }
 
+    // 마이페이지 수정 동작
+    @PostMapping("/mypage/edit")
+    public String updateMyPage(@ModelAttribute MemberDto memberDto, HttpSession session, Model model) {
+        try {
+            MemberDto sessionMember = (MemberDto) session.getAttribute("member");
+            memberDto.setId(sessionMember.getId()); // 세션에서 id 값을 가져와서 설정
+            memberDto.setLoginId(sessionMember.getLoginId()); // 세션에서 로그인 아이디를 가져와서 설정
 
-//    @PostMapping("/mypage/update")
-//
-//    }
-//
-//    @GetMapping("/mypage/delete")
-//
-//
-//    }
+            // 비밀번호가 비어 있으면 기존 비밀번호를 유지
+            if (memberDto.getPassword() == null || memberDto.getPassword().isEmpty()) {
+                memberDto.setPassword(sessionMember.getPassword());
+            } else {
+                memberDto.setPassword(passwordEncoder.encode(memberDto.getPassword()));
+            }
+
+            memberService.updateMember(sessionMember.getId(), memberDto);
+            session.setAttribute("member", memberDto); // 세션 업데이트
+            return "redirect:/mypage"; // 수정 후 마이페이지로 리다이렉트
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("error", e.getMessage());
+            return "mypageEdit";
+        }
+    }
 
 
+
+    // 회원 삭제 동작
+    @PostMapping("/mypage/delete")
+    public String deleteMember(HttpSession session, Model model) {
+        try {
+            MemberDto memberDto = (MemberDto) session.getAttribute("member");
+            memberService.deleteMember(memberDto.getId());
+            session.invalidate(); // 세션 무효화
+            return "redirect:/"; //
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("error", e.getMessage());
+            return "mypageEdit";
+        }
+    }
 }
