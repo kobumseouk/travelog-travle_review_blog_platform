@@ -7,7 +7,8 @@
 
 <div class="h-full">
     <div class="container mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold mb-6" th:text="${regionMajor} + ' 게시판'"></h1>
+        <h1 class="text-3xl font-bold mb-6" th:text="${regionMajor} + ' ' + (${regionMiddle} != null ? ${regionMiddle} + ' ' : '') + '게시판'"></h1>
+        <h5 class="text-3xl font-bold mb-6" th:text="${boardCategory}"></h5>
 
         <div class="mb-4 flex space-x-4">
             <!--게시판 주요지역 선택-->

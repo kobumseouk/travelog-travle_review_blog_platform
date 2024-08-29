@@ -141,6 +141,16 @@ public class PostService {
         });
   }
 
+  // 조회수 감소(새로고침 방지)
+  @Transactional
+  public void decreaseViews(Long postId) {
+    postRepository.findById(postId)
+        .ifPresent(post -> {
+          post.setViews(post.getViews() - 1);
+          postRepository.save(post);
+        });
+  }
+
   // 추천수 증가
   @Transactional
   public void incrementRecommends(Long postId) {

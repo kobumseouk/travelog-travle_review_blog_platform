@@ -1,6 +1,7 @@
 package cloud4.team4.travelog.domain.post.controller;
 
 import cloud4.team4.travelog.domain.board.dto.BoardViewResponse;
+import cloud4.team4.travelog.domain.board.entity.Board;
 import cloud4.team4.travelog.domain.board.service.BoardService;
 import cloud4.team4.travelog.domain.comment.dto.CommentPagingInfo;
 import cloud4.team4.travelog.domain.comment.dto.CommentRequestDto;
@@ -47,8 +48,11 @@ public class PostViewController {
                           @RequestParam(name = "keyword", required = false) String keyword,
                           Model model) {
 
+
     Pageable pageable = PageRequest.of(page - 1, 10, postService.createSort(sortBy));
     Page<PostListViewResponse> posts = postService.getPostsByRegionMajor(regionMajor, searchType, keyword, pageable);
+
+    Board board = boardService.getBoardById(boardId);
 
     // 모든 게시판 중복 제거 후 찾기
     List<String> uniqueRegionMajors = boardService.getAllBoards().stream()
@@ -61,9 +65,10 @@ public class PostViewController {
     model.addAttribute("currentPage", posts.getNumber() + 1);
     model.addAttribute("totalPages", posts.getTotalPages());
     model.addAttribute("regionMajor", regionMajor);
+    model.addAttribute("regionMiddle", board.getRegionMiddle());
     model.addAttribute("boardId", boardId);
+    model.addAttribute("boardCategory", board.getBoardCategory());
     model.addAttribute("allRegionMajors", uniqueRegionMajors);
-    model.addAttribute("middleBoards", MiddleBoards);
     model.addAttribute("sortBy", sortBy);
     model.addAttribute("searchType", searchType);
     model.addAttribute("keyword", keyword);
@@ -81,7 +86,6 @@ public class PostViewController {
                      Model model) {
 
     Post post = postService.getPostById(postId);
-
     postService.incrementViews(postId);  // 방문마다 조회수 증가
 
 
@@ -106,6 +110,7 @@ public class PostViewController {
     // 로그인 한 멤버의 id
     Long memberId = (Long) model.getAttribute("loginMember");
 
+    postService.decreaseViews(postId);
     postLikeService.likePost(memberId, postId);
 
     return "redirect:/board/" + regionMajor + "/" + boardId + "/posts/" + postId;
