@@ -26,6 +26,8 @@ public interface PostMapper {
   @Mapping(source = "postPhotos", target = "photos")
   PostResponseDto postToPostResponseDto(Post post);
 
+  PostUpdateDto postToPostUpdateDto(Post post);
+
   default Long mapMemberToLong(Member member) {
     return member != null ? member.getId() : null;
   }

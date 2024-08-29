@@ -58,7 +58,10 @@ public class PostService {
     post.setRecommends(0);
 
     Post createdPost = postRepository.save(post);
-    postPhotoService.uploadPhoto(createdPost, postPostDto.getPhotos(), postPostDto.getPhotoPositions());
+    // 사진이 있는 경우에만 올림
+    if (postPostDto.getPhotos() != null && !postPostDto.getPhotos().isEmpty()) {
+      postPhotoService.uploadPhoto(createdPost, postPostDto.getPhotos());
+    }
     return createdPost;
   }
 
@@ -85,7 +88,7 @@ public class PostService {
     post.setPeriodEnd(postDetails.getPeriodEnd());
     post.setEditedAt(LocalDateTime.now());
 
-    postPhotoService.updatePhoto(postId, postDetails.getPhotos(), postDetails.getPhotoPositions());
+    postPhotoService.updatePhoto(postId, postDetails.getPhotos());
     return postRepository.save(post);
   }
 

@@ -1,6 +1,7 @@
 package cloud4.team4.travelog.domain.post.controller;
 
 
+import cloud4.team4.travelog.domain.member.dto.MemberDto;
 import cloud4.team4.travelog.domain.post.dto.PostPostDto;
 import cloud4.team4.travelog.domain.post.dto.PostResponseDto;
 import cloud4.team4.travelog.domain.post.dto.PostUpdateDto;
@@ -8,6 +9,7 @@ import cloud4.team4.travelog.domain.post.entity.Post;
 import cloud4.team4.travelog.domain.post.dto.PostMapper;
 import cloud4.team4.travelog.domain.post.exception.ResourceNotFoundException;
 import cloud4.team4.travelog.domain.post.service.PostService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -42,11 +44,11 @@ public class PostController {
       PostResponseDto responseDto = postMapper.postToPostResponseDto(createdPost);
       return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     } catch (IllegalArgumentException e) {
-      return ResponseEntity.badRequest().body(e.getMessage());  // 적절한 입력을 하지 못했을 때 오류
+      return ResponseEntity.badRequest().body(e.getMessage());
     } catch (IOException e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 업로드 중 오류 발생");
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 업로드 중 오류 발생: " + e.getMessage());
     } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류");
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류: " + e.getMessage());
     }
   }
 
@@ -105,5 +107,13 @@ public class PostController {
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
+  }
+
+  @ModelAttribute("loginMember")
+  public Long loginMemberId(HttpSession session) {
+    // 세션에서 로그인한 멤버의 id 값 가져옴
+    MemberDto memberDto = (MemberDto) session.getAttribute("member");
+    if(memberDto == null) return null;
+    return memberDto.getId();
   }
 }

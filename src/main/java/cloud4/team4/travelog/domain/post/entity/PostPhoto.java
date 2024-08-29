@@ -35,15 +35,11 @@ public class PostPhoto {
   @Column(columnDefinition = "MEDIUMBLOB")
   private byte[] imageData;
 
-  @NotBlank
-  @Column(name = "position")   // 게시글 내 위치 정보 추가
-  private String position;
 
-  public PostPhoto(String imageName, byte[] imageData, Post post, String position) {
+  public PostPhoto(String imageName, byte[] imageData, Post post) {
     this.imageName = imageName;
     this.imageData = imageData;
     this.post = post;
-    this.position = position;
   }
 
   // Base64 문자열 추가
