@@ -1,6 +1,7 @@
 package cloud4.team4.travelog.domain.post.controller;
 
 import cloud4.team4.travelog.domain.board.dto.BoardViewResponse;
+import cloud4.team4.travelog.domain.board.entity.Board;
 import cloud4.team4.travelog.domain.board.service.BoardService;
 import cloud4.team4.travelog.domain.comment.dto.CommentPagingInfo;
 import cloud4.team4.travelog.domain.comment.dto.CommentRequestDto;
@@ -41,32 +42,39 @@ public class PostViewController {
   @GetMapping("/board/{regionMajor}/{boardId}/posts")
   public String listPosts(@PathVariable(name = "regionMajor") String regionMajor,
                           @PathVariable(name = "boardId") Long boardId,
+                          @RequestParam(name = "regionMiddle", required = false) String regionMiddle,
                           @RequestParam(name = "page", defaultValue = "1") int page,
                           @RequestParam(name = "sortBy", defaultValue = "createdAt") String sortBy,
                           @RequestParam(name = "searchType", required = false) String searchType,
                           @RequestParam(name = "keyword", required = false) String keyword,
                           Model model) {
 
-    Pageable pageable = PageRequest.of(page - 1, 10, postService.createSort(sortBy));
-    Page<PostListViewResponse> posts = postService.getPostsByRegionMajor(regionMajor, searchType, keyword, pageable);
+    Board board = boardService.getBoardById(boardId);
+    String defaultRegionMiddle = board.getRegionMiddle();
 
-    // 모든 게시판 중복 제거 후 찾기
-    List<String> uniqueRegionMajors = boardService.getAllBoards().stream()
-        .map(BoardViewResponse::getRegionMajor)
-        .distinct()
-        .collect(Collectors.toList());
-    List<BoardViewResponse> MiddleBoards = boardService.getMiddleBoards(regionMajor);
+    // regionMiddle이 null이면 board의 regionMiddle을 사용
+    if (regionMiddle == null) {
+      regionMiddle = defaultRegionMiddle;
+    }
+
+    Pageable pageable = PageRequest.of(page - 1, 10, postService.createSort(sortBy));
+    Page<PostListViewResponse> posts = postService.getPostsByRegionMiddle(regionMiddle, searchType, keyword, pageable);
+
+    List<BoardViewResponse> middleBoards = boardService.getMiddleBoards(regionMajor);
 
     model.addAttribute("posts", posts);
     model.addAttribute("currentPage", posts.getNumber() + 1);
     model.addAttribute("totalPages", posts.getTotalPages());
     model.addAttribute("regionMajor", regionMajor);
     model.addAttribute("boardId", boardId);
-    model.addAttribute("allRegionMajors", uniqueRegionMajors);
-    model.addAttribute("middleBoards", MiddleBoards);
+    model.addAttribute("boardCategory", board.getBoardCategory());
     model.addAttribute("sortBy", sortBy);
     model.addAttribute("searchType", searchType);
     model.addAttribute("keyword", keyword);
+    model.addAttribute("regionMiddle", regionMiddle);
+    if(board.getBoardCategory().equals("여행후기")) {
+      model.addAttribute("MiddleBoards", middleBoards);
+    }
 
     return "boardPosts";
   }
@@ -81,7 +89,6 @@ public class PostViewController {
                      Model model) {
 
     Post post = postService.getPostById(postId);
-
     postService.incrementViews(postId);  // 방문마다 조회수 증가
 
 
@@ -106,6 +113,7 @@ public class PostViewController {
     // 로그인 한 멤버의 id
     Long memberId = (Long) model.getAttribute("loginMember");
 
+    postService.decreaseViews(postId);
     postLikeService.likePost(memberId, postId);
 
     return "redirect:/board/" + regionMajor + "/" + boardId + "/posts/" + postId;

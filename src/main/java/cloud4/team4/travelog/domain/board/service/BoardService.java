@@ -156,4 +156,5 @@ public class BoardService {
             default -> regionMajor;
         };
     }
+
 }

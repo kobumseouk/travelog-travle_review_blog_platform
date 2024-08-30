@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const regionMajorSelect = document.getElementById('regionMajorSelect');
+    const regionMiddleSelect = document.getElementById('regionMiddleSelect');
     const searchTypeSelect = document.getElementById('searchTypeSelect');
     const searchInput = document.getElementById('searchInput');
     const searchBtn = document.getElementById('searchBtn');
@@ -11,11 +11,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const currentRegionMajor = urlParts[2];
     const currentBoardId = urlParts[3];
 
-    // 게시판 이동
-    regionMajorSelect.addEventListener('change', function() {
-        if (this.value !== currentRegionMajor) {        // 값이 변경되면 해당 게시판 페이지로 이동
-            window.location.href = `/boards/${this.value}`;
-        }
+    // 게시판 이동 (regionMiddle 선택 시)
+    regionMiddleSelect.addEventListener('change', function() {
+        const selectedRegionMiddle = this.value;
+        window.location.href = `/board/${currentRegionMajor}/${currentBoardId}/posts?regionMiddle=${selectedRegionMiddle}`;
     });
 
     searchBtn.addEventListener('click', search);
@@ -23,12 +22,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 제목, 내용으로 분류를 나누고 현재 정렬 방식으로 찾기
     function search() {
-        const regionMajor = regionMajorSelect.value;
+        const regionMiddle = regionMiddleSelect.value;
         const searchType = searchTypeSelect.value;
         const keyword = searchInput.value;
         const currentSort = sortSelect.value;
 
-        let url = `/board/${regionMajor}/${currentBoardId}/posts?sortBy=${currentSort}`;
+        let url = `/board/${currentRegionMajor}/${currentBoardId}/posts?sortBy=${currentSort}&regionMiddle=${regionMiddle}`;
 
         if (searchType && keyword) {
             url += `&searchType=${searchType}&keyword=${keyword}`;
@@ -42,6 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const sortBy = sortSelect.value;
         const urlParams = new URLSearchParams(window.location.search);
         urlParams.set('sortBy', sortBy);
-        window.location.href = `/board/${currentRegionMajor}/${currentBoardId}/posts?${urlParams.toString()}`;
+        urlParams.set('regionMiddle', regionMiddleSelect.value);
+        window.location.search = urlParams.toString();
     }
 });
