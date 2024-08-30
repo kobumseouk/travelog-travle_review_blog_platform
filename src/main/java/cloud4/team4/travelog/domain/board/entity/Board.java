@@ -9,6 +9,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 
@@ -64,15 +65,19 @@ public class Board {
 
     // 이미지 저장 경로
     @Column(name = "image_path")
-    private String imagePath;
+    private String imageName;
+
+    @Lob
+    @Column(columnDefinition = "MEDIUMBLOB")
+    private byte[] imageData;
 
 
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
+    public void setImage(String imageName, byte[] imageData) {
+        this.imageName = imageName;
+        this.imageData = imageData;
     }
 
 
-    //@Builder
     public Board(String description, String regionMajor, String regionMiddle,
                  String boardCategory, LocalDateTime createdAt) {
         this.description = description;
@@ -82,8 +87,20 @@ public class Board {
         this.createdAt = createdAt;
     }
 
+
+    public Board(String imageName, byte[] imageData) {
+        this.imageName = imageName;
+        this.imageData = imageData;
+    }
+
+
     public void updateDescription(String description) {
         this.description = description;
+    }
+
+
+    public String getBase64Image() {
+        return Base64.getEncoder().encodeToString(this.imageData);
     }
 
 }

@@ -1,5 +1,6 @@
 package cloud4.team4.travelog.domain.board.service;
 
+import cloud4.team4.travelog.domain.board.entity.Board;
 import cloud4.team4.travelog.domain.board.repository.BoardRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -23,24 +24,18 @@ public class BoardImageService {
 
     // 사진 추가
     @Transactional
-    public String saveImage(MultipartFile image) throws Exception {
+    public void saveImage(Board board, MultipartFile image) throws Exception {
         try {
-            // 사진 저장 디렉토리
-            String saveDir = "src/main/resources/static/uploads/board_images/";
-
             // 파일이 비어있는지 확인
             if (image == null || image.isEmpty()) throw new RuntimeException("사진을 업로드해주세요");
 
             // 파일이 이미지인지 확인
             if (!isImageFile(image)) throw new IllegalArgumentException("사진 이외 파일은 업로드 불가");
 
-            // 게시판을 저장
-            // Board savedBoard = boardRepository.save(board);
+            String imageNameUUID = UUID.randomUUID().toString().replace("-", "") + "_" + image.getOriginalFilename();
+            board.setImage(imageNameUUID, image.getBytes());
+            boardRepository.save(board);
 
-            // 경로를 DB에 저장
-            String dbFilePath = saveImage(image, saveDir);
-
-            return dbFilePath;
 
         } catch (IOException e) {
             throw new RuntimeException("업로드 중 오류 발생", e);
@@ -91,21 +86,22 @@ public class BoardImageService {
     /* DELETE */
 
     // 디렉토리에 저장된 사진 삭제
-    public void deleteImage(String imagePath) {
-        try {
-            // 실제 파일 경로
-            String relativePath = "src/main/resources/static" + imagePath;
-            Path path = Paths.get(relativePath);
-
-            // 파일이 존재하는지 확인하고 삭제
-            if (Files.exists(path)) {
-                Files.delete(path);
-            } else {
-                throw new RuntimeException("해당 경로에 파일이 존재하지 않습니다: " + relativePath);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("이미지 삭제 중 오류 발생", e);
-        }
+    public void deleteImage(Board board) {
+//        try {
+            board.setImage(null, null);
+//            // 실제 파일 경로
+//            String relativePath = "src/main/resources/static" + imagePath;
+//            Path path = Paths.get(relativePath);
+//
+//            // 파일이 존재하는지 확인하고 삭제
+//            if (Files.exists(path)) {
+//                Files.delete(path);
+//            } else {
+//                throw new RuntimeException("해당 경로에 파일이 존재하지 않습니다: " + relativePath);
+//            }
+//        } catch (IOException e) {
+//            throw new RuntimeException("이미지 삭제 중 오류 발생", e);
+//        }
     }
 
 

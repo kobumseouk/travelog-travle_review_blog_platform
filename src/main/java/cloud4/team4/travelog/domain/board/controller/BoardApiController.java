@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.parameters.P;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.net.URI;
 import java.util.List;
@@ -67,11 +68,15 @@ public class BoardApiController {
 //    }
 
 
-    @PutMapping("/board-update/{id}")
+    @PostMapping("/board-update/{id}")
     public ResponseEntity<Void> updateBoard(@PathVariable("id") Long id,
-                                            @ModelAttribute BoardUpdateRequestDto requestDto) {
+                                            @ModelAttribute("requestDto") BoardUpdateRequestDto requestDto) {
+
+        System.out.println("requestDto = " + requestDto.getDescription());
+        System.out.println("requestDto = " + requestDto.getRegionMajor());
         try {
             boardService.updateDescription(id, requestDto);
+
             boardService.updateImage(id, requestDto);
             return ResponseEntity.status(HttpStatus.FOUND)
                     .location(URI.create("/")) // 수정 후 리다이렉트할 경로
@@ -81,33 +86,6 @@ public class BoardApiController {
                     .build(); // 예외 메시지는 사용자에게 직접 노출하지 않음
         }
     }
-
-
-
-    // 게시판 사진 수정
-//    @PutMapping(value = "/update-image/{id}", consumes = "multipart/form-data")
-//    public ResponseEntity<String> updateImage(@PathVariable("id") Long id,
-//                                              @ModelAttribute BoardImageRequestDto requestDto) {
-//        try {
-//            boardService.updateImage(id, requestDto);
-//            return ResponseEntity.status(HttpStatus.FOUND)
-//                    .location(URI.create("/"))
-//                    .build();
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-//                    .body(e.getMessage());
-//        }
-//    }
-
-
-    // update
-//    @PostMapping("/api/board/{id}/update")
-//    public String updateBoard(@PathVariable("id") Long id, @RequestParam("description") String description, @RequestParam("image") MultipartFile image) {
-//        // 이미지와 설명 업데이트 로직
-//        boardService.updateBoard(id, description, image);
-//        return "redirect:/board/" + id; // 업데이트 후 리다이렉트
-//    }
-
 
 
 
