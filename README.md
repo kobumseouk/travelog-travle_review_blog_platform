@@ -204,9 +204,9 @@
 
 
 
-##게시판
+## 게시판
 
-#게시판 기능
+# 게시판 기능
 
 게시판 생성 (Create)
 
@@ -250,7 +250,7 @@
 
 마찬가지로 중분류 게시판 목록 화면에서 버튼을 확인할 수 있다.
 
-#게시글 디렉토리 구조
+# 게시글 디렉토리 구조
 
 -Controller
 BoardApiController
@@ -279,5 +279,5 @@ createboard.html
 updateboard.html
 
 
-##댓글
+## 댓글
 
