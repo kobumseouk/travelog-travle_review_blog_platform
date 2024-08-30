@@ -206,6 +206,9 @@
 
 ## 게시판
 
+!!!업데이트 버그!!!
+사진을 변경하지 않으면 게시판 수정이 안 되는 버그 존재.
+
 # 게시판 기능
 
 게시판 생성 (Create)
@@ -252,32 +255,33 @@
 
 # 게시글 디렉토리 구조
 
--Controller
-BoardApiController
-BoardViewController
+-Controller.
+BoardApiController.
+BoardViewController.
 
--Service
-BoardService
-BoardImageService
+-Service.
+BoardService.
+BoardImageService.
 
--Repository
-BoardRepository
+-Repository.
+BoardRepository.
 
--Board
-BoardMapper
+-Board.
+BoardMapper.
 
--Dto
-BoardRequestDto
-BoardUpdateRequestDto
-BoardViewResponseDto
-BoardDescRequestDto
+-Dto.
+BoardRequestDto.
+BoardUpdateRequestDto.
+BoardViewResponseDto.
+BoardDescRequestDto.
 
--HTML
-mainboard.html
-middleboard.html
-createboard.html
-updateboard.html
+-HTML.
+mainboard.html.
+middleboard.html.
+createboard.html.
+updateboard.html.
 
 
-## 댓글
+
+## 유저
 
