@@ -51,6 +51,7 @@ public class PostViewController {
 
     Board board = boardService.getBoardById(boardId);
     String defaultRegionMiddle = board.getRegionMiddle();
+    String koreanRegionMajor = boardService.convertToKorean(regionMajor);
 
     // regionMiddle이 null이면 board의 regionMiddle을 사용
     if (regionMiddle == null) {
@@ -72,6 +73,7 @@ public class PostViewController {
     model.addAttribute("searchType", searchType);
     model.addAttribute("keyword", keyword);
     model.addAttribute("regionMiddle", regionMiddle);
+    model.addAttribute("koreanRegionMajor", koreanRegionMajor);
     if(board.getBoardCategory().equals("여행후기")) {
       model.addAttribute("MiddleBoards", middleBoards);
     }
@@ -90,7 +92,7 @@ public class PostViewController {
 
     Post post = postService.getPostById(postId);
     postService.incrementViews(postId);  // 방문마다 조회수 증가
-
+    String boardCategory = post.getBoard().getBoardCategory();
 
     model.addAttribute("regionMajor", regionMajor);
     model.addAttribute("boardId", boardId);
@@ -98,7 +100,7 @@ public class PostViewController {
     model.addAttribute("post", postMapper.postToPostResponseDto(post));
     model.addAttribute("comments", commentService.findPagedCommentsByPostId(postId, commentPage, commentPagingInfo));
 
-    if(post.getBoard().getBoardCategory().equals("여행후기")) model.addAttribute("averageRating", commentService.getAverageRating(postId));
+    if(boardCategory.equals("여행후기")) model.addAttribute("averageRating", commentService.getAverageRating(postId));
 
     return "post";
   }
@@ -128,7 +130,10 @@ public class PostViewController {
 
     // 로그인 한 멤버의 id
     Long memberId = (Long) model.getAttribute("loginMember");
+    Board board = boardService.getBoardById(boardId);
+    String boardCategory = board.getBoardCategory();
 
+    model.addAttribute("boardCategory", boardCategory);
     model.addAttribute("regionMajor", regionMajor);
     model.addAttribute("boardId", boardId);
 
@@ -148,6 +153,89 @@ public class PostViewController {
 
     return "newPost";
 
+  }
+
+  @GetMapping("/board/{regionMajor}/qna/posts")
+  public String listQnaPosts(@PathVariable(name = "regionMajor") String regionMajor,
+                         @RequestParam(name = "page", defaultValue = "1") int page,
+                         @RequestParam(name = "sortBy", defaultValue = "createdAt") String sortBy,
+                         @RequestParam(name = "searchType", required = false) String searchType,
+                         @RequestParam(name = "keyword", required = false) String keyword,
+                         Model model) {
+
+    Pageable pageable = PageRequest.of(page - 1, 10, postService.createSort(sortBy));
+    Page<PostListViewResponse> posts = postService.getPostsByRegionMajor(regionMajor, searchType, keyword, pageable);
+    String koreanRegionMajor = boardService.convertToKorean(regionMajor);
+
+    model.addAttribute("posts", posts);
+    model.addAttribute("currentPage", posts.getNumber() + 1);
+    model.addAttribute("totalPages", posts.getTotalPages());
+    model.addAttribute("regionMajor", regionMajor);
+    model.addAttribute("koreanRegionMajor", koreanRegionMajor);
+    model.addAttribute("boardCategory", "질의응답");
+    model.addAttribute("sortBy", sortBy);
+    model.addAttribute("searchType", searchType);
+    model.addAttribute("keyword", keyword);
+
+    return "qnaBoardPosts";
+  }
+
+  @GetMapping("/board/{regionMajor}/qna/posts/{postId}")
+  public String qnaPost(@PathVariable("regionMajor") String regionMajor,
+                        @PathVariable("postId") Long postId,
+                        @RequestParam(required = false, value = "commentPage", defaultValue = "1") int commentPage,
+                        @ModelAttribute("commentPagingInfo") CommentPagingInfo commentPagingInfo,
+                        Model model) {
+
+    Post post = postService.getPostById(postId);
+    postService.incrementViews(postId);
+
+    model.addAttribute("regionMajor", regionMajor);
+    model.addAttribute("commentRequestDto", new CommentRequestDto());
+    model.addAttribute("post", postMapper.postToPostResponseDto(post));
+    model.addAttribute("comments", commentService.findPagedCommentsByPostId(postId, commentPage, commentPagingInfo));
+
+    return "qnaPost";
+  }
+
+  @GetMapping("/board/{regionMajor}/qna/posts/{postId}/like")
+  public String likeQnaPost(@PathVariable("regionMajor") String regionMajor,
+                            @PathVariable("postId") Long postId,
+                            Model model) {
+
+    // 로그인 한 멤버의 id
+    Long memberId = (Long) model.getAttribute("loginMember");
+
+    postService.decreaseViews(postId);
+    postLikeService.likePost(memberId, postId);
+
+    return "redirect:/board/" + regionMajor + "/qna/posts/" + postId;
+  }
+
+  @GetMapping("/board/{regionMajor}/qna/posts/post-new")
+  public String qnaNewPost(@PathVariable("regionMajor") String regionMajor,
+                           @RequestParam(required = false, name = "postId") Long postId,
+                           Model model) {
+    // 로그인 한 멤버의 id
+    Long memberId = (Long) model.getAttribute("loginMember");
+
+    model.addAttribute("regionMajor", regionMajor);
+    model.addAttribute("boardCategory", "질의응답");
+
+    if (postId == null) { // 게시글 작성
+      PostPostDto postDto = new PostPostDto();
+      postDto.setMemberId(memberId);
+      model.addAttribute("post", postDto);
+    } else { // 게시글 수정
+      Post post = postService.getPostById(postId);
+
+      PostUpdateDto updateDto = postMapper.postToPostUpdateDto(post);
+      updateDto.setId(postId);
+      updateDto.setMemberId(memberId);
+      model.addAttribute("post", updateDto);
+    }
+
+    return "qnaNewPost";
   }
 
   @ModelAttribute("loginMember")
