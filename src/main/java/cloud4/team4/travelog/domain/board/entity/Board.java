@@ -32,22 +32,24 @@ public class Board {
 
 
     //  여행지 대분류 - 서울, 경기도, 충청도 등.
-    @Column(name = "region_major")
-    private String regionMajor;             //  미리 정의할 필드
+    @Column(name = "region_major", nullable = false)
+    private String regionMajor;
 
 
     // 여행지 소분류 - 강남, 강북 등.
-     @Column(name = "region_middle")
-     private String regionMiddle;            // 사용자 입력으로 받을 필드
+    // 이 필드는 사용자 입력으로 받는다.
+     @Column(name = "region_middle", nullable = false)
+     private String regionMiddle;
 
 
     // 게시판에 대한 설명
+    // 사용자가 게시판에 대한 설명을 입력한다.
     @Column(name = "description")
-    private String description;             // 사용자가 설명을 추가하도록 한다.
+    private String description;
 
 
     // 게시판 분류
-    @Column(name = "board_category")
+    @Column(name = "board_category", nullable = false)
     private String boardCategory;
 
 
@@ -64,7 +66,7 @@ public class Board {
 
 
     // 이미지 저장 경로
-    @Column(name = "image_path")
+    @Column(name = "image_name")
     private String imageName;
 
     @Lob
@@ -87,7 +89,7 @@ public class Board {
         this.createdAt = createdAt;
     }
 
-
+    // 이미지 저장 로직을 구현하기 위한 생성자.
     public Board(String imageName, byte[] imageData) {
         this.imageName = imageName;
         this.imageData = imageData;

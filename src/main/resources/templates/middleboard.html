@@ -23,16 +23,13 @@
             <div th:each="board : ${middleboard}" class="bg-white shadow-md rounded-lg overflow-hidden transform transition-transform duration-300 hover:scale-105">
                 <!-- 게시글 요소를 클릭하면 URL로 이동 -->
                 <a th:href="@{'/board/' + ${board.regionMajor} + '/' + ${board.id} + '/posts'}" class="block">
-                    <img th:src="'data:image/jpeg;base64,' + ${board.base64Image}"/>
+                    <!-- 이미지 크기를 고정시키기 위해 추가한 클래스 -->
+                    <img th:src="'data:image/jpeg;base64,' + ${board.base64Image}" class="w-full h-48 object-cover"/>
                     <div class="p-4">
                         <h3 class="text-l font-semibold" th:text="${regionMajorKorean} + ' - ' + ${board.regionMiddle}"></h3>
                         <p class="text-gray-600 mt-2" th:text="${board.description}"></p>
                     </div>
                 </a>
-
-
-
-
 
                 <!-- 수정하기 및 삭제하기 버튼 -->
                 <div class="flex justify-between p-4" th:if="${loginMember != null}">
