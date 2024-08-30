@@ -13,7 +13,7 @@ function deletePost(button) {
                 if (response.ok) {
                     alert('게시글이 삭제되었습니다.');
                     // 게시글 목록 페이지 이동
-                    location.replace(`/boards/${regionMajor}/${boardId}/posts`);
+                    location.replace(`/board/${regionMajor}/${boardId}/posts`);
                 } else {
                     alert('게시글 삭제를 실패했습니다.');
                 }
