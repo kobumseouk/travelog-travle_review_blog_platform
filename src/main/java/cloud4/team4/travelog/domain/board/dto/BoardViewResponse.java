@@ -10,6 +10,7 @@ public class BoardViewResponse {
     private String regionMajor;
     private String regionMiddle;
     private String imagePath;
+    private String boardCategory;
 
     public BoardViewResponse(Board board) {
         this.id = board.getId();
@@ -17,5 +18,6 @@ public class BoardViewResponse {
         this.regionMajor = board.getRegionMajor();
         this.regionMiddle = board.getRegionMiddle();
         this.imagePath = board.getImagePath();
+        this.boardCategory = board.getBoardCategory();
     }
 }

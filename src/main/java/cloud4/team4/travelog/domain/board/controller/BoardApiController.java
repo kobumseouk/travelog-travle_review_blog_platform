@@ -1,14 +1,12 @@
 package cloud4.team4.travelog.domain.board.controller;
 
-import cloud4.team4.travelog.domain.board.dto.BoardImageRequestDto;
-import cloud4.team4.travelog.domain.board.dto.BoardRequestDto;
-import cloud4.team4.travelog.domain.board.dto.BoardDescRequestDto;
-import cloud4.team4.travelog.domain.board.dto.BoardViewResponse;
+import cloud4.team4.travelog.domain.board.dto.*;
 import cloud4.team4.travelog.domain.board.service.BoardImageService;
 import cloud4.team4.travelog.domain.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -63,27 +61,43 @@ public class BoardApiController {
     /* UPDATE */
 
     // 게시판 설명 수정
-    @PutMapping("/update-description/{id}")
-    public Long updateDescription(@PathVariable("id") Long id, @RequestBody BoardDescRequestDto requestDto){
-        return boardService.updateDescription(id, requestDto);
+//    @PutMapping("/update-description/{id}")
+//    public Long updateDescription(@PathVariable("id") Long id, @RequestBody BoardDescRequestDto requestDto){
+//        return boardService.updateDescription(id, requestDto);
+//    }
+
+
+    @PutMapping("/board-update/{id}")
+    public ResponseEntity<Void> updateBoard(@PathVariable("id") Long id,
+                                            @ModelAttribute BoardUpdateRequestDto requestDto) {
+        try {
+            boardService.updateDescription(id, requestDto);
+            boardService.updateImage(id, requestDto);
+            return ResponseEntity.status(HttpStatus.FOUND)
+                    .location(URI.create("/")) // 수정 후 리다이렉트할 경로
+                    .build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .build(); // 예외 메시지는 사용자에게 직접 노출하지 않음
+        }
     }
 
 
 
     // 게시판 사진 수정
-    @PutMapping(value = "/update-image/{id}", consumes = "multipart/form-data")
-    public ResponseEntity<String> updateImage(@PathVariable("id") Long id,
-                                              @ModelAttribute BoardImageRequestDto requestDto) {
-        try {
-            boardService.updateImage(id, requestDto);
-            return ResponseEntity.status(HttpStatus.FOUND)
-                    .location(URI.create("/"))
-                    .build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(e.getMessage());
-        }
-    }
+//    @PutMapping(value = "/update-image/{id}", consumes = "multipart/form-data")
+//    public ResponseEntity<String> updateImage(@PathVariable("id") Long id,
+//                                              @ModelAttribute BoardImageRequestDto requestDto) {
+//        try {
+//            boardService.updateImage(id, requestDto);
+//            return ResponseEntity.status(HttpStatus.FOUND)
+//                    .location(URI.create("/"))
+//                    .build();
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+//                    .body(e.getMessage());
+//        }
+//    }
 
 
     // update

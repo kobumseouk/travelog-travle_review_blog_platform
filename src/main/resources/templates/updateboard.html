@@ -6,24 +6,28 @@
 
 <div class="h-full flex justify-center items-center">
     <div class="container mx-auto max-w-lg px-4 py-8 bg-white shadow-md rounded-lg relative">
-        <!-- 이전 페이지로 돌아가는 버튼 -->
         <a href="javascript:history.back()" class="absolute top-0 right-0 mt-2 mr-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-1 px-3 rounded">이전</a>
 
         <h2 class="text-2xl font-bold mb-6 text-center">여행지 정보 수정하기</h2>
-        <form action="/update-description/{id}" method="POST" enctype="multipart/form-data" class="space-y-4">
-            <!-- 이미지 업로드 -->
+        <form th:action="@{/board-update/{id}(id=${board.id})}" method="post" enctype="multipart/form-data" class="space-y-4">
+            <input type="hidden" name="_method" value="PUT"/> <!-- HiddenHttpMethodFilter 사용 -->
+
+            <!-- CSRF 토큰 필드를 제거했습니다. -->
+
+            <!-- 이미지 업로드 및 미리보기 -->
             <div>
                 <label for="image" class="block text-sm font-medium text-gray-700"></label>
                 <div class="flex justify-center">
-                    <!-- 기존 이미지 미리보기 -->
-                    <img th:src="@{${board.imagePath}}" alt="기존 이미지" class="h-48 w-48 object-cover mt-2 rounded-md border border-gray-300 shadow-sm">
+                    <div class="relative h-48 w-48 border border-gray-300 rounded-md shadow-sm flex items-center justify-center bg-gray-100">
+                        <img id="imagePreview" th:src="${board.imagePath}" alt="이미지를 선택하세요" class="h-full w-full object-cover rounded-md">
+                    </div>
                 </div>
                 <!-- 이미지 변경 버튼 -->
                 <div class="flex justify-center mt-2">
                     <label for="image" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-1 px-3 rounded cursor-pointer text-sm">
                         이미지 변경
                     </label>
-                    <input type="file" id="image" name="image" class="hidden">
+                    <input type="file" id="image" name="image" class="hidden" onchange="previewImage(event)">
                 </div>
             </div>
 
@@ -60,10 +64,20 @@
             </div>
         </form>
     </div>
-    <!-- 게시판 수정 폼 끝 -->
 </div>
 
 <div th:replace="~{fragments/footer :: footer}"></div>
 </body>
+
 <script src="/js/footer.js"></script>
+<script>
+    function previewImage(event) {
+        var reader = new FileReader();
+        reader.onload = function () {
+            var output = document.getElementById('imagePreview');
+            output.src = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+</script>
 </html>
