@@ -7,6 +7,7 @@ import cloud4.team4.travelog.domain.board.repository.BoardRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -62,14 +63,10 @@ public class BoardService {
     }
 
     // 사진과 함께 대분류(regionMajor)에 따른 게시판 조회
-    public List<BoardViewResponse> getMiddleBoards(String regionMajor) {
-        List<Board> boards = boardRepository.findByRegionMajor(regionMajor);
+    public List<Board> getMiddleBoards(String regionMajor) {
 
-        List<BoardViewResponse> result = boards.stream()
-                .map(BoardViewResponse::new)
-                .collect(Collectors.toList());
 
-        return result;
+        return boardRepository.findByRegionMajor(regionMajor);
     }
 
 
@@ -87,8 +84,8 @@ public class BoardService {
     public void updateImage(Long id, BoardUpdateRequestDto requestDto) {
         Board board = boardRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시판이 없습니다. id= " + id));
 
-        boardImageService.deleteImage(board.getImageName());
-
+        boardImageService.deleteImage(board);
+        System.out.println("삭제 완");
         try {
             boardImageService.saveImage(board, requestDto.getImage());
 
@@ -128,7 +125,7 @@ public class BoardService {
         boardRepository.delete(board);
 
         // static에 저장된 사진 삭제
-        boardImageService.deleteImage(board.getImageName());
+//        boardImageService.deleteImage(board.getImageName());
     }
 
 

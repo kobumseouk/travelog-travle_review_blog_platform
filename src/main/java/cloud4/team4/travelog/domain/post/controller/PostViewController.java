@@ -60,7 +60,7 @@ public class PostViewController {
     Pageable pageable = PageRequest.of(page - 1, 10, postService.createSort(sortBy));
     Page<PostListViewResponse> posts = postService.getPostsByRegionMiddle(regionMiddle, searchType, keyword, pageable);
 
-    List<BoardViewResponse> middleBoards = boardService.getMiddleBoards(regionMajor);
+    List<Board> middleBoards = boardService.getMiddleBoards(regionMajor);
 
     model.addAttribute("posts", posts);
     model.addAttribute("currentPage", posts.getNumber() + 1);

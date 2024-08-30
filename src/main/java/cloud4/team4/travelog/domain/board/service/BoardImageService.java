@@ -86,21 +86,22 @@ public class BoardImageService {
     /* DELETE */
 
     // 디렉토리에 저장된 사진 삭제
-    public void deleteImage(String imagePath) {
-        try {
-            // 실제 파일 경로
-            String relativePath = "src/main/resources/static" + imagePath;
-            Path path = Paths.get(relativePath);
-
-            // 파일이 존재하는지 확인하고 삭제
-            if (Files.exists(path)) {
-                Files.delete(path);
-            } else {
-                throw new RuntimeException("해당 경로에 파일이 존재하지 않습니다: " + relativePath);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("이미지 삭제 중 오류 발생", e);
-        }
+    public void deleteImage(Board board) {
+//        try {
+            board.setImage(null, null);
+//            // 실제 파일 경로
+//            String relativePath = "src/main/resources/static" + imagePath;
+//            Path path = Paths.get(relativePath);
+//
+//            // 파일이 존재하는지 확인하고 삭제
+//            if (Files.exists(path)) {
+//                Files.delete(path);
+//            } else {
+//                throw new RuntimeException("해당 경로에 파일이 존재하지 않습니다: " + relativePath);
+//            }
+//        } catch (IOException e) {
+//            throw new RuntimeException("이미지 삭제 중 오류 발생", e);
+//        }
     }
 
 

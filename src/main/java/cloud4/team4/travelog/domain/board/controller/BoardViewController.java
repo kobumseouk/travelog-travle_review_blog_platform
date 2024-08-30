@@ -1,5 +1,6 @@
 package cloud4.team4.travelog.domain.board.controller;
 
+import cloud4.team4.travelog.domain.board.dto.BoardUpdateRequestDto;
 import cloud4.team4.travelog.domain.board.dto.BoardViewResponse;
 import cloud4.team4.travelog.domain.board.entity.Board;
 import cloud4.team4.travelog.domain.board.service.BoardService;
@@ -34,17 +35,15 @@ public class BoardViewController {
     // 중분류 게시판 조회
     @GetMapping("/board/{regionMajor}")
     public String getMiddleBoards(@PathVariable("regionMajor") String regionMajor, Model model) {
-        List<BoardViewResponse> middleboard = boardService.getMiddleBoards(regionMajor).stream()
-                .filter(board -> "여행후기".equals(board.getBoardCategory()))
-                .collect(Collectors.toList());
+        List<Board> middleboard = boardService.getMiddleBoards(regionMajor);
 
         // regionMajor를 한글로 변환
         String regionMajorKorean = boardService.convertToKorean(regionMajor);
 
+
         // 모델에 middleboard와 regionMiddleKorean 값을 추가
         model.addAttribute("middleboard", middleboard);
         model.addAttribute("regionMajorKorean", regionMajorKorean);
-
         return "middleboard";
     }
 
@@ -80,6 +79,8 @@ public class BoardViewController {
         // 가정: BoardService에서 board 정보를 가져올 수 있다고 가정함
         Board board = boardService.getBoardById(id);
 
+        BoardUpdateRequestDto requestDto = new BoardUpdateRequestDto(board.getDescription(), board.getRegionMajor());
+
         // convertKorean 메서드를 사용하여 변환된 값을 모델에 추가
         String regionMajorKorean = boardService.convertToKorean(board.getRegionMajor());
 
@@ -87,6 +88,7 @@ public class BoardViewController {
         model.addAttribute("id", id);
         model.addAttribute("regionMajorKorean", regionMajorKorean);
         model.addAttribute("regionMajor", board.getRegionMajor());
+        model.addAttribute("requestDto", requestDto);
         return "updateboard"; // 수정 화면의 템플릿 이름
     }
 

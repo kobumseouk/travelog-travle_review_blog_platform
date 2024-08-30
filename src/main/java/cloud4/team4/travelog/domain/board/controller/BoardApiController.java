@@ -68,11 +68,15 @@ public class BoardApiController {
 //    }
 
 
-    @PutMapping("/board-update/{id}")
+    @PostMapping("/board-update/{id}")
     public ResponseEntity<Void> updateBoard(@PathVariable("id") Long id,
-                                            @ModelAttribute BoardUpdateRequestDto requestDto) {
+                                            @ModelAttribute("requestDto") BoardUpdateRequestDto requestDto) {
+
+        System.out.println("requestDto = " + requestDto.getDescription());
+        System.out.println("requestDto = " + requestDto.getRegionMajor());
         try {
             boardService.updateDescription(id, requestDto);
+
             boardService.updateImage(id, requestDto);
             return ResponseEntity.status(HttpStatus.FOUND)
                     .location(URI.create("/")) // 수정 후 리다이렉트할 경로
