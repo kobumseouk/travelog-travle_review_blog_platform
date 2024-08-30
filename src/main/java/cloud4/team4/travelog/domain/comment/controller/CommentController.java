@@ -52,7 +52,6 @@ public class CommentController {
         model.addAttribute("boardCategory", postService.getPostById(postId).getBoard().getBoardCategory());
         model.addAttribute("commentUpdateDto", commentUpdateDto);
 
-        postService.decreaseViews(postId); // html 돌아가면 복구
 
         return "comment_update";
     }
