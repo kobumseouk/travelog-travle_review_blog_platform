@@ -26,21 +26,12 @@ public class BoardService {
     @Transactional
     public void saveBoard(BoardRequestDto requestDto) {
 
+        // Mapper를 사용해서 Entity로 변환한한다.
         Board board = BoardMapper.INSTANCE.toEntity(requestDto);
 
         try {
+            // DTO에서 이미지를 추출하여 save
             boardImageService.saveImage(board, requestDto.getImage());
-
-            /* 사진을 같이 저장하기 때문에, 사진은 필수로 업로드해야 함 */
-//            if (imagePath == null || imagePath.isEmpty()) {
-//                throw new IllegalArgumentException("이미지를 업로드해야 합니다.");
-//            }
-
-            // board에 imagePath 저장
-//            board.setImageName(imagePath);
-
-            // Mapper로 나머지 항목 저장
-            //boardRepository.save(board);
 
         } catch (Exception e) {
             // 예외 처리 결과 보류
@@ -52,66 +43,56 @@ public class BoardService {
     /* READ */
 
     // 사진을 포함한 모든 게시판 조회
-    public List<BoardViewResponse> getAllBoards() {
-        List<Board> boards = boardRepository.findAll();
+    // 초기화면은 Board를 가져오지 않아도 되므로 사용하지 않는다.
+//    public List<BoardViewResponse> getAllBoards() {
+//        List<Board> boards = boardRepository.findAll();
+//
+//        List<BoardViewResponse> result = boards.stream()
+//                .map(BoardViewResponse::new)
+//                .collect(Collectors.toList());
+//
+//        return result;
+//    }
 
-        List<BoardViewResponse> result = boards.stream()
-                .map(BoardViewResponse::new)
-                .collect(Collectors.toList());
-
-        return result;
-    }
-
-    // 사진과 함께 대분류(regionMajor)에 따른 게시판 조회
+    // 대분류(regionMajor)에 해당되는 중분류 게시판 조회
     public List<Board> getMiddleBoards(String regionMajor) {
-
-
         return boardRepository.findByRegionMajor(regionMajor);
     }
 
 
+
     /* UPDATE */
 
-    // 게시판 설명 업데이트
+    // 게시판 설명을 수정한다.
+    // Board 엔티티의 setter 메서드로 수정한다.
     @Transactional
-    public Long updateDescription(Long id, BoardUpdateRequestDto requestDto){
-        Board board= boardRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시판이 없습니다. id= " + id));
+    public void updateDescription(Long id, BoardUpdateRequestDto requestDto){
+        Board board= boardRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시판이 없습니다. id= " + id));
+
         board.updateDescription(requestDto.getDescription());
-        return id;
     }
 
+
+
+    // 게시판 이미지를 수정한다.
+    // BoardImageService의 saveImage 메서드로 사진을 저장한다.
     @Transactional
     public void updateImage(Long id, BoardUpdateRequestDto requestDto) {
         Board board = boardRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시판이 없습니다. id= " + id));
 
+        // 새로운 이미지를 저장하기 전에, DB에 저장된 이미지를 삭제한다.
         boardImageService.deleteImage(board);
-        System.out.println("삭제 완");
+
         try {
+            // 게시판에 이미지를 저장한다.
             boardImageService.saveImage(board, requestDto.getImage());
-
-            // board에 imagePath 저장
-//            board.setImageName(board.getImageName());
-//
-//            // Mapper로 나머지 항목 저장
-//            boardRepository.save(board);
-
         } catch (Exception e) {
             // 예외 처리 결과 보류
             e.getMessage();
         }
 
     }
-
-
-    // 게시판 사진 업데이트
-//    @Transactional
-//    public void T_updateBoard(Long id, BoardUpdateRequestDto requestDto) {
-//        Board board = boardRepository.findById(id).orElseThrow(RuntimeException::new);
-//
-//        board.update(requestDto.getDescription());
-//
-//        boardImageService.T_updateImage(requestDto.getImage(), board);
-//    }
 
 
 
@@ -121,11 +102,8 @@ public class BoardService {
         Board board = boardRepository.findById(id)
                 .orElseThrow(RuntimeException::new);
 
-        // DB에 저장된 게시판 삭제
+        // DB에 저장된 게시판을 삭제한다.
         boardRepository.delete(board);
-
-        // static에 저장된 사진 삭제
-//        boardImageService.deleteImage(board.getImageName());
     }
 
 

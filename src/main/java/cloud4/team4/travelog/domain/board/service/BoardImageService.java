@@ -22,7 +22,7 @@ public class BoardImageService {
 
     /* CREATE */
 
-    // 사진 추가
+    // DB에 사진을 저장한다.
     @Transactional
     public void saveImage(Board board, MultipartFile image) throws Exception {
         try {
@@ -43,7 +43,8 @@ public class BoardImageService {
     }
 
 
-
+    // (미사용)기존 사진 저장 로직.
+    // static/uploads/board_images/ 디렉토리에 사진을 저장하고, DB에는 경로 정보만 저장한다.
     private String saveImage(MultipartFile image, String saveDir) throws IOException {
         // 파일명 생성
         String fileName = UUID.randomUUID().toString().replace("-", "") + "_" + image.getOriginalFilename();
@@ -65,47 +66,16 @@ public class BoardImageService {
 
 
     /* UPDATE */
-
-//    @Transactional
-//    public void T_updateImage(MultipartFile image, Board board) {
-//
-//        // 기존 이미지 삭제
-//        boardImageRepository.delete(findPhotoByBoardId(board.getId()));
-//
-//        // 이미지 업데이트
-//        try {
-//            saveImage(image, board);
-//        } catch (Exception e) {
-//            throw new RuntimeException(e.getMessage());
-//        }
-//
-//    }
+    // saveImage 메서드로 Update 로직을 같이 구현한다.
 
 
 
     /* DELETE */
 
-    // 디렉토리에 저장된 사진 삭제
+    // 디렉토리에 저장된 사진을 삭제한다.
     public void deleteImage(Board board) {
-//        try {
             board.setImage(null, null);
-//            // 실제 파일 경로
-//            String relativePath = "src/main/resources/static" + imagePath;
-//            Path path = Paths.get(relativePath);
-//
-//            // 파일이 존재하는지 확인하고 삭제
-//            if (Files.exists(path)) {
-//                Files.delete(path);
-//            } else {
-//                throw new RuntimeException("해당 경로에 파일이 존재하지 않습니다: " + relativePath);
-//            }
-//        } catch (IOException e) {
-//            throw new RuntimeException("이미지 삭제 중 오류 발생", e);
-//        }
     }
-
-
-
 
 
 
@@ -127,7 +97,7 @@ public class BoardImageService {
 //                .orElseThrow();
 //    }
 
-    // ToDo: 이미지 파일인지 확인하는 메서드
+    // 업로드된 파일이 이미지 파일인지 확인하는 메서드
     private boolean isImageFile(MultipartFile photo) {
         String contentType = photo.getContentType();
         return contentType != null && contentType.startsWith("image/");

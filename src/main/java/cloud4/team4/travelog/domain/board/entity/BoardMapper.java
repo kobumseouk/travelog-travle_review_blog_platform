@@ -12,11 +12,8 @@ public interface BoardMapper {
 
     BoardMapper INSTANCE = Mappers.getMapper(BoardMapper.class);
 
-    // @Mapping(source = "board", target = "post")
-
-    /* Create 매핑 */
-
     // CreateRequestDto -> Board 매핑
+    // 오류 발생으로 명시적 매핑을 수행했다.
     @Mapping(target = "id", ignore = true) // ID는 자동 생성되므로 무시
     @Mapping(target = "regionMajor", source = "regionMajor")
     @Mapping(target = "regionMiddle", source = "regionMiddle")
@@ -26,8 +23,9 @@ public interface BoardMapper {
 
     /*---------- Update 매핑 ----------*/
 
-    // Board -> UpdateRequestDto 매핑
-    BoardDescRequestDto toUpdateRequestDto(Board board);
+    // 미구현: Board -> UpdateRequestDto 매핑
+//    BoardDescRequestDto toUpdateRequestDto(Board board);
+
 
     // UpdateRequestDto -> Board 매핑
     @Mapping(target = "id", ignore = true)

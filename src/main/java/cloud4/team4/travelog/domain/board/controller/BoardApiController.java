@@ -22,28 +22,14 @@ public class BoardApiController {
     private final BoardImageService boardImageService;
 
 
-//    /* READ */
-//
-//    // 모든 대분류(regionMajor) 게시판 조회
-//    @GetMapping
-//    public List<BoardViewResponse> getAllBoards() {
-//        return boardService.getAllBoards();
-//    }
-//
-//
-//
-//    // 사진과 함께 대분류(regionMajor)에 따른 게시판 조회
-//    @GetMapping("/boardlist-{regionMajor}")
-//    public List<BoardViewResponse> getMiddleBoards(@PathVariable("regionMajor") String regionMajor) {
-//        return boardService.getMiddleBoards(regionMajor);
-//    }
-//
+    /* READ */
+    /* READ 뷰는 BoardViewController에 구현. */
+
 
 
     /* CREATE */
 
-    // 사진과 함께 게시판을 추가
-    // boards/board-new로 api 수정할 것
+    // 사진과 함께 게시판을 추가하는 POST 메서드.
     @PostMapping(value = "/board/board-new", consumes = "multipart/form-data")
     public ResponseEntity<String> createBoard(@ModelAttribute BoardRequestDto boardRequestDto) {
         try {
@@ -61,23 +47,19 @@ public class BoardApiController {
 
     /* UPDATE */
 
-    // 게시판 설명 수정
-//    @PutMapping("/update-description/{id}")
-//    public Long updateDescription(@PathVariable("id") Long id, @RequestBody BoardDescRequestDto requestDto){
-//        return boardService.updateDescription(id, requestDto);
-//    }
-
-
+    // 게시판의 id로 검색한 후, 해당 게시판의 사진 / 설명을 수정하는 메서드.
+    // html에서는 PUT Mapping 불가로 POST Mapping으로 구현한 뒤, js에서 처리했다.
     @PostMapping("/board-update/{id}")
     public ResponseEntity<Void> updateBoard(@PathVariable("id") Long id,
                                             @ModelAttribute("requestDto") BoardUpdateRequestDto requestDto) {
 
-        System.out.println("requestDto = " + requestDto.getDescription());
-        System.out.println("requestDto = " + requestDto.getRegionMajor());
         try {
             boardService.updateDescription(id, requestDto);
 
-            boardService.updateImage(id, requestDto);
+            // 이미지가 업로드되지 않으면 이미지 저장하지 않음.
+            if (requestDto.getImage() != null) {
+                boardService.updateImage(id, requestDto);
+            }
             return ResponseEntity.status(HttpStatus.FOUND)
                     .location(URI.create("/")) // 수정 후 리다이렉트할 경로
                     .build();
@@ -91,8 +73,10 @@ public class BoardApiController {
 
     /* DELETE */
 
+    // 게시판 id에 해당하는 게시판을 삭제한다.
     @DeleteMapping("/board-delete/{id}")
     public void delete(@PathVariable("id") Long id) {
         boardService.deleteBoard(id);
     }
+
 }

@@ -23,8 +23,7 @@ public class BoardViewController {
     private final BoardService boardService;
 
 
-
-    // 기본화면. 대분류 게시판 조회
+    // 초기 화면. 대분류(regionMajor) 게시판 조회
     @GetMapping
     public String getMainBoards() {
         return "mainboard";
@@ -32,23 +31,26 @@ public class BoardViewController {
 
 
 
-    // 중분류 게시판 조회
+    // 중분류(regionMiddle) 게시판 조회
     @GetMapping("/board/{regionMajor}")
     public String getMiddleBoards(@PathVariable("regionMajor") String regionMajor, Model model) {
         List<Board> middleboard = boardService.getMiddleBoards(regionMajor);
 
-        // regionMajor를 한글로 변환
+        // regionMajor를 한글로 변환. -> regionMajor를 파라미터로 넘겨줄 때, 한글일 경우 인코딩 오류가 있다.
         String regionMajorKorean = boardService.convertToKorean(regionMajor);
 
-
-        // 모델에 middleboard와 regionMiddleKorean 값을 추가
         model.addAttribute("middleboard", middleboard);
+
+        // 모델에 middleboard와 한글로 변환된 regionMajor 값을 추가한다.
+        // 이 파라미터는 뷰 반환 시 사용한다.
         model.addAttribute("regionMajorKorean", regionMajorKorean);
         return "middleboard";
     }
 
 
 
+    // 질의응답을 게시글을 반환하는 뷰 컨트롤러.
+    // 아직 문제가 있다...
     @GetMapping("/board/{regionMajor}/qna/{postId}")
     public String getQnaPost(@PathVariable String regionMajor, @PathVariable String postId, Model model) {
         // postId가 숫자여야 하는지 확인하고 숫자가 아닌 경우 에러를 처리하거나
@@ -100,7 +102,5 @@ public class BoardViewController {
         if(memberDto == null) return null;
         return memberDto.getId();
     }
-
-
 
 }
