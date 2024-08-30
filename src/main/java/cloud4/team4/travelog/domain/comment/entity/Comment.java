@@ -31,7 +31,13 @@ public class Comment {
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
     private List<CommentPhotos> commentPhotos = new ArrayList<>();
 
-    @Column(nullable = false)
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
+    private List<Reply> replies = new ArrayList<>();
+
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
+    private List<CommentLike> commentLikes = new ArrayList<>();
+
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
     @Column(nullable = false)
@@ -39,7 +45,7 @@ public class Comment {
     private LocalDateTime editedAt;
 
     // 평점 (1 ~ 5점 선택 가능)
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private Long rating;
 
     public void setMember(Member member) {

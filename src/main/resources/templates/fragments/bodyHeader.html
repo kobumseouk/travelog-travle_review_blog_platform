@@ -7,11 +7,25 @@
                 <a href="/">
                     <img src="/images/logo.png" style="width:130px" alt="로고">
                 </a>
-                <a href="/login">
+                <a th:if="${loginMember == null}" th:href="@{/login}">
                     <button class="rounded-md bg-blue-500 px-3 py-2 text-base font-medium text-white hover:bg-blue-700 hover:text-white">
                         로그인
                     </button>
                 </a>
+
+                <div th:unless="${loginMember == null}">
+                    <a th:href="@{/mypage}">
+                        <button class="rounded-md bg-blue-500 px-3 py-2 text-base font-medium text-white hover:bg-blue-700 hover:text-white mt-4">
+                            마이페이지
+                        </button>
+                    </a>
+                    <a th:href="@{/logout}">
+                        <button class="rounded-md bg-blue-500 px-3 py-2 text-base font-medium text-white hover:bg-blue-700 hover:text-white">
+                            로그아웃
+                        </button>
+                    </a>
+                </div>
+
             </nav>
         </div>
     </div>

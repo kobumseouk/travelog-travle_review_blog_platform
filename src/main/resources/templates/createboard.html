@@ -1,0 +1,128 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header}"></head>
+<body class="h-full flex flex-col">
+<div th:replace="~{fragments/bodyHeader :: bodyHeader}"></div><br>
+
+<div class="h-full flex justify-center items-center">
+    <div class="container mx-auto max-w-lg px-4 py-8 bg-white shadow-md rounded-lg relative">
+        <!-- 이전 페이지로 돌아가는 버튼 -->
+        <a href="javascript:history.back()" class="absolute top-0 right-0 mt-2 mr-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-1 px-3 rounded">이전</a>
+
+        <h2 class="text-2xl font-bold mb-6 text-center">새로운 여행지 추가하기</h2>
+        <!-- novalidate를 추가하여 기본 HTML5 유효성 검사를 비활성화 -->
+        <form action="/api/board/board-new" method="POST" enctype="multipart/form-data" class="space-y-4" novalidate onsubmit="return validateForm()">
+
+            <!-- 이미지 업로드 및 미리보기 -->
+            <div>
+                <label for="image" class="block text-sm font-medium text-gray-700"></label>
+                <div class="flex justify-center">
+                    <!-- 이미지 미리보기 영역 -->
+                    <div class="relative h-48 w-48 border border-gray-300 rounded-md shadow-sm flex items-center justify-center bg-gray-100">
+                        <img id="imagePreview" src="#" alt="이미지를 선택하세요" class="h-full w-full object-cover rounded-md" style="display: none;">
+                        <span id="imagePlaceholder" class="text-gray-500">이미지를 업로드하세요</span>
+                    </div>
+                </div>
+                <!-- 이미지 변경 버튼 -->
+                <div class="flex justify-center mt-2">
+                    <label for="image" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-1 px-3 rounded cursor-pointer text-sm">
+                        이미지 변경
+                    </label>
+                    <input type="file" id="image" name="image" class="hidden" onchange="previewImage(event)">
+                </div>
+            </div>
+
+            <!-- 지역 대분류 입력 (드롭다운으로 선택) -->
+            <div>
+                <label for="regionMajor" class="block text-sm font-medium text-gray-700">대분류</label>
+                <select id="regionMajor" name="regionMajor" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                    <option value="" disabled selected>대분류 선택</option>
+                    <option value="seoul" th:selected="${regionMajor == '서울'}">서울</option>
+                    <option value="gyeonggi" th:selected="${regionMajor == '경기도'}">경기도</option>
+                    <option value="incheon" th:selected="${regionMajor == '인천'}">인천</option>
+                    <option value="daejeon" th:selected="${regionMajor == '대전'}">대전</option>
+                    <option value="daegu" th:selected="${regionMajor == '대구'}">대구</option>
+                    <option value="busan" th:selected="${regionMajor == '부산'}">부산</option>
+                    <option value="ulsan" th:selected="${regionMajor == '울산'}">울산</option>
+                    <option value="jeju" th:selected="${regionMajor == '제주'}">제주</option>
+                </select>
+            </div>
+
+            <!-- 지역 중분류 입력 -->
+            <div>
+                <label for="regionMiddle" class="block text-sm font-medium text-gray-700">중분류</label>
+                <input type="text" id="regionMiddle" name="regionMiddle" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="지역 중분류 입력 (예: 강남)" required>
+                <!-- 오류 메시지를 표시할 span 태그 추가 -->
+                <span id="regionMiddleError" class="text-red-500 text-sm" style="display: none;">중분류를 입력해주세요!</span>
+            </div>
+
+            <!-- 여행지 설명 입력 -->
+            <div>
+                <label for="description" class="block text-sm font-medium text-gray-700">설명</label>
+                <textarea id="description" name="description" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" rows="3" placeholder="게시판 설명 입력" required></textarea>
+                <!-- 오류 메시지를 표시할 span 태그 추가 -->
+                <span id="descriptionError" class="text-red-500 text-sm" style="display: none;">설명을 입력해주세요!</span>
+            </div>
+
+            <!-- 게시판 분류 (안 보이게 hidden input으로 설정) -->
+            <input type="hidden" id="boardCategory" name="boardCategory" value="여행후기">
+<!--            <div>-->
+<!--                <label for="boardCategory" class="block text-sm font-medium text-gray-700">설명</label>-->
+<!--                <textarea id="boardCategory" name="boardCategory" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" rows="3" placeholder="게시판 설명 입력" required></textarea>-->
+<!--                &lt;!&ndash; 오류 메시지를 표시할 span 태그 추가 &ndash;&gt;-->
+<!--                <span id="boardCategoryError" class="text-red-500 text-sm" style="display: none;">설명을 입력해주세요!</span>-->
+<!--            </div>-->
+
+            <!-- 제출 버튼 -->
+            <div class="text-center">
+                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">생성하기</button>
+            </div>
+        </form>
+    </div>
+    <!-- 게시판 생성 폼 끝 -->
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+
+<script src="/js/footer.js"></script>
+<script>
+    function previewImage(event) {
+        var reader = new FileReader();
+        reader.onload = function () {
+            var output = document.getElementById('imagePreview');
+            var placeholder = document.getElementById('imagePlaceholder');
+            output.src = reader.result;
+            output.style.display = 'block';
+            placeholder.style.display = 'none'; // 이미지가 업로드되면 플레이스홀더 텍스트 숨기기
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+
+    function validateForm() {
+        // 설명 필드 유효성 검사
+        var description = document.getElementById('description').value;
+        var descriptionError = document.getElementById('descriptionError');
+        var regionMiddle = document.getElementById('regionMiddle').value;
+        var regionMiddleError = document.getElementById('regionMiddleError');
+
+        var isValid = true;
+
+        if (!description.trim()) {
+            descriptionError.style.display = 'block'; // 오류 메시지 표시
+            isValid = false; // 폼 제출 방지
+        } else {
+            descriptionError.style.display = 'none'; // 오류 메시지 숨기기
+        }
+
+        if (!regionMiddle.trim()) {
+            regionMiddleError.style.display = 'block'; // 중분류 오류 메시지 표시
+            isValid = false; // 폼 제출 방지
+        } else {
+            regionMiddleError.style.display = 'none'; // 중분류 오류 메시지 숨기기
+        }
+
+        return isValid; // 폼 제출 허용 여부 반환
+    }
+</script>
+</html>
