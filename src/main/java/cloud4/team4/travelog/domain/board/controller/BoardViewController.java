@@ -3,10 +3,13 @@ package cloud4.team4.travelog.domain.board.controller;
 import cloud4.team4.travelog.domain.board.dto.BoardViewResponse;
 import cloud4.team4.travelog.domain.board.entity.Board;
 import cloud4.team4.travelog.domain.board.service.BoardService;
+import cloud4.team4.travelog.domain.member.dto.MemberDto;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
@@ -33,11 +36,11 @@ public class BoardViewController {
         List<BoardViewResponse> middleboard = boardService.getMiddleBoards(regionMajor);
 
         // regionMajor를 한글로 변환
-        String regionMiddleKorean = boardService.convertToKorean(regionMajor);
+        String regionMajorKorean = boardService.convertToKorean(regionMajor);
 
         // 모델에 middleboard와 regionMiddleKorean 값을 추가
         model.addAttribute("middleboard", middleboard);
-        model.addAttribute("regionMajorKorean", regionMiddleKorean);
+        model.addAttribute("regionMajorKorean", regionMajorKorean);
 
         return "middleboard";
     }
@@ -74,7 +77,14 @@ public class BoardViewController {
         return "updateboard"; // 수정 화면의 템플릿 이름
     }
 
-
+    // 로그인 여부 확인
+    @ModelAttribute("loginMember")
+    public Long loginMemberId(HttpSession session) {
+        // 세션에서 로그인한 멤버의 id 값 가져옴
+        MemberDto memberDto = (MemberDto) session.getAttribute("member");
+        if(memberDto == null) return null;
+        return memberDto.getId();
+    }
 
 
 

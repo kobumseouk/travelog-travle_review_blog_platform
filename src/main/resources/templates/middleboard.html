@@ -8,19 +8,19 @@
     <!-- 게시판 목록을 표시 -->
     <div class="container mx-auto max-w-4xl px-4 pb-20">
         <!-- 상단의 버튼 영역 -->
-        <div class="flex justify-end mb-4">
+        <div class="flex justify-end mb-4" th:if="${loginMember != null}">
             <!-- 게시판 추가 링크 수정 -->
             <a th:href="@{|/board-new/${regionMajor}|}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                게시판 추가
+                여행지 추가하기!
             </a>
         </div>
 
         <!-- 제목 동적으로 변경 -->
-        <h2 class="text-2xl font-bold mb-4 text-center" th:text="${regionMajorKorean} + ' 여행지 목록'"></h2>
+        <h2 class="text-2xl font-bold mb-4 text-center" th:text="${regionMajorKorean} + ' 여행 후기 게시판 목록'"></h2>
 
         <!-- 여행지 목록 -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            <div th:each="board : ${middleboard}" class="bg-white shadow-md rounded-lg overflow-hidden">
+            <div th:each="board : ${middleboard}" class="bg-white shadow-md rounded-lg overflow-hidden transform transition-transform duration-300 hover:scale-105">
                 <!-- 게시글 요소를 클릭하면 URL로 이동 -->
                 <a th:href="@{'/board/' + ${board.regionMajor} + '/' + ${board.id} + '/posts'}" class="block">
                     <img th:src="@{${board.imagePath}}" alt="이미지" class="w-full h-40 object-cover">
@@ -30,7 +30,7 @@
                     </div>
                 </a>
                 <!-- 수정하기 및 삭제하기 버튼 -->
-                <div class="flex justify-between p-4">
+                <div class="flex justify-between p-4" th:if="${loginMember != null}">
                     <a th:href="@{'/board-update/' + ${board.id}}" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded">
                         수정하기
                     </a>

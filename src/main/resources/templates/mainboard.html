@@ -6,22 +6,13 @@
 
 <div class="flex-grow flex justify-center overflow-auto">
     <!-- 게시판 목록을 표시 -->
-    <div class="container mx-auto max-w-4xl px-4 pb-20">
-        <!-- 게시판 추가 버튼 -->
-        <!--
-        <div class="flex justify-end mb-4">
-            <a href="/board/board-new" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                게시판 추가
-            </a>
-        </div>
-        -->
-
+    <div class="container mx-auto max-w-5xl px-6 pb-20">
         <!-- 검색창 추가 -->
         <div class="flex justify-center mb-8">
-            <form action="/search" method="GET" class="w-full max-w-md">
+            <form action="/search" method="GET" class="w-full max-w-lg">
                 <div class="flex items-center border-b border-teal-500 py-2">
-                    <input class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="text" placeholder="떠나고 싶은 여행지를 찾아보세요!" aria-label="검색어">
-                    <button class="flex-shrink-0 bg-teal-500 hover:bg-teal-700 border-teal-500 hover:border-teal-700 text-sm border-4 text-white py-1 px-2 rounded" type="submit">
+                    <input class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-2 px-2 leading-tight focus:outline-none" type="text" placeholder="떠나고 싶은 여행지를 찾아보세요!" aria-label="검색어">
+                    <button class="flex-shrink-0 bg-teal-500 hover:bg-teal-700 border-teal-500 hover:border-teal-700 text-sm border-4 text-white py-1 px-3 rounded" type="submit">
                         검색
                     </button>
                 </div>
@@ -29,70 +20,99 @@
         </div>
 
         <!-- 대분류 게시판 목록 -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <!-- 서울 -->
-            <a href="/board/seoul" class="bg-white shadow-md rounded-lg overflow-hidden">
-                <img src="/images/regionmajor/seoul.jpg" alt="seoul" class="w-full h-40 object-cover">
-                <div class="p-4">
-                    <h2 class="text-l font-semibold text-center">서울</h2>
-                </div>
-            </a>
+            <div class="relative bg-white shadow-md rounded-lg overflow-hidden transform transition-transform duration-300 hover:scale-105">
+                <a href="/board/seoul">
+                    <img src="/images/regionmajor/seoul.jpg" alt="seoul" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h2 class="text-xl font-semibold text-center">서울</h2>
+                    </div>
+                </a>
+                <!-- Q&A 버튼에 동적 URL 설정 -->
+                <a th:href="@{|/board/seoul/qna/posts|}" class="absolute bottom-4 right-4 bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-2 rounded">Q&A</a>
+            </div>
             <!-- 경기 -->
-            <a href="/board/gyeonggi" class="bg-white shadow-md rounded-lg overflow-hidden">
-                <img src="/images/regionmajor/gyeonggi.jpg" alt="gyeonggi" class="w-full h-40 object-cover">
-                <div class="p-4">
-                    <h2 class="text-l font-semibold text-center">경기</h2>
-                </div>
-            </a>
+            <div class="relative bg-white shadow-md rounded-lg overflow-hidden transform transition-transform duration-300 hover:scale-105">
+                <a href="/board/gyeonggi">
+                    <img src="/images/regionmajor/gyeonggi.jpg" alt="gyeonggi" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h2 class="text-xl font-semibold text-center">경기</h2>
+                    </div>
+                </a>
+                <a th:href="@{|/board/gyeonggi/qna/posts|}" class="absolute bottom-4 right-4 bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-2 rounded">Q&A</a>
+            </div>
             <!-- 부산 -->
-            <a href="/board/busan" class="bg-white shadow-md rounded-lg overflow-hidden">
-                <img src="/images/regionmajor/busan.jpg" alt="busan" class="w-full h-40 object-cover">
-                <div class="p-4">
-                    <h2 class="text-l font-semibold text-center">부산</h2>
-                </div>
-            </a>
+            <div class="relative bg-white shadow-md rounded-lg overflow-hidden transform transition-transform duration-300 hover:scale-105">
+                <a href="/board/busan">
+                    <img src="/images/regionmajor/busan.jpg" alt="busan" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h2 class="text-xl font-semibold text-center">부산</h2>
+                    </div>
+                </a>
+                <a th:href="@{|/board/busan/qna/posts|}" class="absolute bottom-4 right-4 bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-2 rounded">Q&A</a>
+            </div>
+            <!-- 다른 지역들도 동일하게 설정 -->
             <!-- 인천 -->
-            <a href="/board/incheon" class="bg-white shadow-md rounded-lg overflow-hidden">
-                <img src="/images/regionmajor/incheon.jpg" alt="incheon" class="w-full h-40 object-cover">
-                <div class="p-4">
-                    <h2 class="text-l font-semibold text-center">인천</h2>
-                </div>
-            </a>
+            <div class="relative bg-white shadow-md rounded-lg overflow-hidden transform transition-transform duration-300 hover:scale-105">
+                <a href="/board/incheon">
+                    <img src="/images/regionmajor/incheon.jpg" alt="incheon" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h2 class="text-xl font-semibold text-center">인천</h2>
+                    </div>
+                </a>
+                <a th:href="@{|/board/incheon/qna/posts|}" class="absolute bottom-4 right-4 bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-2 rounded">Q&A</a>
+            </div>
             <!-- 대구 -->
-            <a href="/board/daegu" class="bg-white shadow-md rounded-lg overflow-hidden">
-                <img src="/images/regionmajor/daegu.jpg" alt="daegu" class="w-full h-40 object-cover">
-                <div class="p-4">
-                    <h2 class="text-l font-semibold text-center">대구</h2>
-                </div>
-            </a>
+            <div class="relative bg-white shadow-md rounded-lg overflow-hidden transform transition-transform duration-300 hover:scale-105">
+                <a href="/board/daegu">
+                    <img src="/images/regionmajor/daegu.jpg" alt="daegu" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h2 class="text-xl font-semibold text-center">대구</h2>
+                    </div>
+                </a>
+                <a th:href="@{|/board/daegu/qna/posts|}" class="absolute bottom-4 right-4 bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-2 rounded">Q&A</a>
+            </div>
             <!-- 대전 -->
-            <a href="/board/daejeon" class="bg-white shadow-md rounded-lg overflow-hidden">
-                <img src="/images/regionmajor/daejeon.jpg" alt="daejeon" class="w-full h-40 object-cover">
-                <div class="p-4">
-                    <h2 class="text-l font-semibold text-center">대전</h2>
-                </div>
-            </a>
+            <div class="relative bg-white shadow-md rounded-lg overflow-hidden transform transition-transform duration-300 hover:scale-105">
+                <a href="/board/daejeon">
+                    <img src="/images/regionmajor/daejeon.jpg" alt="daejeon" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h2 class="text-xl font-semibold text-center">대전</h2>
+                    </div>
+                </a>
+                <a th:href="@{|/board/daejeon/qna/posts|}" class="absolute bottom-4 right-4 bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-2 rounded">Q&A</a>
+            </div>
             <!-- 광주 -->
-            <a href="/board/gwangju" class="bg-white shadow-md rounded-lg overflow-hidden">
-                <img src="/images/regionmajor/gwangju.jpg" alt="gwangju" class="w-full h-40 object-cover">
-                <div class="p-4">
-                    <h2 class="text-l font-semibold text-center">광주</h2>
-                </div>
-            </a>
+            <div class="relative bg-white shadow-md rounded-lg overflow-hidden transform transition-transform duration-300 hover:scale-105">
+                <a href="/board/gwangju">
+                    <img src="/images/regionmajor/gwangju.jpg" alt="gwangju" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h2 class="text-xl font-semibold text-center">광주</h2>
+                    </div>
+                </a>
+                <a th:href="@{|/board/gwangju/qna/posts|}" class="absolute bottom-4 right-4 bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-2 rounded">Q&A</a>
+            </div>
             <!-- 울산 -->
-            <a href="/board/ulsan" class="bg-white shadow-md rounded-lg overflow-hidden">
-                <img src="/images/regionmajor/ulsan.jpg" alt="ulsan" class="w-full h-40 object-cover">
-                <div class="p-4">
-                    <h2 class="text-l font-semibold text-center">울산</h2>
-                </div>
-            </a>
+            <div class="relative bg-white shadow-md rounded-lg overflow-hidden transform transition-transform duration-300 hover:scale-105">
+                <a href="/board/ulsan">
+                    <img src="/images/regionmajor/ulsan.jpg" alt="ulsan" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h2 class="text-xl font-semibold text-center">울산</h2>
+                    </div>
+                </a>
+                <a th:href="@{|/board/ulsan/qna/posts|}" class="absolute bottom-4 right-4 bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-2 rounded">Q&A</a>
+            </div>
             <!-- 제주 -->
-            <a href="/board/jeju" class="bg-white shadow-md rounded-lg overflow-hidden">
-                <img src="/images/regionmajor/jeju.jpg" alt="jeju" class="w-full h-40 object-cover">
-                <div class="p-4">
-                    <h2 class="text-l font-semibold text-center">제주</h2>
-                </div>
-            </a>
+            <div class="relative bg-white shadow-md rounded-lg overflow-hidden transform transition-transform duration-300 hover:scale-105">
+                <a href="/board/jeju">
+                    <img src="/images/regionmajor/jeju.jpg" alt="jeju" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h2 class="text-xl font-semibold text-center">제주</h2>
+                    </div>
+                </a>
+                <a th:href="@{|/board/jeju/qna/posts|}" class="absolute bottom-4 right-4 bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-2 rounded">Q&A</a>
+            </div>
         </div>
     </div>
 </div>

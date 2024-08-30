@@ -77,14 +77,14 @@ public class BoardService {
 
     // 게시판 설명 업데이트
     @Transactional
-    public Long updateDescription(Long id, BoardDescRequestDto requestDto){
+    public Long updateDescription(Long id, BoardUpdateRequestDto requestDto){
         Board board= boardRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시판이 없습니다. id= " + id));
         board.updateDescription(requestDto.getDescription());
         return id;
     }
 
     @Transactional
-    public void updateImage(Long id, BoardImageRequestDto requestDto) {
+    public void updateImage(Long id, BoardUpdateRequestDto requestDto) {
         Board board = boardRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시판이 없습니다. id= " + id));
 
         boardImageService.deleteImage(board.getImagePath());
@@ -153,6 +153,7 @@ public class BoardService {
             case "gwangju" -> "광주";
             case "ulsan" -> "울산";
             case "jaeju" -> "제주";
+            case "gyeonggi" -> "경기";
             default -> regionMajor;
         };
     }
