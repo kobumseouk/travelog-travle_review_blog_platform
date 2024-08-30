@@ -28,18 +28,18 @@ public class BoardService {
         Board board = BoardMapper.INSTANCE.toEntity(requestDto);
 
         try {
-            String imagePath = boardImageService.saveImage(requestDto.getImage());
+            boardImageService.saveImage(board, requestDto.getImage());
 
             /* 사진을 같이 저장하기 때문에, 사진은 필수로 업로드해야 함 */
-            if (imagePath == null || imagePath.isEmpty()) {
-                throw new IllegalArgumentException("이미지를 업로드해야 합니다.");
-            }
+//            if (imagePath == null || imagePath.isEmpty()) {
+//                throw new IllegalArgumentException("이미지를 업로드해야 합니다.");
+//            }
 
             // board에 imagePath 저장
-            board.setImagePath(imagePath);
+//            board.setImageName(imagePath);
 
             // Mapper로 나머지 항목 저장
-            boardRepository.save(board);
+            //boardRepository.save(board);
 
         } catch (Exception e) {
             // 예외 처리 결과 보류
@@ -87,16 +87,16 @@ public class BoardService {
     public void updateImage(Long id, BoardUpdateRequestDto requestDto) {
         Board board = boardRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시판이 없습니다. id= " + id));
 
-        boardImageService.deleteImage(board.getImagePath());
+        boardImageService.deleteImage(board.getImageName());
 
         try {
-            String imagePath = boardImageService.saveImage(requestDto.getImage());
+            boardImageService.saveImage(board, requestDto.getImage());
 
             // board에 imagePath 저장
-            board.setImagePath(imagePath);
-
-            // Mapper로 나머지 항목 저장
-            boardRepository.save(board);
+//            board.setImageName(board.getImageName());
+//
+//            // Mapper로 나머지 항목 저장
+//            boardRepository.save(board);
 
         } catch (Exception e) {
             // 예외 처리 결과 보류
@@ -128,7 +128,7 @@ public class BoardService {
         boardRepository.delete(board);
 
         // static에 저장된 사진 삭제
-        boardImageService.deleteImage(board.getImagePath());
+        boardImageService.deleteImage(board.getImageName());
     }
 
 

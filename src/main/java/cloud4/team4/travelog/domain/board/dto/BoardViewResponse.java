@@ -9,7 +9,9 @@ public class BoardViewResponse {
     private String description;
     private String regionMajor;
     private String regionMiddle;
-    private String imagePath;
+    private String imageName;
+    private byte[] imageData;
+//    private String imagePath;
     private String boardCategory;
 
     public BoardViewResponse(Board board) {
@@ -17,7 +19,9 @@ public class BoardViewResponse {
         this.description = board.getDescription();
         this.regionMajor = board.getRegionMajor();
         this.regionMiddle = board.getRegionMiddle();
-        this.imagePath = board.getImagePath();
+//        this.imagePath = board.getImageName();
+        this.imageName = board.getImageName();
+        this.imageData = board.getImageData();
         this.boardCategory = board.getBoardCategory();
     }
 }
