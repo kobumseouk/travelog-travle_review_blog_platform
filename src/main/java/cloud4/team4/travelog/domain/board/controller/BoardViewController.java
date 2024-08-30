@@ -49,6 +49,7 @@ public class BoardViewController {
     }
 
 
+
     @GetMapping("/board/{regionMajor}/qna/{postId}")
     public String getQnaPost(@PathVariable String regionMajor, @PathVariable String postId, Model model) {
         // postId가 숫자여야 하는지 확인하고 숫자가 아닌 경우 에러를 처리하거나
@@ -64,14 +65,6 @@ public class BoardViewController {
     }
 
 
-
-
-    // 게시판 생성 화면
-    // 기존
-//    @GetMapping("/{regionMajor}/add-board")
-//    public String getCreateBoard() {
-//        return "createboard";
-//    }
 
     @GetMapping("/board-new/{regionMajor}")
     public String getCreateBoard(@PathVariable("regionMajor") String regionMajor, Model model) {
@@ -93,6 +86,7 @@ public class BoardViewController {
         model.addAttribute("board", board);
         model.addAttribute("id", id);
         model.addAttribute("regionMajorKorean", regionMajorKorean);
+        model.addAttribute("regionMajor", board.getRegionMajor());
         return "updateboard"; // 수정 화면의 템플릿 이름
     }
 

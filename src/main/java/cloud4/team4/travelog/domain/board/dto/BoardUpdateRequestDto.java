@@ -7,5 +7,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class BoardUpdateRequestDto {
     private String description;
     private MultipartFile image;
+    private String regionMajor;
 
 }
