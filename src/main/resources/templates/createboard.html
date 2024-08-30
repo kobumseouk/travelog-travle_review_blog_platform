@@ -65,7 +65,13 @@
             </div>
 
             <!-- 게시판 분류 (안 보이게 hidden input으로 설정) -->
-            <input type="hidden" id="boardCategory" name="boardCategory" value="여행후기">
+            <!--<input type="hidden" id="boardCategory" name="boardCategory" value="여행후기">-->
+            <div>
+                <label for="boardCategory" class="block text-sm font-medium text-gray-700">설명</label>
+                <textarea id="boardCategory" name="boardCategory" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" rows="3" placeholder="게시판 설명 입력" required></textarea>
+                <!-- 오류 메시지를 표시할 span 태그 추가 -->
+                <span id="boardCategoryError" class="text-red-500 text-sm" style="display: none;">설명을 입력해주세요!</span>
+            </div>
 
             <!-- 제출 버튼 -->
             <div class="text-center">

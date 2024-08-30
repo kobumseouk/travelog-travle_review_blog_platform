@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Controller
@@ -33,7 +34,9 @@ public class BoardViewController {
     // 중분류 게시판 조회
     @GetMapping("/board/{regionMajor}")
     public String getMiddleBoards(@PathVariable("regionMajor") String regionMajor, Model model) {
-        List<BoardViewResponse> middleboard = boardService.getMiddleBoards(regionMajor);
+        List<BoardViewResponse> middleboard = boardService.getMiddleBoards(regionMajor).stream()
+                .filter(board -> "여행후기".equals(board.getBoardCategory()))
+                .collect(Collectors.toList());
 
         // regionMajor를 한글로 변환
         String regionMajorKorean = boardService.convertToKorean(regionMajor);
@@ -44,6 +47,22 @@ public class BoardViewController {
 
         return "middleboard";
     }
+
+
+    @GetMapping("/board/{regionMajor}/qna/{postId}")
+    public String getQnaPost(@PathVariable String regionMajor, @PathVariable String postId, Model model) {
+        // postId가 숫자여야 하는지 확인하고 숫자가 아닌 경우 에러를 처리하거나
+        // postId가 숫자라면 Long으로 변환하여 사용
+        try {
+            Long postIdLong = Long.parseLong(postId);
+            // postIdLong을 사용하여 비즈니스 로직 수행
+        } catch (NumberFormatException e) {
+            // postId가 숫자가 아닌 경우 처리할 로직
+            return "errorPage"; // 에러 페이지로 이동
+        }
+        return "qnaPage"; // 정상적인 경우 처리할 뷰
+    }
+
 
 
 

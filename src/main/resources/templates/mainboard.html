@@ -30,7 +30,7 @@
                     </div>
                 </a>
                 <!-- Q&A 버튼에 동적 URL 설정 -->
-                <a th:href="@{|/board/seoul/qna/posts|}" class="absolute bottom-4 right-4 bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-2 rounded">Q&A</a>
+                <a th:href="@{'/board/seoul/qna/posts'}" class="absolute bottom-4 right-4 bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-2 rounded">Q&A</a>
             </div>
             <!-- 경기 -->
             <div class="relative bg-white shadow-md rounded-lg overflow-hidden transform transition-transform duration-300 hover:scale-105">
@@ -40,7 +40,7 @@
                         <h2 class="text-xl font-semibold text-center">경기</h2>
                     </div>
                 </a>
-                <a th:href="@{|/board/gyeonggi/qna/posts|}" class="absolute bottom-4 right-4 bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-2 rounded">Q&A</a>
+                <a th:href="@{'/board/gyeonggi/qna/posts'}" class="absolute bottom-4 right-4 bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-2 rounded">Q&A</a>
             </div>
             <!-- 부산 -->
             <div class="relative bg-white shadow-md rounded-lg overflow-hidden transform transition-transform duration-300 hover:scale-105">
@@ -50,9 +50,9 @@
                         <h2 class="text-xl font-semibold text-center">부산</h2>
                     </div>
                 </a>
-                <a th:href="@{|/board/busan/qna/posts|}" class="absolute bottom-4 right-4 bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-2 rounded">Q&A</a>
+                <a th:href="@{'/board/busan/qna/posts'}" class="absolute bottom-4 right-4 bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-2 rounded">Q&A</a>
             </div>
-            <!-- 다른 지역들도 동일하게 설정 -->
+            <!-- 동일한 방법으로 다른 지역 추가 -->
             <!-- 인천 -->
             <div class="relative bg-white shadow-md rounded-lg overflow-hidden transform transition-transform duration-300 hover:scale-105">
                 <a href="/board/incheon">
@@ -61,7 +61,7 @@
                         <h2 class="text-xl font-semibold text-center">인천</h2>
                     </div>
                 </a>
-                <a th:href="@{|/board/incheon/qna/posts|}" class="absolute bottom-4 right-4 bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-2 rounded">Q&A</a>
+                <a th:href="@{'/board/incheon/qna/posts'}" class="absolute bottom-4 right-4 bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-2 rounded">Q&A</a>
             </div>
             <!-- 대구 -->
             <div class="relative bg-white shadow-md rounded-lg overflow-hidden transform transition-transform duration-300 hover:scale-105">
@@ -71,8 +71,9 @@
                         <h2 class="text-xl font-semibold text-center">대구</h2>
                     </div>
                 </a>
-                <a th:href="@{|/board/daegu/qna/posts|}" class="absolute bottom-4 right-4 bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-2 rounded">Q&A</a>
+                <a th:href="@{'/board/daegu/qna/posts'}" class="absolute bottom-4 right-4 bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-2 rounded">Q&A</a>
             </div>
+            <!-- 나머지 지역들도 동일하게 설정 -->
             <!-- 대전 -->
             <div class="relative bg-white shadow-md rounded-lg overflow-hidden transform transition-transform duration-300 hover:scale-105">
                 <a href="/board/daejeon">
@@ -81,7 +82,7 @@
                         <h2 class="text-xl font-semibold text-center">대전</h2>
                     </div>
                 </a>
-                <a th:href="@{|/board/daejeon/qna/posts|}" class="absolute bottom-4 right-4 bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-2 rounded">Q&A</a>
+                <a th:href="@{'/board/daejeon/qna/posts'}" class="absolute bottom-4 right-4 bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-2 rounded">Q&A</a>
             </div>
             <!-- 광주 -->
             <div class="relative bg-white shadow-md rounded-lg overflow-hidden transform transition-transform duration-300 hover:scale-105">
@@ -91,7 +92,7 @@
                         <h2 class="text-xl font-semibold text-center">광주</h2>
                     </div>
                 </a>
-                <a th:href="@{|/board/gwangju/qna/posts|}" class="absolute bottom-4 right-4 bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-2 rounded">Q&A</a>
+                <a th:href="@{'/board/gwangju/qna/posts'}" class="absolute bottom-4 right-4 bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-2 rounded">Q&A</a>
             </div>
             <!-- 울산 -->
             <div class="relative bg-white shadow-md rounded-lg overflow-hidden transform transition-transform duration-300 hover:scale-105">
@@ -101,7 +102,7 @@
                         <h2 class="text-xl font-semibold text-center">울산</h2>
                     </div>
                 </a>
-                <a th:href="@{|/board/ulsan/qna/posts|}" class="absolute bottom-4 right-4 bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-2 rounded">Q&A</a>
+                <a th:href="@{'/board/ulsan/qna/posts'}" class="absolute bottom-4 right-4 bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-2 rounded">Q&A</a>
             </div>
             <!-- 제주 -->
             <div class="relative bg-white shadow-md rounded-lg overflow-hidden transform transition-transform duration-300 hover:scale-105">
@@ -111,7 +112,7 @@
                         <h2 class="text-xl font-semibold text-center">제주</h2>
                     </div>
                 </a>
-                <a th:href="@{|/board/jeju/qna/posts|}" class="absolute bottom-4 right-4 bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-2 rounded">Q&A</a>
+                <a th:href="@{'/board/jeju/qna/posts'}" class="absolute bottom-4 right-4 bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-2 rounded">Q&A</a>
             </div>
         </div>
     </div>
