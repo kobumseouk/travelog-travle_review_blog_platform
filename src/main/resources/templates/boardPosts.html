@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/header :: header}"></head>
-<body class="h-full flex flex-col">
+<body class="h-full flex flex-col" th:data-board-category="${boardCategory}">
 <div th:replace="~{fragments/bodyHeader :: bodyHeader}"></div>
 <br>
 
@@ -12,11 +12,11 @@
 
         <div class="mb-4 flex space-x-4">
             <!--게시판 주요지역 선택-->
-            <select id="regionMajorSelect" class="p-2 border rounded">
-                <option th:each="major : ${allRegionMajors}"
-                        th:value="${major}"
-                        th:text="${major}"
-                        th:selected="${major == regionMajor}"></option>
+            <select th:if="${boardCategory == '여행후기'}" id="regionMiddleSelect" class="p-2 border rounded">
+                <option th:each="middle : ${MiddleBoards}"
+                        th:value="${middle.regionMiddle}"
+                        th:text="${middle.regionMiddle}"
+                        th:selected="${middle.regionMiddle == regionMiddle}"></option>
             </select>
             <!--검색 분야 선택-->
             <select id="searchTypeSelect" class="p-2 border rounded">

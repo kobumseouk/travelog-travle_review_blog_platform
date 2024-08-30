@@ -157,7 +157,4 @@ public class BoardService {
         };
     }
 
-    public Board getBoardById(Long id) {
-        return boardRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시판이 없습니다. id= " + id));
-    }
 }

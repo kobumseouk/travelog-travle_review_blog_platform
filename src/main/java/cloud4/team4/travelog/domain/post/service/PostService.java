@@ -100,11 +100,11 @@ public class PostService {
     postRepository.delete(post);
   }
 
-  public Page<PostListViewResponse> getPostsByRegionMajor(String regionMajor, String searchType, String keyword, Pageable pageable) {
+  public Page<PostListViewResponse> getPostsByRegionMiddle(String regionMiddle, String searchType, String keyword, Pageable pageable) {
     Specification<Post> spec = Specification.where(null);
 
-    if (regionMajor != null && !regionMajor.isEmpty()) {
-      spec = spec.and((root, query, cb) -> cb.equal(root.get("board").get("regionMajor"), regionMajor));
+    if (regionMiddle != null && !regionMiddle.isEmpty()) {
+      spec = spec.and((root, query, cb) -> cb.equal(root.get("board").get("regionMiddle"), regionMiddle));
     }
 
     // 검색 분류
