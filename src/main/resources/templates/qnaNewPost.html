@@ -7,25 +7,24 @@
 <div th:replace="~{fragments/bodyHeader :: bodyHeader}"></div>
 <header>
     <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        <h1 class="text-3xl font-bold tracking-tight text-gray-900" th:text="${post.id == null ? '게시글 작성' : '게시글 수정'}">게시글</h1>
+        <h1 class="text-3xl font-bold tracking-tight text-gray-900" th:text="${post.id == null ? '질문 작성' : '질문 수정'}">질문</h1>
     </div>
 </header>
 <div class="flex justify-center items-center flex-grow">
     <main class="flex flex-col w-full max-w-4xl"> <!-- 크기를 키우기 위해 max-w-4xl로 변경 -->
         <div class="w-full m-10 bg-gray-50 p-10 shadow-xl rounded-lg">
-            <form th:action="@{/board/{regionMajor}/{boardId}/posts/post-new(regionMajor=${regionMajor},boardId=${boardId})}"
+            <form th:action="@{/board/{regionMajor}/qna/posts/post-new(regionMajor=${regionMajor})}"
                   th:object="${post}" method="post" enctype="multipart/form-data"
-                  th:data-post-id="${post.id}" th:data-region-major="${regionMajor}" th:data-board-id="${boardId}">
+                  th:data-post-id="${post.id}" th:data-region-major="${regionMajor}">
 
                 <input type="hidden" th:field="*{id}" />
                 <input type="hidden" name="regionMajor" th:value="${regionMajor}">
-                <input type="hidden" name="boardId" th:value="${boardId}">
                 <input type="hidden" th:if="${post.memberId != null}" th:field="*{memberId}" />
 
 
                 <!-- 제목 입력 -->
                 <div class="mb-4">
-                    <label for="title" class="block text-sm font-medium text-gray-700">제목</label>
+                    <label for="title" class="block text-sm font-medium text-gray-700">질문 제목</label>
                     <input type="text" id="title" th:field="*{title}"
                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                            required />
@@ -55,7 +54,7 @@
 
                 <!-- 내용 입력 -->
                 <div class="mb-4">
-                    <label for="content" class="block text-sm font-medium text-gray-700">내용</label>
+                    <label for="content" class="block text-sm font-medium text-gray-700">질문 내용</label>
                     <textarea id="content" th:field="*{content}" rows="10"
                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                               required></textarea>
@@ -83,10 +82,10 @@
                 <!-- 제출 버튼 -->
                 <div class="flex justify-between mt-4">
                     <button type="submit" id="submit-btn"
-                            th:text="${post.id == null ? '작성' : '수정'}"
+                            th:text="${post.id == null ? '질문 등록' : '질문 수정'}"
                             class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200">
                     </button>
-                    <a th:href="@{/board/{regionMajor}/{boardId}/posts(regionMajor=${regionMajor},boardId=${boardId})}"
+                    <a th:href="@{/board/{regionMajor}/qna/posts(regionMajor=${regionMajor})}"
                        class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-200">
                         취소
                     </a>
@@ -99,9 +98,9 @@
 </div>
 
 <div th:replace="~{fragments/footer :: footer}"></div>
+<!--js redirect 수정 필요-->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="/js/footer.js"></script>
-<script src="/js/post_photos.js"></script>
 <script src="/js/post_update.js"></script>
 <script src="/js/post_validation.js"></script>
 </body>

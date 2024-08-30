@@ -94,6 +94,7 @@ public class CommentApiController {
         Long memberId = (Long) model.getAttribute("loginMember");
         boolean likeBoolean = commentLikeService.likeComment(memberId, commentId);
 
+
         if(likeBoolean) {
             return ResponseEntity.status(HttpStatus.OK).body("해당 댓글에 좋아요를 눌렀습니다!");
         } else {
