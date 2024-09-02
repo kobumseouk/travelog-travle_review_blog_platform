@@ -79,24 +79,6 @@ public class Post {
 
   @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
   private List<PostLike> postLikes = new ArrayList<>();
-
-  /*public void addPostPhoto(PostPhoto postPhoto) {
-    postPhotos.add(postPhoto);
-    postPhoto.setPost(this);
-  }
-
-  public void removePostPhoto(PostPhoto postPhoto) {
-    postPhotos.remove(postPhoto);
-    postPhoto.setPost(null);
-  }*/
-  public void incrementRecommends() {
-    this.recommends++;
-  }
-
-  public void decrementRecommends() {
-    if (this.recommends > 0) {
-      this.recommends--;
-    }
   }
 
 }

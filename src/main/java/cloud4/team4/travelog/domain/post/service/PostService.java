@@ -184,4 +184,13 @@ public class PostService {
         });
   }
 
+  @Transactional
+  public void decrementRecommends(Long postId) {
+    postRepository.findById(postId)
+        .ifPresent(post -> {
+          post.setRecommends(post.getRecommends() - 1);
+          postRepository.save(post);
+        });
+  }
+
 }
