@@ -26,16 +26,13 @@ public class SecurityConfig {
                 .csrf((auth) -> auth.disable())
                 .authorizeHttpRequests(authorize->authorize
                         // api/member 뒤에서 들어온 접근권한 요청은 전부 허용하겠다.
-                        .requestMatchers("/**").permitAll()
+                        .requestMatchers("/api/member/**").permitAll()
                                 .anyRequest()
                                 .authenticated()
-                        )
-                .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/") // 로그아웃 성공 후 리다이렉트할 경로
-                        .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID")
-                );
-        return http.build();
+                        );
+                return http.build();
     }
+
+
+
 }

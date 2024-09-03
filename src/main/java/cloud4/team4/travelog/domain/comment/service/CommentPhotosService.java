@@ -2,9 +2,10 @@ package cloud4.team4.travelog.domain.comment.service;
 
 import cloud4.team4.travelog.domain.comment.entity.Comment;
 import cloud4.team4.travelog.domain.comment.entity.CommentPhotos;
-import cloud4.team4.travelog.domain.comment.exception.CommentPhotosCountException;
+import cloud4.team4.travelog.domain.comment.exception.CommentPhotosSizeException;
 import cloud4.team4.travelog.domain.comment.exception.CommentPhotosTypeException;
 import cloud4.team4.travelog.domain.comment.repository.CommentPhotosRepository;
+import cloud4.team4.travelog.domain.comment.repository.CommentRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,18 +22,21 @@ import java.util.UUID;
 public class CommentPhotosService {
 
      private final CommentPhotosRepository commentPhotosRepository;
+     private final CommentRepository commentRepository;
+
 
     @Transactional
     public void savePhotos(List<MultipartFile> photos, Comment comment) throws Exception{
          try {
              // 업로드한 파일이 없다면 리턴
              if(photos == null) {
+                 System.out.println("파일 없음");
                  return;
              }
 
              // 사진 업로드 개수 > 5 인지 체크
              if(photos.size() > 5) {
-                 throw new CommentPhotosCountException("최대 사진 업로드 개수는 5개 입니다!");
+                 throw new CommentPhotosSizeException("최대 사진 업로드 개수는 5개 입니다!");
              }
 
              // 업로드 파일의 타입이 사진인지 체크

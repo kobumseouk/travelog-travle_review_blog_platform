@@ -3,7 +3,7 @@ function deleteComment(button) {
     const commentId = button.getAttribute('data-id');
 
     if (confirm('댓글을 삭제하시겠습니까?')) {
-        fetch(`/api/comment/${commentId}`, {
+        fetch(`/api/comment/delete/${commentId}`, {
             method: 'DELETE'
         })
             .then(response => {

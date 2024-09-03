@@ -8,12 +8,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.*;
 @Slf4j
 @RestController
 @RequestMapping("/api/member")
 @RequiredArgsConstructor
 public class MemberController {
     private final MemberService memberService;
+
 
     //회원가입
     @PostMapping("/sign-up")
@@ -44,14 +46,12 @@ public class MemberController {
         return ResponseEntity.ok("회원 삭제 성공");
     }
 
-
     //로그인
     @PostMapping("/login")
     public ResponseEntity<MemberDto> login(@RequestParam("loginId") String loginId, @RequestParam("password") String password, HttpSession session) {
         MemberDto memberDto = memberService.login(loginId, password, session);
         return ResponseEntity.ok(memberDto);
     }
-
 
     // 로그아웃
     @PostMapping("/logout")
@@ -85,6 +85,20 @@ public class MemberController {
 
     }
 
+    //비밀번호 찾기
+    @PostMapping("/find-password")
+    public ResponseEntity<String> findPassword(@RequestParam String loginId, @RequestParam String name, @RequestParam String email, @RequestParam String phoneNumber, @RequestParam String newPassword) {
+        memberService.findPassword(loginId, name, email, phoneNumber);
+        return ResponseEntity.ok(memberService.findPassword(loginId, name, email, phoneNumber));
+    }
 
+
+
+    //아이디 찾기 (이름&전화번호 방식)
+//    @GetMapping("/find-id-by-phone")
+//    public ResponseEntity<String> findMemberIdByNum(@RequestParam String name, @RequestParam String phoneNumber) {
+//        return ResponseEntity.ok(memberService.findMemberIdByNum(name,phoneNumber));
+//
+//    }
 
 }

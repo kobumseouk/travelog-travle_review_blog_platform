@@ -10,20 +10,19 @@ public class PostListViewResponse {
   private final Long postId;
   private final String title;
   private final String memberName;
-  private final Long boardId;
-  private final String boardCategory;
   private final LocalDateTime createdAt;
-  private final Integer views;
+  private final Integer view;
   private final Integer recommends;
 
-  public PostListViewResponse(Post post) {
-    this.postId = post.getId();
+
+  public PostListViewResponse(Post post){
+    this.postId = post.getPostId();
     this.title = post.getTitle();
     this.memberName = post.getMember().getName();
-    this.boardId = post.getBoard().getId();
-    this.boardCategory = post.getBoard().getBoardCategory();
     this.createdAt = post.getCreatedAt();
-    this.views = post.getViews();
+    this.view = post.getViews();
     this.recommends = post.getRecommends();
   }
+
+
 }

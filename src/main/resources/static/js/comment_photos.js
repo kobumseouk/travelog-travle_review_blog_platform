@@ -1,41 +1,20 @@
 document.addEventListener('DOMContentLoaded', function() {
     const fileInput = document.getElementById('file-input');
     const fileInfo = document.getElementById('file-info');
-    const imagePreview = document.getElementById('image-preview');
 
     fileInput.addEventListener('change', function() {
         const files = fileInput.files;
         fileInfo.innerHTML = ''; // 기존 내용을 지웁니다.
-        imagePreview.innerHTML = ''; // 미리보기를 초기화합니다.
 
         if (files.length > 0) {
             const fileNames = Array.from(files).map(file => file.name).join(', ');
             fileInfo.innerHTML = `선택한 파일: ${fileNames}`;
-
-            Array.from(files).forEach(file => {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const previewItem = document.createElement('div');
-                    previewItem.className = 'image-preview-item';
-
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-
-                    const fileName = document.createElement('div');
-                    fileName.textContent = file.name;
-                    fileName.className = 'file-name'; // 클래스 추가
-
-                    previewItem.appendChild(img);
-                    previewItem.appendChild(fileName);
-                    imagePreview.appendChild(previewItem);
-                }
-                reader.readAsDataURL(file);
-            });
         } else {
             fileInfo.innerHTML = '선택한 파일이 없습니다.';
         }
     });
 });
+
 $(document).ready(function() {
     $('form').on('submit', function(event) {
         event.preventDefault(); // 폼 기본 동작 방지
@@ -44,9 +23,8 @@ $(document).ready(function() {
         var formData = new FormData(this);
 
         // postId를 URL에서 가져오기
-        var postId = $(this).data('post-id');
-        var boardId = $(this).data('board-id');
-        var regionMajor = $(this).data('region-major');
+        var postId = $(this).data('post-id'); // HTML 요소에 data-post-id 속성 추가
+        console.log(postId);
         // AJAX 요청 보내기
         $.ajax({
             url: '/api/comment/' + postId, // postId를 포함한 URL
@@ -56,14 +34,14 @@ $(document).ready(function() {
             contentType: false, // 콘텐츠 타입을 자동으로 설정
             success: function() {
                 // 성공적으로 처리된 경우의 로직 (리다이렉트)
-                window.location.href = "/board/" + regionMajor + '/' + boardId + '/posts/' + postId; // 리다이렉션
+                window.location.href = "/post/" + postId; // 리다이렉션
             },
             error: function(xhr) {
                 // 에러 발생 시 (BAD_REQUEST 포함)
                 if (xhr.status === 400) {
                     alert(xhr.responseText); // 서버에서 전달된 에러 메시지 출력
                 } else {
-                    alert('댓글 작성 중 오류가 발생했습니다. 다시 시도해 주세요.');
+                    alert('서버와의 통신 중 오류가 발생했습니다. 다시 시도해 주세요.');
                 }
             }
         });
