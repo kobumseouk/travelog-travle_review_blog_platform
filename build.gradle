@@ -48,7 +48,7 @@ dependencies {
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
 
 	// 개인: MySQL 라이브러리 추가
-	implementation 'mysql:mysql-connector-java:8.0.31'
+	implementation 'mysql:mysql-connector-java:8.0.30'
 }
 
 tasks.named('test') {

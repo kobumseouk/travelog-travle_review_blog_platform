@@ -8,19 +8,25 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import cloud4.team4.travelog.domain.member.entity.Member;
 
+import java.util.Base64;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Mapper(componentModel = "spring")
 public interface PostMapper {
-
-  PostMapper INSTANCE = Mappers.getMapper(PostMapper.class);;
-
   @Mapping(target = "member", ignore = true)
-  @Mapping(target = "board", ignore = true)  // member, board 필드 매핑 제외
+  @Mapping(target = "board", ignore = true)
+  @Mapping(target = "postPhotos", ignore = true)   // member, board, PostPhoto 필드 매핑 제외
   Post postPostDtoToPost(PostPostDto postPostDto);
 
   @Mapping(source = "board", target="boardId")
   @Mapping(source = "member", target="memberId")
-  @Mapping(source = "postPhoto", target = "photos")
+  @Mapping(source = "member.name", target = "memberName")
+  @Mapping(source = "board.boardCategory", target = "boardCategory")
+  @Mapping(source = "postPhotos", target = "photos")
   PostResponseDto postToPostResponseDto(Post post);
+
+  PostUpdateDto postToPostUpdateDto(Post post);
 
   default Long mapMemberToLong(Member member) {
     return member != null ? member.getId() : null;
@@ -28,15 +34,16 @@ public interface PostMapper {
   default Long mapBoardToLong(Board board) {
     return board != null ? board.getId() : null;
   }
-//  @Mapping(target = "postId", ignore = true)
-//  PostPhoto postPhotoDtoToPostPhoto(PostPhotoDto postPhotoDto);
-//
-//  @Mapping(source = "post", target = "postId")
-//  PostPhotoResponseDto postPhotoToPostPhotoResponseDto(PostPhoto postPhoto);
 
   /*---------추가(디버깅)---------*/
-  default String mapPostPhotoToString(PostPhoto postPhoto) {
-    return postPhoto != null ? postPhoto.getImagePath() : null;
+  default List<String> mapPostPhotos(List<PostPhoto> postPhotos) {
+    if (postPhotos == null) {
+      return null;
+    }
+    return postPhotos.stream()
+        .map(PostPhoto::getBase64Image)
+        .collect(Collectors.toList());
   }
+
 
 }

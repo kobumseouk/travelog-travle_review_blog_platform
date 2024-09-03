@@ -5,7 +5,7 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-08-24T17:14:18+0900",
+    date = "2024-08-30T19:40:39+0900",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 22.0.1 (Oracle Corporation)"
 )
 public class MemberMapperImpl implements MemberMapper {
@@ -24,6 +24,7 @@ public class MemberMapperImpl implements MemberMapper {
         memberDto.setLoginId( member.getLoginId() );
         memberDto.setPassword( member.getPassword() );
         memberDto.setEmail( member.getEmail() );
+        memberDto.setStatus( member.getStatus() );
 
         return memberDto;
     }
@@ -42,6 +43,7 @@ public class MemberMapperImpl implements MemberMapper {
         member.setPassword( memberDto.getPassword() );
         member.setPhoneNumber( memberDto.getPhoneNumber() );
         member.setEmail( memberDto.getEmail() );
+        member.setStatus( memberDto.getStatus() );
 
         return member;
     }

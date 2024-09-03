@@ -1,5 +1,7 @@
 package cloud4.team4.travelog.domain.post.dto;
 
+import cloud4.team4.travelog.domain.post.entity.Post;
+import cloud4.team4.travelog.domain.post.entity.PostPhoto;
 import jakarta.validation.constraints.*;
 import cloud4.team4.travelog.domain.comment.entity.Comment;
 import lombok.AllArgsConstructor;
@@ -16,13 +18,18 @@ import java.util.List;
 @AllArgsConstructor
 public class PostResponseDto {
   @NotNull
-  private Long postId;
+  private Long id;
   @NotBlank
   private String title;
   @NotBlank
   private String content;
+
   private Long boardId;
+  private String boardCategory;
+
   private Long memberId;
+  private String memberName;
+
   private String periodStart;
   private String periodEnd;
   private LocalDateTime createdAt;
@@ -30,10 +37,11 @@ public class PostResponseDto {
   private Integer views;
   private Integer recommends;
 
-  private List<String> photos;    // 게시글에 첨부된 이미지 경로
+  /*private String photoPath;    // 게시글에 첨부된 이미지 경로
+  private String photoPosition;   // 이미지를 삽입할 위치*/
+  private List<String> photos;
 
   private List<Comment> comments;
-
 
 }
 
