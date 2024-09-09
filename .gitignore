@@ -1,0 +1,47 @@
+HELP.md
+.gradle
+build/
+!../gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/
+/src/main/generated/cloud4/team4/travelog/domain/board/entity/BoardMapperImpl.java
+/src/main/generated/cloud4/team4/travelog/domain/comment/dto/CommentMapperImpl.java
+/src/main/generated/cloud4/team4/travelog/domain/post/dto/PostMapperImpl.java
+/src/main/generated/cloud4/team4/travelog/domain/member/dto/MemberMapperImpl.java
+
+*MapperImpl.java          // 매퍼 클래스는자동 생성되므로 불필요
+application.properties
+build.gradle
+
+/src/main/generated/cloud4/team4/travelog/domain/comment/dto/ReplyMapperImpl.java
