@@ -1,0 +1,77 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header}"></head>
+<body class="min-h-screen flex flex-col">
+<div th:replace="~{fragments/bodyHeader :: bodyHeader}"></div><br>
+
+<div class="flex-grow flex justify-center overflow-auto">
+    <!-- 게시판 목록을 표시 -->
+    <div class="container mx-auto max-w-4xl px-4 pb-20">
+        <!-- 상단의 버튼 영역 -->
+        <div class="flex justify-end mb-4" th:if="${loginMember != null}">
+            <!-- 게시판 추가 링크 수정 -->
+            <a th:href="@{|/board-new/${regionMajor}|}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                여행지 추가하기!
+            </a>
+        </div>
+
+        <!-- 제목 동적으로 변경 -->
+        <h2 class="text-2xl font-bold mb-4 text-center" th:text="${regionMajorKorean} + ' 여행 후기 게시판 목록'"></h2>
+
+        <!-- 여행지 목록 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <div th:each="board : ${middleboard}" class="bg-white shadow-md rounded-lg overflow-hidden transform transition-transform duration-300 hover:scale-105">
+                <!-- 게시글 요소를 클릭하면 URL로 이동 -->
+                <a th:href="@{'/board/' + ${board.regionMajor} + '/' + ${board.id} + '/posts'}" class="block">
+                    <!-- 이미지 크기를 고정시키기 위해 추가한 클래스 -->
+                    <img th:src="'data:image/jpeg;base64,' + ${board.base64Image}" class="w-full h-48 object-cover"/>
+                    <div class="p-4">
+                        <h3 class="text-l font-semibold" th:text="${regionMajorKorean} + ' - ' + ${board.regionMiddle}"></h3>
+                        <p class="text-gray-600 mt-2" th:text="${board.description}"></p>
+                    </div>
+                </a>
+
+                <!-- 수정하기 및 삭제하기 버튼 -->
+                <div class="flex justify-between p-4" th:if="${loginMember != null}">
+                    <a th:href="@{'/board-update/' + ${board.id}}" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded">
+                        수정하기
+                    </a>
+                    <button th:onclick="|confirmDelete('${board.id}')|" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded">
+                        삭제하기
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script src="/js/footer.js"></script>
+<script th:inline="javascript">
+    function confirmDelete(boardId) {
+        if (confirm('정말 삭제하시겠습니까?')) {
+            deleteBoard(boardId);
+        }
+    }
+
+    function deleteBoard(boardId) {
+        fetch(`/api/board-delete/${boardId}`, {
+            method: 'DELETE',
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert('게시판이 삭제되었습니다.');
+                    window.location.reload(); // 페이지 새로고침하여 변경사항 반영
+                } else {
+                    alert('삭제에 실패했습니다.');
+                }
+            })
+            .catch(error => {
+                console.error('삭제 요청 중 오류 발생:', error);
+                alert('삭제 요청 중 오류가 발생했습니다.');
+            });
+    }
+</script>
+</body>
+</html>

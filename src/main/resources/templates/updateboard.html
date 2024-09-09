@@ -1,0 +1,80 @@
+
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header}"></head>
+<body class="h-full flex flex-col">
+<div th:replace="~{fragments/bodyHeader :: bodyHeader}"></div><br>
+
+<div class="h-full flex justify-center items-center">
+    <div class="container mx-auto max-w-lg px-4 py-8 bg-white shadow-md rounded-lg relative">
+        <a href="javascript:history.back()" class="absolute top-0 right-0 mt-2 mr-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-1 px-3 rounded">이전</a>
+
+        <h2 class="text-2xl font-bold mb-6 text-center">여행지 정보 수정하기</h2>
+        <form enctype="multipart/form-data" class="space-y-4" th:object="${requestDto}"
+              th:data-id="${id}">
+            <!--            <input type="hidden" name="_method" value="PUT"/> <>!&#45;&#45; HiddenHttpMethodFilter 사용 &ndash;&gt;-->
+
+            <!-- CSRF 토큰 필드를 제거했습니다. -->
+
+            <!-- 이미지 업로드 및 미리보기 -->
+            <div>
+                <label for="image" class="block text-sm font-medium text-gray-700"></label>
+                <div class="flex justify-center">
+                    <div class="relative h-48 w-48 border border-gray-300 rounded-md shadow-sm flex items-center justify-center bg-gray-100">
+                        <img th:src="'data:image/jpeg;base64,' + ${board.base64Image}" id="imagePreview" alt="이미지를 선택하세요" class="h-full w-full object-cover rounded-md"/>
+                    </div>
+                </div>
+                <!-- 이미지 변경 버튼 -->
+                <div class="flex justify-center mt-2">
+                    <label for="image" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-1 px-3 rounded cursor-pointer text-sm">
+                        이미지 변경
+                    </label>
+                    <input type="file" id="image" th:field="*{image}" class="hidden" onchange="previewImage(event)">
+                </div>
+            </div>
+
+            <!-- 대분류 (수정 불가) -->
+            <div>
+                <label for="regionMajor" class="block text-sm font-medium text-gray-700">대분류</label>
+                <input type="text" id="regionMajor" name="regionMajor" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-100 focus:outline-none" th:value="${regionMajorKorean}" readonly>
+            </div>
+
+            <!-- 중분류 (수정 불가) -->
+            <div>
+                <label for="regionMiddle" class="block text-sm font-medium text-gray-700">중분류</label>
+                <input type="text" id="regionMiddle" name="regionMiddle" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-100 focus:outline-none" th:value="${board.regionMiddle}" readonly>
+            </div>
+
+            <!-- 여행지 설명 입력 -->
+            <div>
+                <label for="description" class="block text-sm font-medium text-gray-700">설명</label>
+                <textarea id="description" th:field="*{description}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" rows="3" th:text="${board.description}" th:placeholder="${board.description}" required></textarea>
+            </div>
+
+            <!-- 게시판 분류 (수정 불가) -->
+            <div>
+                <label for="boardCategory" class="block text-sm font-medium text-gray-700">카테고리</label>
+                <select id="boardCategory" name="boardCategory" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-100 focus:outline-none" th:value="${board.boardCategory}" disabled>
+                    <option value="여행후기" th:selected="${board.boardCategory == '여행후기'}">여행후기</option>
+                    <option value="질의응답" th:selected="${board.boardCategory == '질의응답'}">질의응답</option>
+                </select>
+            </div>
+
+            <!-- 제출 버튼 -->
+            <div class="text-center">
+                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">수정하기</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="/js/footer.js"></script>
+<script src="/js/board_update.js"></script>
+</html>
+
+
+
+

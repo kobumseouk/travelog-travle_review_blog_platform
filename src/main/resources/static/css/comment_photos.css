@@ -1,0 +1,65 @@
+.img-container {
+    display: flex; /* Flexbox 사용 */
+    flex-direction: row;
+    justify-content: start;
+    flex-wrap: wrap; /* 이미지가 여러 줄로 배치되도록 설정 */
+    border: 2px solid rgba(68, 68, 68, 0.5); /* 반투명 검정색 */
+    border-radius: 8px; /* 둥근 모서리 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 부드러운 그림자 추가 */
+    transition: border-color 0.3s; /* 보더 색상 전환 효과 추가 */
+    padding: 5px;
+    margin-top: 4px;
+}
+
+.image-link {
+    position: relative;
+    cursor: pointer; /* 기본 커서를 pointer로 설정 */
+    pointer-events: auto; /* 포인터 이벤트 활성화 */
+
+    flex: 0 1 calc(33.33% - 20px); /* 3개가 들어갈 수 있도록 너비 설정 (좌우 간격 포함) */
+    height: 50px; /* 고정된 높이 설정 (원하는 크기로 조정) */
+    display: flex; /* Flexbox 사용 */
+    justify-content: center; /* 이미지 중앙 정렬 */
+    align-items: center; /* 이미지 세로 중앙 정렬 */
+    margin: 0 10px; /* 좌우 간격 설정 (10px) */
+    box-sizing: border-box; /* padding 및 margin을 포함하여 너비 계산 */
+}
+
+.image-link:hover {
+    cursor: zoom-in !important; /* 호버 시 돋보기 커서 강제 적용 */
+    pointer-events: auto; /* 호버 시에도 포인터 이벤트 활성화 */
+}
+
+img {
+    width: 100%; /* 고정된 너비에 맞게 설정 */
+    height: 100%; /* 고정된 높이에 맞게 설정 */
+    object-fit: cover; /* 비율 유지하면서 크기 조정 */
+}
+
+.image-preview-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.image-preview-item {
+    border: 2px solid #ccc; /* 테두리 색상 */
+    border-radius: 8px; /* 모서리 둥글게 */
+    margin: 5px; /* 이미지 간격 */
+    padding: 5px; /* 패딩 */
+    background-color: #f9f9f9; /* 배경색 */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+    text-align: center; /* 텍스트 정렬 */
+    margin-bottom: 20px; /* 컨테이너 아래쪽 마진 */
+}
+
+.image-preview-item img {
+    max-width: 100px; /* 이미지 최대 너비 */
+    max-height: 100px; /* 이미지 최대 높이 */
+    border-radius: 5px; /* 이미지 모서리 둥글게 */
+}
+
+.file-name {
+    color: #676767;
+}

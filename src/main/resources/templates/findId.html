@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header}"></head>
+<body class="h-full flex flex-col justify-center items-center">
+
+<div class="w-full max-w-screen-lg mx-auto my-5">
+    <nav class="flex justify-center items-center">
+        <a href="/">
+            <img src="/images/logo.png" style="width:130px" alt="로고">
+        </a>
+    </nav>
+</div>
+<!-- 아이디 찾기 -->
+<div class="bg-white p-8 rounded-lg shadow-md w-full max-w-sm">
+    <h2 class="text-center text-3xl font-bold text-gray-900 mb-8">아이디 찾기</h2>
+    <form th:action="@{/findId}" method="post" class="space-y-6">
+        <div>
+            <label for="name" class="sr-only">이름</label>
+            <input id="name" name="name" type="text" required
+                   class="w-full px-3 py-2 border border-gray-300 rounded-md text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                   placeholder="닉네임 입력하세요.">
+        </div>
+        <div>
+            <label for="email" class="sr-only">이메일</label>
+            <input id="email" name="email" type="email" required
+                   class="w-full px-3 py-2 border border-gray-300 rounded-md text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                   placeholder="이메일을 입력하세요.">
+        </div>
+        <button type="submit"
+                class="w-full bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+            아이디 찾기
+        </button>
+    </form>
+</div>
+
+<div class="mt-4">
+    <a href="/" class="w-full bg-gray-600 text-white px-4 py-2 rounded-md text-sm font-medium text-center hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+        홈으로 돌아가기
+    </a>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+<script src="/js/footer.js"></script>
+</html>
+
