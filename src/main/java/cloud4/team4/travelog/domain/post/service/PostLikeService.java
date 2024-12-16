@@ -23,6 +23,7 @@ public class PostLikeService {
   private final PostLikeRepository postLikeRepository;
   private final MemberRepository memberRepository;
   private final PostRepository postRepository;
+  private final PostService postService;
 
   @Transactional
   public void likePost(Long memberId, Long postId) {
@@ -42,13 +43,13 @@ public class PostLikeService {
       createdPostLike.setMember(member);
       createdPostLike.setPost(post);
 
-      post.incrementRecommends();
+      postService.incrementRecommends(postId);
       postLikeRepository.save(createdPostLike);
     } else { // 좋아요 엔티티 삭제
       postLikeRepository.delete(postLike);
 
       Post post = postLike.getPost();
-      post.decrementRecommends();
+      postService.decrementRecommends(postId);
       postRepository.save(post);
     }
   }
